@@ -9,6 +9,9 @@ using GitVersion.Extensions;
 
 namespace GitVersionCore.Tests.IntegrationTests
 {
+    using System;
+    using GitVersion.Helpers;
+
     [TestFixture]
     public class FeatureBranchScenarios : TestBase
     {
@@ -51,7 +54,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                             Increment = IncrementStrategy.Minor,
                             Regex = "unstable",
                             SourceBranches = new List<string>(),
-                            IsSourceBranchFor = new [] { "feature" }
+                            IsSourceBranchFor = new[] {"feature"}
                         }
                     }
                 }
@@ -179,8 +182,8 @@ namespace GitVersionCore.Tests.IntegrationTests
             {
                 Branches =
                 {
-                    { "release", new BranchConfig { Tag = "build" } },
-                    { "feature", new BranchConfig { Tag = "useBranchName" } }
+                    {"release", new BranchConfig {Tag = "build"}},
+                    {"feature", new BranchConfig {Tag = "useBranchName"}}
                 }
             };
 
@@ -204,7 +207,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             {
                 Branches =
                 {
-                    { "feature", new BranchConfig { Tag = tag } }
+                    {"feature", new BranchConfig {Tag = tag}}
                 }
             };
 
@@ -410,19 +413,23 @@ namespace GitVersionCore.Tests.IntegrationTests
                 [Test]
                 public void ShouldPickUpVersionFromMasterAfterReleaseBranchCreated()
                 {
-                    var config = new Config
+                    var s = string.Empty;
+                    Action<string> action = info => { s = info; };
+                    using (Logger.AddLoggersTemporarily(action, action, action, action))
                     {
-                        Branches = new Dictionary<string, BranchConfig>
+                        var config = new Config
                         {
+                            Branches = new Dictionary<string, BranchConfig>
                             {
-                                "master", new BranchConfig()
                                 {
-                                    TracksReleaseBranches = true,
-                                    Regex = "master"
+                                    "master", new BranchConfig()
+                                    {
+                                        TracksReleaseBranches = true,
+                                        Regex = "master"
+                                    }
                                 }
                             }
-                        }
-                    };
+                        };
 
                     using var fixture = new EmptyRepositoryFixture();
                     // Create release branch

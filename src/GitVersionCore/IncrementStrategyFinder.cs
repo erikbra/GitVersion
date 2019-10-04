@@ -8,6 +8,8 @@ using GitVersion.Extensions;
 
 namespace GitVersion
 {
+    using System.Collections.Concurrent;
+
     public enum CommitMessageIncrementMode
     {
         Enabled,

@@ -22,6 +22,8 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.1" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.1" />
         <PackageReference Include="YamlDotNet" Version="$(PackageVersion_YamlDotNet)" />
+        <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+        <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

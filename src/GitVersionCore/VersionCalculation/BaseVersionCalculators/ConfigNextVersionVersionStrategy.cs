@@ -16,5 +16,6 @@ namespace GitVersion.VersionCalculation.BaseVersionCalculators
             var semanticVersion = SemanticVersion.Parse(context.Configuration.NextVersion, context.Configuration.GitTagPrefix);
             yield return new BaseVersion(context, "NextVersion in GitVersion configuration file", false, semanticVersion, null, null);
         }
+
     }
 }

@@ -30,7 +30,7 @@ namespace GitVersionCore.Tests
 
             ShouldlyConfiguration.ShouldMatchApprovedDefaults.LocateTestMethodUsingAttribute<TestAttribute>();
         }
-    
+
         [TestCase(DefaultRepoPath)]
         [TestCase(DefaultWorkingPath)]
         public void WarnOnExistingGitVersionConfigYamlFile(string path)
@@ -98,7 +98,7 @@ namespace GitVersionCore.Tests
 
                 var configurationProvider = new ConfigProvider(fileSystem, log, defaultConfigFileLocator, gitPreparer, configInitWizard);
 
-                configurationProvider.Provide(repoPath); 
+                configurationProvider.Provide(repoPath);
             });
 
             output.Length.ShouldBe(0);

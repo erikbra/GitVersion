@@ -38,7 +38,6 @@ namespace GitVersion.VersionCalculation
                                 return false;
                             }
                         }
-
                         return true;
                     })
                     .Select(v => new Versions

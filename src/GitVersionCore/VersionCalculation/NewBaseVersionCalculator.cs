@@ -7,11 +7,11 @@ using GitVersion.Helpers;
 
 namespace GitVersion.VersionCalculation
 {
-    public class NewBaseVersionCalculator : IBaseVersionCalculator
+    public class BaseVersionCalculator : IBaseVersionCalculator
     {
         readonly BaseVersionStrategy[] strategies;
 
-        public NewBaseVersionCalculator(params BaseVersionStrategy[] strategies)
+        public BaseVersionCalculator(params BaseVersionStrategy[] strategies)
         {
             this.strategies = strategies;
         }
@@ -24,7 +24,8 @@ namespace GitVersion.VersionCalculation
 //            {
 //                throw new ApplicationException($"Non-mathing versions. Slow is {slow} and Fast is {fast}");
 //            }
-            return /*fast; // ??*/ slow;
+            //return fast ;//?? slow;
+            return slow;
         }
 
         private BaseVersion GetCalculatedBaseFast(GitVersionContext context)
@@ -70,8 +71,7 @@ namespace GitVersion.VersionCalculation
                 })
                 .Select(v => new Versions
                 {
-                    //IncrementedVersion = MaybeIncrement(context, v),
-                    IncrementedVersion = new SemanticVersion(),
+                    IncrementedVersion = MaybeIncrement(context, v),
                     Version = v
                 })
                 .ToList();

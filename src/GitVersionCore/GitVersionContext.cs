@@ -7,6 +7,8 @@ using GitVersion.Extensions;
 
 namespace GitVersion
 {
+    using GitVersion.Cache;
+
     /// <summary>
     /// Contextual information about where GitVersion is being run
     /// </summary>
@@ -185,7 +187,7 @@ namespace GitVersion
                 }
             }
 
-            return desiredBranch;
+            return desiredBranch.Cache();
         }
     }
 }

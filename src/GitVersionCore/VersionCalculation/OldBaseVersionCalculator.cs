@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitVersion.VersionCalculation.BaseVersionCalculators;
-using GitVersion.Logging;
+using GitVersion.Helpers;
 
 namespace GitVersion.VersionCalculation
 {
-    public class _BaseVersionCalculator : IBaseVersionCalculator
+    public class OldBaseVersionCalculator : IBaseVersionCalculator
     {
-        private readonly ILog log;
-        private readonly IVersionStrategy[] strategies;
+        readonly BaseVersionStrategy[] strategies;
 
-        public BaseVersionCalculator(ILog log, IEnumerable<IVersionStrategy> strategies)
+        public OldBaseVersionCalculator(params BaseVersionStrategy[] strategies)
         {
-            this.log = log ?? throw new ArgumentNullException(nameof(log));
-            this.strategies = strategies?.ToArray() ?? Array.Empty<IVersionStrategy>();
+            this.strategies = strategies;
         }
 
         public BaseVersion GetBaseVersion(GitVersionContext context)
         {
-            using (log.IndentLog("Calculating base versions"))
+            using (Logger.IndentLog("Calculating base versions"))
             {
                 var baseVersions = strategies
                     .SelectMany(s => s.GetVersions(context))
@@ -28,13 +26,13 @@ namespace GitVersion.VersionCalculation
                     {
                         if (v == null) return false;
 
-                        log.Info(v.ToString());
+                        Logger.WriteInfo(v.ToString());
 
                         foreach (var filter in context.Configuration.VersionFilters)
                         {
                             if (filter.Exclude(v, out var reason))
                             {
-                                log.Info(reason);
+                                Logger.WriteInfo(reason);
                                 return false;
                             }
                         }
@@ -59,7 +57,7 @@ namespace GitVersion.VersionCalculation
                     var oldest = matchingVersionsOnceIncremented.Aggregate((v1, v2) => v1.Version.BaseVersionSource.Committer.When < v2.Version.BaseVersionSource.Committer.When ? v1 : v2);
                     baseVersionWithOldestSource = oldest.Version;
                     maxVersion = oldest;
-                    log.Info($"Found multiple base versions which will produce the same SemVer ({maxVersion.IncrementedVersion}), taking oldest source for commit counting ({baseVersionWithOldestSource.Source})");
+                    Logger.WriteInfo($"Found multiple ({matchingVersionsOnceIncremented.Count}) base versions which will produce the same SemVer ({maxVersion.IncrementedVersion}), taking oldest source for commit counting ({baseVersionWithOldestSource.Source})");
                 }
                 else
                 {
@@ -78,7 +76,7 @@ namespace GitVersion.VersionCalculation
                     context, maxVersion.Version.Source, maxVersion.Version.ShouldIncrement, maxVersion.Version.SemanticVersion,
                     baseVersionWithOldestSource.BaseVersionSource, maxVersion.Version.BranchNameOverride);
 
-                log.Info($"Base version used: {calculatedBase}");
+                Logger.WriteInfo($"Base version used: {calculatedBase}");
 
                 return calculatedBase;
             }
@@ -103,7 +101,7 @@ namespace GitVersion.VersionCalculation
                 foreach (var baseVersion in baseVersions)
                 {
                     if (baseVersion.Version.Source.Contains(
-                        MergeMessageVersionStrategy.MergeMessageStrategyPrefix)
+                        MergeMessageBaseVersionStrategy.MergeMessageStrategyPrefix)
                         && baseVersion.Version.Source.Contains("Merge branch")
                         && baseVersion.Version.Source.Contains("release"))
                     {
@@ -134,11 +132,6 @@ namespace GitVersion.VersionCalculation
         {
             public SemanticVersion IncrementedVersion { get; set; }
             public BaseVersion Version { get; set; }
-
-            public override string ToString()
-            {
-                return $"{Version} | {IncrementedVersion}";
-            }
         }
     }
 }

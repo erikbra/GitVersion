@@ -7,7 +7,7 @@ namespace GitVersion.Cache
         private Branch _source;
 
         public CachedBranch(Branch source)
-        : base(source.repo, source.)
+        //: base(source.repo, source.)
 
         {
             _source = source;

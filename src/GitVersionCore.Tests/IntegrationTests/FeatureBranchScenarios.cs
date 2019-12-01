@@ -9,9 +9,6 @@ using GitVersion.Extensions;
 
 namespace GitVersionCore.Tests.IntegrationTests
 {
-    using System;
-    using GitVersion.Helpers;
-
     [TestFixture]
     public class FeatureBranchScenarios : TestBase
     {
@@ -413,10 +410,6 @@ namespace GitVersionCore.Tests.IntegrationTests
                 [Test]
                 public void ShouldPickUpVersionFromMasterAfterReleaseBranchCreated()
                 {
-                    var s = string.Empty;
-                    Action<string> action = info => { s = info; };
-                    using (Logger.AddLoggersTemporarily(action, action, action, action))
-                    {
                         var config = new Config
                         {
                             Branches = new Dictionary<string, BranchConfig>

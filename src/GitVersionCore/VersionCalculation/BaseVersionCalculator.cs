@@ -7,7 +7,7 @@ using GitVersion.Logging;
 
 namespace GitVersion.VersionCalculation
 {
-    public class _BaseVersionCalculator : IBaseVersionCalculator
+    public class BaseVersionCalculator : IBaseVersionCalculator
     {
         private readonly ILog log;
         private readonly IVersionStrategy[] strategies;

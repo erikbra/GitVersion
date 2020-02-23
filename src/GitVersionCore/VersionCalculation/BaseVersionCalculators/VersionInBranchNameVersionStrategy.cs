@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using LibGit2Sharp;
 using GitVersion.Configuration;
 using GitVersion.Extensions;
+using GitVersion.Models;
 
 namespace GitVersion.VersionCalculation
 {
     /// <summary>
     /// Version is extracted from the name of the branch.
-    /// BaseVersionSource is the commit where the branch was branched from its parent.
+    /// BaseVersionSource is the IGitCommit where the branch was branched from its parent.
     /// Does not increment.
     /// </summary>
     public class VersionInBranchNameVersionStrategy : IVersionStrategy
@@ -20,7 +21,7 @@ namespace GitVersion.VersionCalculation
             return GetVersions(context, tagPrefixRegex, currentBranch);
         }
 
-        public IEnumerable<BaseVersion> GetVersions(GitVersionContext context, string tagPrefixRegex, Branch currentBranch)
+        public IEnumerable<BaseVersion> GetVersions(GitVersionContext context, string tagPrefixRegex, IGitBranch currentBranch)
         {
             if (!context.FullConfiguration.IsReleaseBranch(currentBranch.NameWithoutOrigin()))
             {

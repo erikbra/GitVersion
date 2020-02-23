@@ -1,4 +1,5 @@
 using GitTools.Testing;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersionCore.Tests.Helpers;
 using LibGit2Sharp;
 using NUnit.Framework;
@@ -17,7 +18,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Repository.CreateBranch("release-4.0.123");
             fixture.Checkout(commit.Sha);
 
-            fixture.AssertFullSemver("4.0.123-beta.1+0", fixture.Repository, commit.Sha, false, "release-4.0.123");
+            fixture.AssertFullSemver("4.0.123-beta.1+0", new LibGitRepository(fixture.Repository), commit.Sha, false, "release-4.0.123");
         }
 
         [Test]

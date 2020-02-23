@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using GitVersion.Models;
 using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.Mocks
 {
-    public class MockReflogCollection : ReflogCollection, ICollection<Commit>
+    public class MockReflogCollection : ReflogCollection, ICollection<IGitCommit>
     {
-        public List<Commit> Commits = new List<Commit>();
+        public List<IGitCommit> Commits = new List<IGitCommit>();
 
-        public new IEnumerator<Commit> GetEnumerator()
+        public new IEnumerator<IGitCommit> GetEnumerator()
         {
             return Commits.GetEnumerator();
         }
@@ -18,7 +19,7 @@ namespace GitVersionCore.Tests.Mocks
             return GetEnumerator();
         }
 
-        public void Add(Commit item)
+        public void Add(IGitCommit item)
         {
             Commits.Add(item);
         }
@@ -28,17 +29,17 @@ namespace GitVersionCore.Tests.Mocks
             Commits.Clear();
         }
 
-        public bool Contains(Commit item)
+        public bool Contains(IGitCommit item)
         {
             return Commits.Contains(item);
         }
 
-        public void CopyTo(Commit[] array, int arrayIndex)
+        public void CopyTo(IGitCommit[] array, int arrayIndex)
         {
             Commits.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(Commit item)
+        public bool Remove(IGitCommit item)
         {
             return Commits.Remove(item);
         }

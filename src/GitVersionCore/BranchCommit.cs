@@ -1,22 +1,23 @@
+using GitVersion.Models;
 using LibGit2Sharp;
 
 namespace GitVersion
 {
     /// <summary>
-    /// A commit, together with the branch to which the commit belongs.
+    /// A IGitCommit, together with the branch to which the IGitCommit belongs.
     /// </summary>
     public struct BranchCommit
     {
         public static readonly BranchCommit Empty = new BranchCommit();
 
-        public BranchCommit(Commit commit, Branch branch) : this()
+        public BranchCommit(IGitCommit commit, IGitBranch branch) : this()
         {
             Branch = branch;
             Commit = commit;
         }
 
-        public Branch Branch { get; }
-        public Commit Commit { get; }
+        public IGitBranch Branch { get; }
+        public IGitCommit Commit { get; }
 
         public bool Equals(BranchCommit other)
         {
@@ -27,7 +28,7 @@ namespace GitVersion
         {
             if (ReferenceEquals(null, obj))
                 return false;
-            return obj is BranchCommit commit && Equals(commit);
+            return obj is BranchCommit IGitCommit && Equals(IGitCommit);
         }
 
         public override int GetHashCode()

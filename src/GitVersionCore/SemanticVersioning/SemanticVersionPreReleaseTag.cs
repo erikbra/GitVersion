@@ -96,7 +96,7 @@ namespace GitVersion
             if (!match.Success)
             {
                 // TODO check how to log this
-                Console.WriteLine($"Unable to successfully parse semver tag {preReleaseTag}");
+                Console.WriteLine($"Unable to successfully parse semver IGitTag {preReleaseTag}");
                 return new SemanticVersionPreReleaseTag();
             }
 
@@ -134,9 +134,9 @@ namespace GitVersion
 
         /// <summary>
         /// Default formats:
-        /// <para>t - SemVer 2.0 formatted tag [beta.1]</para>
-        /// <para>l - Legacy SemVer tag with the tag number padded. [beta1]</para>
-        /// <para>lp - Legacy SemVer tag with the tag number padded. [beta0001]. Can specify an integer to control padding (i.e., lp5)</para>
+        /// <para>t - SemVer 2.0 formatted IGitTag [beta.1]</para>
+        /// <para>l - Legacy SemVer IGitTag with the IGitTag number padded. [beta1]</para>
+        /// <para>lp - Legacy SemVer IGitTag with the IGitTag number padded. [beta0001]. Can specify an integer to control padding (i.e., lp5)</para>
         /// </summary>
         public string ToString(string format, IFormatProvider formatProvider = null)
         {
@@ -174,16 +174,16 @@ namespace GitVersion
             };
         }
 
-        private string FormatLegacy(string tag, string number = "")
+        private string FormatLegacy(string IGitTag, string number = "")
         {
-            var tagEndsWithANumber = char.IsNumber(tag.Last());
+            var tagEndsWithANumber = char.IsNumber(IGitTag.Last());
             if (tagEndsWithANumber && number.Length > 0)
                 number = "-" + number;
 
-            if (tag.Length + number.Length > 20)
-                return $"{tag.Substring(0, 20 - number.Length)}{number}";
+            if (IGitTag.Length + number.Length > 20)
+                return $"{IGitTag.Substring(0, 20 - number.Length)}{number}";
 
-            return $"{tag}{number}";
+            return $"{IGitTag}{number}";
         }
 
         private string GetLegacyName()

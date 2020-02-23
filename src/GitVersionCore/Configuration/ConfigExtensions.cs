@@ -143,7 +143,7 @@ namespace GitVersion.Configuration
             branchConfig.Regex = string.IsNullOrEmpty(branchConfig.Regex) ? branchRegex : branchConfig.Regex;
             branchConfig.SourceBranches = branchConfig.SourceBranches == null || !branchConfig.SourceBranches.Any()
                 ? sourceBranches : branchConfig.SourceBranches;
-            branchConfig.Tag ??= defaultTag;
+            branchConfig.IGitTag ??= defaultTag;
             branchConfig.TagNumberPattern ??= defaultTagNumberPattern;
             branchConfig.Increment ??= defaultIncrementStrategy ?? config.Increment ?? DefaultIncrementStrategy;
             branchConfig.PreventIncrementOfMergedBranchVersion ??= defaultPreventIncrement;

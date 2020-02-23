@@ -19,7 +19,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                     {
                         "master", new BranchConfig
                         {
-                            Tag = "pre",
+                            IGitTag = "pre",
                             SourceBranches = new List<string>()
                         }
                     }

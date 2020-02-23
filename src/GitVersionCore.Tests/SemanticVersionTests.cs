@@ -35,7 +35,7 @@ namespace GitVersionCore.Tests
         [TestCase("V1.2.3", 1, 2, 3, null, null, null, null, null, null, "1.2.3", Config.DefaultTagPrefix)]
         [TestCase("version-1.2.3", 1, 2, 3, null, null, null, null, null, null, "1.2.3", "version-")]
         public void ValidateVersionParsing(
-            string versionString, int major, int minor, int patch, string tag, int? tagNumber, int? numberOfBuilds,
+            string versionString, int major, int minor, int patch, string IGitTag, int? tagNumber, int? numberOfBuilds,
             string branchName, string sha, string otherMetaData, string fullFormattedVersionString, string tagPrefixRegex)
         {
             fullFormattedVersionString ??= versionString;
@@ -44,7 +44,7 @@ namespace GitVersionCore.Tests
             Assert.AreEqual(major, version.Major);
             Assert.AreEqual(minor, version.Minor);
             Assert.AreEqual(patch, version.Patch);
-            Assert.AreEqual(tag, version.PreReleaseTag.Name);
+            Assert.AreEqual(IGitTag, version.PreReleaseTag.Name);
             Assert.AreEqual(tagNumber, version.PreReleaseTag.Number);
             Assert.AreEqual(numberOfBuilds, version.BuildMetaData.CommitsSinceTag);
             Assert.AreEqual(branchName, version.BuildMetaData.Branch);

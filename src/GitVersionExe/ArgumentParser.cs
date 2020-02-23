@@ -328,7 +328,7 @@ namespace GitVersion
 
                     if (keyValueOptions.Length > 1)
                     {
-                        throw new WarningException("Can't specify multiple /overrideconfig options: currently supported only 'tag-prefix' option");
+                        throw new WarningException("Can't specify multiple /overrideconfig options: currently supported only 'IGitTag-prefix' option");
                     }
 
                     // key=value
@@ -343,8 +343,8 @@ namespace GitVersion
                         var optionKey = keyAndValue[0].ToLowerInvariant();
                         arguments.OverrideConfig.TagPrefix = optionKey switch
                         {
-                            "tag-prefix" => keyAndValue[1],
-                            _ => throw new WarningException($"Could not parse /overrideconfig option: {optionKey}. Currently supported only 'tag-prefix' option")
+                            "IGitTag-prefix" => keyAndValue[1],
+                            _ => throw new WarningException($"Could not parse /overrideconfig option: {optionKey}. Currently supported only 'IGitTag-prefix' option")
                         };
                     }
 

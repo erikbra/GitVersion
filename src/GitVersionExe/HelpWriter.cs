@@ -36,15 +36,15 @@ GitVersion [path]
 
     /targetpath     Same as 'path', but not positional
     /output         Determines the output to the console. Can be either 'json' or 'buildserver', will default to 'json'.
-    /showvariable   Used in conjuntion with /output json, will output just a particular variable. 
+    /showvariable   Used in conjuntion with /output json, will output just a particular variable.
                     eg /output json /showvariable SemVer - will output `1.2.3+beta.4`
     /l              Path to logfile.
     /config         Path to config file (defaults to GitVersion.yml)
     /showconfig     Outputs the effective GitVersion config (defaults + custom from GitVersion.yml) in yaml format
-    /overrideconfig Overrides GitVersion config values inline (semicolon-separated key value pairs e.g. /overrideconfig tag-prefix=Foo)
-                    Currently supported config overrides: tag-prefix
+    /overrideconfig Overrides GitVersion config values inline (semicolon-separated key value pairs e.g. /overrideconfig IGitTag-prefix=Foo)
+                    Currently supported config overrides: IGitTag-prefix
     /nocache        Bypasses the cache, result will not be written to the cache.
-    /nonormalize    Disables normalize step on a build server. 
+    /nonormalize    Disables normalize step on a build server.
 
  # AssemblyInfo updating
     /updateassemblyinfo
@@ -52,10 +52,10 @@ GitVersion [path]
     /updateassemblyinfofilename
                     Specify name of AssemblyInfo file. Can also /updateAssemblyInfo GlobalAssemblyInfo.cs as a shorthand
     /ensureassemblyinfo
-                    If the assembly info file specified with /updateassemblyinfo or /updateassemblyinfofilename is not found, 
+                    If the assembly info file specified with /updateassemblyinfo or /updateassemblyinfofilename is not found,
                     it be created with these attributes: AssemblyFileVersion, AssemblyVersion and AssemblyInformationalVersion
-                    ---        
-                    Supports writing version info for: C#, F#, VB    
+                    ---
+                    Supports writing version info for: C#, F#, VB
 
     # Create or update Wix version file
     /updatewixversionfile
@@ -67,11 +67,11 @@ GitVersion [path]
     /b              Name of the branch to use on the remote repository, must be used in combination with /url.
     /u              Username in case authentication is required.
     /p              Password in case authentication is required.
-    /c              The commit id to check. If not specified, the latest available commit on the specified branch will be used.
+    /c              The IGitCommit id to check. If not specified, the latest available IGitCommit on the specified branch will be used.
     /dynamicRepoLocation
                     By default dynamic repositories will be cloned to %tmp%. Use this switch to override
     /nofetch        Disables 'git fetch' during version calculation. Might cause GitVersion to not calculate your version as expected.
-    
+
 # Execute build args
     /exec           Executes target executable making GitVersion variables available as environmental variables
     /execargs       Arguments for the executable specified by /exec

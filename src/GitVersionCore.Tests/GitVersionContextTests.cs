@@ -7,6 +7,7 @@ using Shouldly;
 using System.Collections.Generic;
 using GitVersion.Configuration;
 using GitVersion.Logging;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersion.VersioningModes;
 using GitVersionCore.Tests.Helpers;
 using GitVersionCore.Tests.Mocks;
@@ -34,7 +35,7 @@ namespace GitVersionCore.Tests
             };
             config.Reset();
 
-            var mockBranch = new MockBranch("master") { new MockCommit { CommitterEx = Generate.SignatureNow() } };
+            var mockBranch = new MockBranch("master") { new MockCommit { CommitterEx = new LibGitSignature(Generate.SignatureNow()) } };
             var mockRepository = new MockRepository
             {
                 Branches = new MockBranchCollection
@@ -68,7 +69,7 @@ namespace GitVersionCore.Tests
             fixture.BranchTo(dummyBranchName);
             fixture.MakeACommit();
 
-            var context = new GitVersionContext(fixture.Repository, log, fixture.Repository.Branches[dummyBranchName], config);
+            var context = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(fixture.Repository.Branches[dummyBranchName]), config);
             context.Configuration.Increment.ShouldBe(alternateExpected ?? increment);
         }
 
@@ -84,23 +85,23 @@ namespace GitVersionCore.Tests
                         "develop", new BranchConfig
                         {
                             VersioningMode = VersioningMode.ContinuousDeployment,
-                            Tag = "alpha"
+                            IGitTag = "alpha"
                         }
                     }
                 }
             };
             config.Reset();
-            var develop = new MockBranch("develop") { new MockCommit { CommitterEx = Generate.SignatureNow() } };
+            var develop = new MockBranch("develop") { new MockCommit { CommitterEx = new LibGitSignature(Generate.SignatureNow()) } };
             var mockRepository = new MockRepository
             {
                 Branches = new MockBranchCollection
                 {
-                    new MockBranch("master") { new MockCommit { CommitterEx = Generate.SignatureNow() } },
+                    new MockBranch("master") { new MockCommit { CommitterEx = new LibGitSignature(Generate.SignatureNow()) } },
                     develop
                 }
             };
             var context = new GitVersionContext(mockRepository, log, develop, config);
-            context.Configuration.Tag.ShouldBe("alpha");
+            context.Configuration.IGitTag.ShouldBe("alpha");
         }
 
         [Test]
@@ -116,8 +117,8 @@ namespace GitVersionCore.Tests
                 }
             }.ApplyDefaults();
 
-            var releaseLatestBranch = new MockBranch("release/latest") { new MockCommit { CommitterEx = Generate.SignatureNow() } };
-            var releaseVersionBranch = new MockBranch("release/1.0.0") { new MockCommit { CommitterEx = Generate.SignatureNow() } };
+            var releaseLatestBranch = new MockBranch("release/latest") { new MockCommit { CommitterEx = new LibGitSignature(Generate.SignatureNow()) } };
+            var releaseVersionBranch = new MockBranch("release/1.0.0") { new MockCommit { CommitterEx = new LibGitSignature(Generate.SignatureNow()) } };
 
             var mockRepository = new MockRepository
             {
@@ -155,7 +156,7 @@ namespace GitVersionCore.Tests
             Commands.Checkout(repo.Repository, featureBranch);
             repo.Repository.MakeACommit();
 
-            var context = new GitVersionContext(repo.Repository, log, repo.Repository.Head, config);
+            var context = new GitVersionContext(new LibGitRepository(repo.Repository), log, new LibGitBranch(repo.Repository.Head), config);
             context.Configuration.Increment.ShouldBe(IncrementStrategy.Major);
         }
     }

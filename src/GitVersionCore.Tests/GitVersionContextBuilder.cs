@@ -2,6 +2,8 @@ using GitTools.Testing;
 using GitVersion;
 using GitVersion.Configuration;
 using GitVersion.Logging;
+using GitVersion.Models;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersionCore.Tests.Mocks;
 using LibGit2Sharp;
 
@@ -9,10 +11,10 @@ namespace GitVersionCore.Tests
 {
     public class GitVersionContextBuilder
     {
-        private IRepository repository;
+        private IGitRepository repository;
         private Config config;
 
-        public GitVersionContextBuilder WithRepository(IRepository repository)
+        public GitVersionContextBuilder WithRepository(IGitRepository repository)
         {
             this.repository = repository;
             return this;
@@ -68,9 +70,9 @@ namespace GitVersionCore.Tests
             return new GitVersionContext(repo, new NullLog(), repo.Head, configuration);
         }
 
-        private IRepository CreateRepository()
+        private IGitRepository CreateRepository()
         {
-            var mockBranch = new MockBranch("master") { new MockCommit { CommitterEx = Generate.SignatureNow() } };
+            var mockBranch = new MockBranch("master") { new MockCommit { CommitterEx = new LibGitSignature(Generate.SignatureNow()) } };
             var mockRepository = new MockRepository
             {
                 Branches = new MockBranchCollection

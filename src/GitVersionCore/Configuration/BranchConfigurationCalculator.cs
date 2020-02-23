@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using GitVersion.Logging;
 using LibGit2Sharp;
 using GitVersion.Extensions;
+using GitVersion.Models;
 
 namespace GitVersion.Configuration
 {
@@ -21,9 +22,9 @@ namespace GitVersion.Configuration
         }
 
         /// <summary>
-        /// Gets the <see cref="BranchConfig"/> for the current commit.
+        /// Gets the <see cref="BranchConfig"/> for the current IGitCommit.
         /// </summary>
-        public BranchConfig GetBranchConfiguration(Branch targetBranch, IList<Branch> excludedInheritBranches = null)
+        public BranchConfig GetBranchConfiguration(IGitBranch targetBranch, IList<IGitBranch> excludedInheritBranches = null)
         {
             var matchingBranches = context.FullConfiguration.GetConfigForBranch(targetBranch.NameWithoutRemote());
 
@@ -49,14 +50,14 @@ namespace GitVersion.Configuration
         }
 
         // TODO I think we need to take a fresh approach to this.. it's getting really complex with heaps of edge cases
-        private BranchConfig InheritBranchConfiguration(Branch targetBranch, BranchConfig branchConfiguration, IList<Branch> excludedInheritBranches)
+        private BranchConfig InheritBranchConfiguration(IGitBranch targetBranch, BranchConfig branchConfiguration, IList<IGitBranch> excludedInheritBranches)
         {
             var repository = context.Repository;
             var config = context.FullConfiguration;
             using (log.IndentLog("Attempting to inherit branch configuration from parent branch"))
             {
                 var excludedBranches = new[] { targetBranch };
-                // Check if we are a merge commit. If so likely we are a pull request
+                // Check if we are a merge IGitCommit. If so likely we are a pull request
                 var parentCount = context.CurrentCommit.Parents.Count();
                 if (parentCount == 2)
                 {
@@ -81,7 +82,7 @@ namespace GitVersion.Configuration
 
                 var branchPoint = context.RepositoryMetadataProvider
                     .FindCommitBranchWasBranchedFrom(targetBranch, excludedInheritBranches.ToArray());
-                List<Branch> possibleParents;
+                List<IGitBranch> possibleParents;
                 if (branchPoint == BranchCommit.Empty)
                 {
                     possibleParents = context.RepositoryMetadataProvider.GetBranchesContainingCommit(targetBranch.Tip, branchesToEvaluate, false)
@@ -184,7 +185,7 @@ namespace GitVersion.Configuration
             }
         }
 
-        private Branch[] CalculateWhenMultipleParents(IRepository repository, Commit currentCommit, ref Branch currentBranch, Branch[] excludedBranches)
+        private IGitBranch[] CalculateWhenMultipleParents(IGitRepository repository, IGitCommit currentCommit, ref IGitBranch currentBranch, IGitBranch[] excludedBranches)
         {
             var parents = currentCommit.Parents.ToArray();
             var branches = repository.Branches.Where(b => !b.IsRemote && b.Tip == parents[1]).ToList();
@@ -215,12 +216,12 @@ namespace GitVersion.Configuration
                 }
             }
 
-            log.Info("HEAD is merge commit, this is likely a pull request using " + currentBranch.FriendlyName + " as base");
+            log.Info("HEAD is merge IGitCommit, this is likely a pull request using " + currentBranch.FriendlyName + " as base");
 
             return excludedBranches;
         }
 
-        private static BranchConfig ChooseMasterOrDevelopIncrementStrategyIfTheChosenBranchIsOneOfThem(Branch chosenBranch, BranchConfig branchConfiguration, Config config)
+        private static BranchConfig ChooseMasterOrDevelopIncrementStrategyIfTheChosenBranchIsOneOfThem(IGitBranch chosenBranch, BranchConfig branchConfiguration, Config config)
         {
             BranchConfig masterOrDevelopConfig = null;
             var developBranchRegex = config.Branches[Config.DevelopBranchKey].Regex;

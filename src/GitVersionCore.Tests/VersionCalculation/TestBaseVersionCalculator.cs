@@ -1,4 +1,5 @@
 using GitVersion;
+using GitVersion.Models;
 using GitVersion.VersionCalculation;
 using LibGit2Sharp;
 
@@ -8,9 +9,9 @@ namespace GitVersionCore.Tests.VersionCalculation
     {
         private readonly SemanticVersion semanticVersion;
         private readonly bool shouldIncrement;
-        private readonly Commit source;
+        private readonly IGitCommit source;
 
-        public TestBaseVersionCalculator(bool shouldIncrement, SemanticVersion semanticVersion, Commit source)
+        public TestBaseVersionCalculator(bool shouldIncrement, SemanticVersion semanticVersion, IGitCommit source)
         {
             this.semanticVersion = semanticVersion;
             this.source = source;

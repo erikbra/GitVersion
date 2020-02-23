@@ -1,9 +1,10 @@
+using GitVersion.Models;
 using LibGit2Sharp;
 
 namespace GitVersion.VersionCalculation
 {
     public interface IMetaDataCalculator
     {
-        SemanticVersionBuildMetaData Create(Commit baseVersionSource, GitVersionContext context);
+        SemanticVersionBuildMetaData Create(IGitCommit baseVersionSource, GitVersionContext context);
     }
 }

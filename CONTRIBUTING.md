@@ -61,7 +61,7 @@ If you are using non-default configuration just modify the `Config` class before
 
 ### 5. Writing the scenario
 
-We have a number of extension method off `IRepository` to make it easy to write tests at the flow level and not worry about creating/commiting files.
+We have a number of extension method off `IGitRepository` to make it easy to write tests at the flow level and not worry about creating/commiting files.
 
 An example test looks like this:
 
@@ -89,23 +89,23 @@ We use Cake for our build and deployment process. The way the build / release pr
 1) Login to AppVeyor
 1) Deploy the latest master build
 ![docs/input/docs/img/release-1-deploy.png](docs/input/docs/img/release-1-deploy.png)
-1) Choose GitVersion release, when you press deploy it will create a *non-released* GitHub release, this *will not* create a Git tag. This step is so we can validate the release and release notes before pushing the button.
+1) Choose GitVersion release, when you press deploy it will create a *non-released* GitHub release, this *will not* create a Git IGitTag. This step is so we can validate the release and release notes before pushing the button.
 ![docs/input/docs/img/release-2-deploy.png](docs/input/docs/img/release-2-deploy.png)
 1) All the artifacts should upload nicely
 ![docs/input/docs/img/release-3-deploy.png](docs/input/docs/img/release-3-deploy.png)
 1) Head over to GitHub releases, you should have a draft release, download a copy of the release notes
 ![docs/input/docs/img/release-4-deploy.png](docs/input/docs/img/release-4-deploy.png)
 1) Edit the release and do the following:
-    1. Remove the build metadata from the tag and title (the + and everything after it)
+    1. Remove the build metadata from the IGitTag and title (the + and everything after it)
     2. Paste the downloaded release notes in, you can clean them up if you want otherwise there may be closed issues which were questions etc.
     3. Tick the pre-release box if it's pre-release
     4. Press Publish
-1) Publishing tags (a git tag) the release commit, this will trigger another appveyor build which only builds tags, this build uses deploy.cake. It downloads the artifacts from that GitHub release, then performs the release
+1) Publishing tags (a git IGitTag) the release IGitCommit, this will trigger another appveyor build which only builds tags, this build uses deploy.cake. It downloads the artifacts from that GitHub release, then performs the release
 
 ## Docker
 
 It is a manual release step after the release now, first download the appropriate ZIP and put into a `releaseArtifacts` folder in the GitVersion repository, then run:
 
 ```bash
-docker build . --build-arg GitVersionZip=GitVersion_<VERSION>.zip --tag gittools/gitversion
+docker build . --build-arg GitVersionZip=GitVersion_<VERSION>.zip --IGitTag gittools/gitversion
 ```

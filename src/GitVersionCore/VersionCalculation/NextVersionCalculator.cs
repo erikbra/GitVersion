@@ -89,8 +89,8 @@ namespace GitVersion.VersionCalculation
             }
 
             var hasPreReleaseTag = semver.PreReleaseTag.HasTag();
-            var branchConfigHasPreReleaseTagConfigured = !string.IsNullOrEmpty(context.Configuration.Tag);
-            var preReleaseTagDoesNotMatchConfiguration = hasPreReleaseTag && branchConfigHasPreReleaseTagConfigured && semver.PreReleaseTag.Name != context.Configuration.Tag;
+            var branchConfigHasPreReleaseTagConfigured = !string.IsNullOrEmpty(context.Configuration.IGitTag);
+            var preReleaseTagDoesNotMatchConfiguration = hasPreReleaseTag && branchConfigHasPreReleaseTagConfigured && semver.PreReleaseTag.Name != context.Configuration.IGitTag;
             if (!semver.PreReleaseTag.HasTag() && branchConfigHasPreReleaseTagConfigured || preReleaseTagDoesNotMatchConfiguration)
             {
                 UpdatePreReleaseTag(context, semver, baseVersion.BranchNameOverride);
@@ -105,7 +105,7 @@ namespace GitVersion.VersionCalculation
                 }
                 else
                 {
-                    // set the commit count on the tagged ver
+                    // set the IGitCommit count on the tagged ver
                     taggedSemanticVersion.BuildMetaData.CommitsSinceVersionSource = semver.BuildMetaData.CommitsSinceVersionSource;
                 }
             }
@@ -152,14 +152,14 @@ namespace GitVersion.VersionCalculation
 
         public string GetBranchSpecificTag(EffectiveConfiguration configuration, string branchFriendlyName, string branchNameOverride)
         {
-            var tagToUse = configuration.Tag;
+            var tagToUse = configuration.IGitTag;
             if (tagToUse == "useBranchName")
             {
                 tagToUse = "{BranchName}";
             }
             if (tagToUse.Contains("{BranchName}"))
             {
-                log.Info("Using branch name to calculate version tag");
+                log.Info("Using branch name to calculate version IGitTag");
 
                 var branchName = branchNameOverride ?? branchFriendlyName;
                 if (!string.IsNullOrWhiteSpace(configuration.BranchPrefixToTrim))

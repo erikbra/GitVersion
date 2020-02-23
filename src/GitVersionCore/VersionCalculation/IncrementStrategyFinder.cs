@@ -6,6 +6,7 @@ using GitVersion.VersionCalculation;
 using LibGit2Sharp;
 using GitVersion.Configuration;
 using GitVersion.Extensions;
+using GitVersion.Models;
 
 namespace GitVersion
 {
@@ -18,7 +19,7 @@ namespace GitVersion
 
     public static class IncrementStrategyFinder
     {
-        private static List<Commit> intermediateCommitCache;
+        private static List<IGitCommit> intermediateCommitCache;
         public const string DefaultMajorPattern = @"\+semver:\s?(breaking|major)";
         public const string DefaultMinorPattern = @"\+semver:\s?(feature|minor)";
         public const string DefaultPatchPattern = @"\+semver:\s?(fix|patch)";
@@ -34,19 +35,19 @@ namespace GitVersion
             var commitMessageIncrement = FindCommitMessageIncrement(context, baseVersion);
             var defaultIncrement = context.Configuration.Increment.ToVersionField();
 
-            // use the default branch config increment strategy if there are no commit message overrides
+            // use the default branch config increment strategy if there are no IGitCommit message overrides
             if (commitMessageIncrement == null)
             {
                 return baseVersion.ShouldIncrement ? defaultIncrement : (VersionField?)null;
             }
 
-            // cap the commit message severity to minor for alpha versions
+            // cap the IGitCommit message severity to minor for alpha versions
             if (baseVersion.SemanticVersion < new SemanticVersion(1) && commitMessageIncrement > VersionField.Minor)
             {
                 commitMessageIncrement = VersionField.Minor;
             }
 
-            // don't increment for less than the branch config increment, if the absence of commit messages would have
+            // don't increment for less than the branch config increment, if the absence of IGitCommit messages would have
             // still resulted in an increment of configuration.Increment
             if (baseVersion.ShouldIncrement && commitMessageIncrement < defaultIncrement)
             {
@@ -73,7 +74,7 @@ namespace GitVersion
             return GetIncrementForCommits(context, commits);
         }
 
-        public static VersionField? GetIncrementForCommits(GitVersionContext context, IEnumerable<Commit> commits)
+        public static VersionField? GetIncrementForCommits(GitVersionContext context, IEnumerable<IGitCommit> commits)
         {
             var majorRegex = TryGetRegexOrDefault(context.Configuration.MajorVersionBumpMessage, DefaultMajorPatternRegex);
             var minorRegex = TryGetRegexOrDefault(context.Configuration.MinorVersionBumpMessage, DefaultMinorPatternRegex);
@@ -104,7 +105,7 @@ namespace GitVersion
             return CompiledRegexCache.GetOrAdd(messageRegex, pattern => new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase));
         }
 
-        private static IEnumerable<Commit> GetIntermediateCommits(IRepository repo, Commit baseCommit, Commit headCommit)
+        private static IEnumerable<IGitCommit> GetIntermediateCommits(IGitRepository repo, IGitCommit baseCommit, IGitCommit headCommit)
         {
             if (baseCommit == null) yield break;
 
@@ -112,10 +113,10 @@ namespace GitVersion
 
             if (commitCache == null || commitCache.LastOrDefault() != headCommit)
             {
-                var filter = new CommitFilter
+                var filter = new GitCommitFilter
                 {
                     IncludeReachableFrom = headCommit,
-                    SortBy = CommitSortStrategies.Topological | CommitSortStrategies.Reverse
+                    SortBy = GitCommitSortStrategies.Topological | GitCommitSortStrategies.Reverse
                 };
 
                 commitCache = repo.Commits.QueryBy(filter).ToList();
@@ -123,12 +124,12 @@ namespace GitVersion
             }
 
             var found = false;
-            foreach (var commit in commitCache)
+            foreach (var IGitCommit in commitCache)
             {
                 if (found)
-                    yield return commit;
+                    yield return IGitCommit;
 
-                if (commit.Sha == baseCommit.Sha)
+                if (IGitCommit.Sha == baseCommit.Sha)
                     found = true;
             }
         }

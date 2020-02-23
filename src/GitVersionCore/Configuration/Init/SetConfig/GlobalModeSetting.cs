@@ -51,7 +51,7 @@ namespace GitVersion.Configuration.Init.SetConfig
             return $@"What do you want the default increment mode to be (can be overriden per branch):
 {(!isPartOfWizard ? "0) Go Back" : string.Empty)}
 1) Follow SemVer and only increment when a release has been tagged (continuous delivery mode)
-2) Increment based on branch config every commit (continuous deployment mode)
+2) Increment based on branch config every IGitCommit (continuous deployment mode)
 3) Each merged branch against master will increment the version (mainline mode)
 {(isPartOfWizard ? "4) Skip" : string.Empty)}";
         }

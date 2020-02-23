@@ -29,7 +29,7 @@ namespace GitVersion.OutputVariables
             if (isContinuousDeploymentMode)
             {
                 semanticVersion = new SemanticVersion(semanticVersion);
-                // Continuous Deployment always requires a pre-release tag unless the commit is tagged
+                // Continuous Deployment always requires a pre-release IGitTag unless the IGitCommit is tagged
                 if (!semanticVersion.PreReleaseTag.HasTag())
                 {
                     semanticVersion.PreReleaseTag.Name = nextVersionCalculator.GetBranchSpecificTag(config, semanticVersion.BuildMetaData.Branch, null);
@@ -40,7 +40,7 @@ namespace GitVersion.OutputVariables
                 }
             }
 
-            // Evaluate tag number pattern and append to prerelease tag, preserving build metadata
+            // Evaluate IGitTag number pattern and append to prerelease IGitTag, preserving build metadata
             var appendTagNumberPattern = !string.IsNullOrEmpty(config.TagNumberPattern) && semanticVersion.PreReleaseTag.HasTag();
             if (appendTagNumberPattern)
             {
@@ -105,7 +105,7 @@ namespace GitVersion.OutputVariables
 
         private static void PromoteNumberOfCommitsToTagNumber(SemanticVersion semanticVersion)
         {
-            // For continuous deployment the commits since tag gets promoted to the pre-release number
+            // For continuous deployment the commits since IGitTag gets promoted to the pre-release number
             if (!semanticVersion.BuildMetaData.CommitsSinceTag.HasValue)
             {
                 semanticVersion.PreReleaseTag.Number = null;
@@ -113,7 +113,7 @@ namespace GitVersion.OutputVariables
             }
             else
             {
-                // Number of commits since last tag should be added to PreRelease number if given. Remember to deduct automatic version bump.
+                // Number of commits since last IGitTag should be added to PreRelease number if given. Remember to deduct automatic version bump.
                 if (semanticVersion.PreReleaseTag.Number.HasValue)
                 {
                     semanticVersion.PreReleaseTag.Number += semanticVersion.BuildMetaData.CommitsSinceTag - 1;

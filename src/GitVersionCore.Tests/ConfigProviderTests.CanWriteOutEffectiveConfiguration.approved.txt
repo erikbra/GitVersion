@@ -1,8 +1,8 @@
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatch
 mode: ContinuousDelivery
-tag-prefix: '[vV]'
-continuous-delivery-fallback-tag: ci
+IGitTag-prefix: '[vV]'
+continuous-delivery-fallback-IGitTag: ci
 major-version-bump-message: '\+semver:\s?(breaking|major)'
 minor-version-bump-message: '\+semver:\s?(feature|minor)'
 patch-version-bump-message: '\+semver:\s?(fix|patch)'
@@ -10,11 +10,11 @@ no-bump-message: '\+semver:\s?(none|skip)'
 legacy-semver-padding: 4
 build-metadata-padding: 4
 commits-since-version-source-padding: 4
-commit-message-incrementing: Enabled
+IGitCommit-message-incrementing: Enabled
 branches:
   develop:
     mode: ContinuousDeployment
-    tag: alpha
+    IGitTag: alpha
     increment: Minor
     prevent-increment-of-merged-branch-version: false
     track-merge-target: true
@@ -26,7 +26,7 @@ branches:
     pre-release-weight: 0
   master:
     mode: ContinuousDelivery
-    tag: ''
+    IGitTag: ''
     increment: Patch
     prevent-increment-of-merged-branch-version: true
     track-merge-target: false
@@ -40,7 +40,7 @@ branches:
     pre-release-weight: 55000
   release:
     mode: ContinuousDelivery
-    tag: beta
+    IGitTag: beta
     increment: None
     prevent-increment-of-merged-branch-version: true
     track-merge-target: false
@@ -56,7 +56,7 @@ branches:
     pre-release-weight: 30000
   feature:
     mode: ContinuousDelivery
-    tag: useBranchName
+    IGitTag: useBranchName
     increment: Inherit
     prevent-increment-of-merged-branch-version: false
     track-merge-target: false
@@ -74,10 +74,10 @@ branches:
     pre-release-weight: 30000
   pull-request:
     mode: ContinuousDelivery
-    tag: PullRequest
+    IGitTag: PullRequest
     increment: Inherit
     prevent-increment-of-merged-branch-version: false
-    tag-number-pattern: '[/-](?<number>\d+)'
+    IGitTag-number-pattern: '[/-](?<number>\d+)'
     track-merge-target: false
     regex: ^(pull|pull\-requests|pr)[/-]
     source-branches:
@@ -93,7 +93,7 @@ branches:
     pre-release-weight: 30000
   hotfix:
     mode: ContinuousDelivery
-    tag: beta
+    IGitTag: beta
     increment: Patch
     prevent-increment-of-merged-branch-version: false
     track-merge-target: false
@@ -108,7 +108,7 @@ branches:
     pre-release-weight: 30000
   support:
     mode: ContinuousDelivery
-    tag: ''
+    IGitTag: ''
     increment: Patch
     prevent-increment-of-merged-branch-version: true
     track-merge-target: false
@@ -121,5 +121,5 @@ branches:
     pre-release-weight: 55000
 ignore:
   sha: []
-commit-date-format: yyyy-MM-dd
+IGitCommit-date-format: yyyy-MM-dd
 merge-message-formats: {}

@@ -93,7 +93,7 @@ namespace GitVersionCore.Tests.VersionCalculation
                         "custom", new BranchConfig
                         {
                             Regex = "custom/",
-                            Tag = "useBranchName",
+                            IGitTag = "useBranchName",
                             SourceBranches = new List<string>()
                         }
                     }
@@ -122,7 +122,7 @@ namespace GitVersionCore.Tests.VersionCalculation
                         "custom", new BranchConfig
                         {
                             Regex = "custom/",
-                            Tag = "alpha.{BranchName}",
+                            IGitTag = "alpha.{BranchName}",
                             SourceBranches = new List<string>()
                         }
                     }
@@ -150,7 +150,7 @@ namespace GitVersionCore.Tests.VersionCalculation
                     {
                         "master", new BranchConfig()
                         {
-                            Tag = "beta"
+                            IGitTag = "beta"
                         }
                     },
                 }

@@ -64,7 +64,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MergeNoFF("feature/foo4");
             fixture.AssertFullSemver(config, "2.0.0");
 
-            // We should evaluate any commits not included in merge commit calculations for direct commit/push or squash to merge commits
+            // We should evaluate any commits not included in merge IGitCommit calculations for direct IGitCommit/push or squash to merge commits
             fixture.MakeACommit("6 +semver: major");
             fixture.AssertFullSemver(config, "3.0.0");
             fixture.MakeACommit("7 +semver: minor");
@@ -80,10 +80,10 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MergeNoFF("feature/foo5");
             fixture.AssertFullSemver(config, "3.2.0");
 
-            // One more direct commit for good measure
+            // One more direct IGitCommit for good measure
             fixture.MakeACommit("10 +semver: minor");
             fixture.AssertFullSemver(config, "3.3.0");
-            // And we can commit without bumping semver
+            // And we can IGitCommit without bumping semver
             fixture.MakeACommit("11 +semver: none");
             fixture.AssertFullSemver(config, "3.3.0");
             Console.WriteLine(fixture.SequenceDiagram.GetDiagram());
@@ -212,7 +212,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MergeNoFF("develop");
             fixture.AssertFullSemver(config, "1.1.0");
 
-            // a commit on develop before the merge still has the same version number
+            // a IGitCommit on develop before the merge still has the same version number
             fixture.Checkout("develop");
             fixture.AssertFullSemver(config, "1.1.0-alpha.1");
 
@@ -220,12 +220,12 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MakeACommit();
             fixture.AssertFullSemver(config, "1.2.0-alpha.1");
 
-            // adding a commit to master increments patch
+            // adding a IGitCommit to master increments patch
             fixture.Checkout("master");
             fixture.MakeACommit();
             fixture.AssertFullSemver(config, "1.1.1");
 
-            // adding a commit to master doesn't change develop's version
+            // adding a IGitCommit to master doesn't change develop's version
             fixture.Checkout("develop");
             fixture.AssertFullSemver(config, "1.2.0-alpha.1");
         }
@@ -249,12 +249,12 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MergeNoFF("develop");
             fixture.AssertFullSemver(config, "1.1.0");
 
-            // a commit on develop before the merge still has the same version number
+            // a IGitCommit on develop before the merge still has the same version number
             fixture.Checkout("develop");
             fixture.AssertFullSemver(config, "1.1.0-alpha.1");
 
             // a branch from develop before the merge tracks the pre-merge version from master
-            // (note: the commit on develop looks like a commit to this branch, thus the .1)
+            // (note: the IGitCommit on develop looks like a IGitCommit to this branch, thus the .1)
             fixture.BranchTo("feature/foo");
             fixture.AssertFullSemver(config, "1.0.2-foo.1");
 
@@ -262,12 +262,12 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MakeACommit();
             fixture.AssertFullSemver(config, "1.1.1-foo.1");
 
-            // adding a commit to master increments patch
+            // adding a IGitCommit to master increments patch
             fixture.Checkout("master");
             fixture.MakeACommit();
             fixture.AssertFullSemver(config, "1.1.1");
 
-            // adding a commit to master doesn't change the feature's version
+            // adding a IGitCommit to master doesn't change the feature's version
             fixture.Checkout("feature/foo");
             fixture.AssertFullSemver(config, "1.1.1-foo.1");
 
@@ -465,9 +465,9 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Checkout("master");
             fixture.MergeNoFF("feature/foo3");
             fixture.SequenceDiagram.NoteOver("Merge message contains '+semver: patch'", "master");
-            var commit = fixture.Repository.Head.Tip;
+            var IGitCommit = fixture.Repository.Head.Tip;
             // Put semver increment in merge message
-            fixture.Repository.Commit(commit.Message + " +semver: patch", commit.Author, commit.Committer, new CommitOptions
+            fixture.Repository.IGitCommit(IGitCommit.Message + " +semver: patch", IGitCommit.Author, IGitCommit.Committer, new CommitOptions
             {
                 AmendPreviousCommit = true
             });
@@ -480,7 +480,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MergeNoFF("feature/foo4");
             fixture.AssertFullSemver(config, "2.0.0");
 
-            // We should evaluate any commits not included in merge commit calculations for direct commit/push or squash to merge commits
+            // We should evaluate any commits not included in merge IGitCommit calculations for direct IGitCommit/push or squash to merge commits
             fixture.MakeACommit("6 +semver: major");
             fixture.AssertFullSemver(minorIncrementConfig, "3.0.0");
             fixture.MakeACommit("7");
@@ -496,10 +496,10 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MergeNoFF("feature/foo5");
             fixture.AssertFullSemver(minorIncrementConfig, "3.1.2");
 
-            // One more direct commit for good measure
+            // One more direct IGitCommit for good measure
             fixture.MakeACommit("10 +semver: patch");
             fixture.AssertFullSemver(minorIncrementConfig, "3.1.3");
-            // And we can commit without bumping semver
+            // And we can IGitCommit without bumping semver
             fixture.MakeACommit("11 +semver: none");
             fixture.AssertFullSemver(minorIncrementConfig, "3.1.3");
             Console.WriteLine(fixture.SequenceDiagram.GetDiagram());
@@ -522,7 +522,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                         participant
                     });
 
-            diagramBuilder.AppendLineFormat("{0} -> {0}: Commit '{1}'", GetParticipant(fixture.Repository.Head.FriendlyName),
+            diagramBuilder.AppendLineFormat("{0} -> {0}: IGitCommit '{1}'", GetParticipant(fixture.Repository.Head.FriendlyName),
                 commitMsg);
         }
     }

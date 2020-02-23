@@ -1,3 +1,4 @@
+using GitVersion.Models;
 using LibGit2Sharp;
 
 namespace GitVersion.VersionCalculation
@@ -6,7 +7,7 @@ namespace GitVersion.VersionCalculation
     {
         private readonly GitVersionContext context;
 
-        public BaseVersion(GitVersionContext context, string source, bool shouldIncrement, SemanticVersion semanticVersion, Commit baseVersionSource, string branchNameOverride)
+        public BaseVersion(GitVersionContext context, string source, bool shouldIncrement, SemanticVersion semanticVersion, IGitCommit baseVersionSource, string branchNameOverride)
         {
             Source = source;
             ShouldIncrement = shouldIncrement;
@@ -22,13 +23,13 @@ namespace GitVersion.VersionCalculation
 
         public SemanticVersion SemanticVersion { get; private set; }
 
-        public Commit BaseVersionSource { get; private set; }
+        public IGitCommit BaseVersionSource { get; private set; }
 
         public string BranchNameOverride { get; private set; }
 
         public override string ToString()
         {
-            return $"{Source}: {SemanticVersion.ToString("f")} with commit count source {(BaseVersionSource == null ? "External Source" : BaseVersionSource.Sha)} (Incremented: {(ShouldIncrement ? BaseVersionCalculator.MaybeIncrement(context, this).ToString("t") : "None")})";
+            return $"{Source}: {SemanticVersion.ToString("f")} with IGitCommit count source {(BaseVersionSource == null ? "External Source" : BaseVersionSource.Sha)} (Incremented: {(ShouldIncrement ? BaseVersionCalculator.MaybeIncrement(context, this).ToString("t") : "None")})";
         }
     }
 }

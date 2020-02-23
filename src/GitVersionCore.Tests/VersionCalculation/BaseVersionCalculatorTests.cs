@@ -10,6 +10,7 @@ using LibGit2Sharp;
 using NUnit.Framework;
 using Shouldly;
 using GitVersion.Extensions;
+using GitVersion.Models;
 using GitVersionCore.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -163,7 +164,7 @@ namespace GitVersionCore.Tests.VersionCalculation
 
         private sealed class V1Strategy : IVersionStrategy
         {
-            private readonly Commit when;
+            private readonly IGitCommit when;
 
             public V1Strategy(DateTimeOffset? when)
             {
@@ -178,7 +179,7 @@ namespace GitVersionCore.Tests.VersionCalculation
 
         private sealed class V2Strategy : IVersionStrategy
         {
-            private readonly Commit when;
+            private readonly IGitCommit when;
 
             public V2Strategy(DateTimeOffset? when)
             {

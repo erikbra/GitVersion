@@ -1,4 +1,5 @@
 using GitVersion;
+using GitVersion.Models;
 using GitVersion.VersionCalculation;
 using LibGit2Sharp;
 
@@ -13,7 +14,7 @@ namespace GitVersionCore.Tests.VersionCalculation
             this.metaData = metaData;
         }
 
-        public SemanticVersionBuildMetaData Create(Commit baseVersionSource, GitVersionContext context)
+        public SemanticVersionBuildMetaData Create(IGitCommit baseVersionSource, GitVersionContext context)
         {
             return metaData;
         }

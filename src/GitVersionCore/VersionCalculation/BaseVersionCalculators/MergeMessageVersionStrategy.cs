@@ -6,12 +6,13 @@ using LibGit2Sharp;
 using GitVersion.Configuration;
 using GitVersion.Extensions;
 using GitVersion.Logging;
+using GitVersion.Models;
 
 namespace GitVersion.VersionCalculation
 {
     /// <summary>
     /// Version is extracted from older commits's merge messages.
-    /// BaseVersionSource is the commit where the message was found.
+    /// BaseVersionSource is the IGitCommit where the message was found.
     /// Increments if PreventIncrementForMergedBranchVersion (from the branch config) is false.
     /// </summary>
     public class MergeMessageVersionStrategy : IVersionStrategy
@@ -34,7 +35,7 @@ namespace GitVersion.VersionCalculation
                         mergeMessage.Version != null &&
                         context.FullConfiguration.IsReleaseBranch(TrimRemote(mergeMessage.MergedBranch)))
                     {
-                        log.Info($"Found commit [{context.CurrentCommit.Sha}] matching merge message format: {mergeMessage.FormatName}");
+                        log.Info($"Found IGitCommit [{context.CurrentCommit.Sha}] matching merge message format: {mergeMessage.FormatName}");
                         var shouldIncrement = !context.Configuration.PreventIncrementForMergedBranchVersion;
                         return new[]
                         {
@@ -48,13 +49,13 @@ namespace GitVersion.VersionCalculation
 
         public static readonly string MergeMessageStrategyPrefix = "Merge message";
 
-        private static bool TryParse(Commit mergeCommit, GitVersionContext context, out MergeMessage mergeMessage)
+        private static bool TryParse(IGitCommit mergeCommit, GitVersionContext context, out MergeMessage mergeMessage)
         {
             mergeMessage = Inner(mergeCommit, context);
             return mergeMessage != null;
         }
 
-        private static MergeMessage Inner(Commit mergeCommit, GitVersionContext context)
+        private static MergeMessage Inner(IGitCommit mergeCommit, GitVersionContext context)
         {
             if (mergeCommit.Parents.Count() < 2)
             {

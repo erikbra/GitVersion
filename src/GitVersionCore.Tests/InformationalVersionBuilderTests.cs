@@ -22,14 +22,14 @@ namespace GitVersionCore.Tests
         [TestCase("release/1.2", "a682956dc1a2752aa24597a0f5cd939f93614509", "a682956d", 1, 2, 0, "beta2", null, null, "1.2.0-beta.2+Branch.release-1.2.Sha.a682956dc1a2752aa24597a0f5cd939f93614509")]
         [TestCase("release/1.2", "a682956dc1a2752aa24597a0f5cd939f93614509", "a682956d", 1, 2, 0, "alpha2", null, null, "1.2.0-alpha.2+Branch.release-1.2.Sha.a682956dc1a2752aa24597a0f5cd939f93614509")]
         public void ValidateInformationalVersionBuilder(string branchName, string sha, string shortSha, int major, int minor, int patch,
-            string tag, string versionSourceSha, int? commitsSinceTag, string versionString)
+            string IGitTag, string versionSourceSha, int? commitsSinceTag, string versionString)
         {
             var semanticVersion = new SemanticVersion
             {
                 Major = major,
                 Minor = minor,
                 Patch = patch,
-                PreReleaseTag = tag,
+                PreReleaseTag = IGitTag,
                 BuildMetaData = new SemanticVersionBuildMetaData(versionSourceSha, commitsSinceTag, branchName, sha, shortSha, DateTimeOffset.MinValue),
             };
             var informationalVersion = semanticVersion.ToString("i");

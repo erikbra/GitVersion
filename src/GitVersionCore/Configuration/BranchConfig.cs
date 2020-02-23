@@ -16,7 +16,7 @@ namespace GitVersion.Configuration
         public BranchConfig(BranchConfig branchConfiguration)
         {
             VersioningMode = branchConfiguration.VersioningMode;
-            Tag = branchConfiguration.Tag;
+            IGitTag = branchConfiguration.IGitTag;
             Increment = branchConfiguration.Increment;
             PreventIncrementOfMergedBranchVersion = branchConfiguration.PreventIncrementOfMergedBranchVersion;
             TagNumberPattern = branchConfiguration.TagNumberPattern;
@@ -36,10 +36,10 @@ namespace GitVersion.Configuration
         public VersioningMode? VersioningMode { get; set; }
 
         /// <summary>
-        /// Special value 'useBranchName' will extract the tag from the branch name
+        /// Special value 'useBranchName' will extract the IGitTag from the branch name
         /// </summary>
-        [YamlMember(Alias = "tag")]
-        public string Tag { get; set; }
+        [YamlMember(Alias = "IGitTag")]
+        public string IGitTag { get; set; }
 
         [YamlMember(Alias = "increment")]
         public IncrementStrategy? Increment { get; set; }
@@ -47,13 +47,13 @@ namespace GitVersion.Configuration
         [YamlMember(Alias = "prevent-increment-of-merged-branch-version")]
         public bool? PreventIncrementOfMergedBranchVersion { get; set; }
 
-        [YamlMember(Alias = "tag-number-pattern")]
+        [YamlMember(Alias = "IGitTag-number-pattern")]
         public string TagNumberPattern { get; set; }
 
         [YamlMember(Alias = "track-merge-target")]
         public bool? TrackMergeTarget { get; set; }
 
-        [YamlMember(Alias = "commit-message-incrementing")]
+        [YamlMember(Alias = "IGitCommit-message-incrementing")]
         public CommitMessageIncrementMode? CommitMessageIncrementing { get; set; }
 
         [YamlMember(Alias = "regex")]

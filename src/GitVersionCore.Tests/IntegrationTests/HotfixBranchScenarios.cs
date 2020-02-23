@@ -5,6 +5,7 @@ using NUnit.Framework;
 using GitVersion.Configuration;
 using GitVersion.VersioningModes;
 using GitVersion.Extensions;
+using GitVersion.Models;
 using GitVersionCore.Tests.Helpers;
 
 namespace GitVersionCore.Tests.IntegrationTests
@@ -63,7 +64,7 @@ namespace GitVersionCore.Tests.IntegrationTests
 
             // create hotfix branch
             Commands.Checkout(fixture.Repository, fixture.Repository.CreateBranch("hotfixes/1.1.1"));
-            fixture.AssertFullSemver("1.1.0"); // We are still on a tagged commit
+            fixture.AssertFullSemver("1.1.0"); // We are still on a tagged IGitCommit
             fixture.Repository.MakeACommit();
 
             fixture.AssertFullSemver("1.1.1-beta.1+1");
@@ -82,14 +83,14 @@ namespace GitVersionCore.Tests.IntegrationTests
             });
             // Merge hotfix branch to support
             Commands.Checkout(fixture.Repository, "master");
-            var tag = fixture.Repository.Tags.Single(t => t.FriendlyName == "1.1.0");
-            var supportBranch = fixture.Repository.CreateBranch("support-1.1", (Commit)tag.Target);
+            var IGitTag = fixture.Repository.Tags.Single(t => t.FriendlyName == "1.1.0");
+            var supportBranch = fixture.Repository.CreateBranch("support-1.1", (IGitCommit)IGitTag.Target);
             Commands.Checkout(fixture.Repository, supportBranch);
             fixture.AssertFullSemver("1.1.0");
 
             // create hotfix branch
             Commands.Checkout(fixture.Repository, fixture.Repository.CreateBranch("hotfix-1.1.1"));
-            fixture.AssertFullSemver("1.1.0"); // We are still on a tagged commit
+            fixture.AssertFullSemver("1.1.0"); // We are still on a tagged IGitCommit
             fixture.Repository.MakeACommit();
 
             fixture.AssertFullSemver("1.1.1-beta.1+1");
@@ -168,9 +169,9 @@ namespace GitVersionCore.Tests.IntegrationTests
             // feature branch from hotfix
             fixture.Repository.CreateBranch(featureBranch);
             Commands.Checkout(fixture.Repository, featureBranch);
-            fixture.Repository.MakeACommit("blabla"); // commit 1
+            fixture.Repository.MakeACommit("blabla"); // IGitCommit 1
             Commands.Checkout(fixture.Repository, hotfix451);
-            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // commit 2
+            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // IGitCommit 2
             fixture.Repository.Branches.Remove(featureBranch);
             fixture.AssertFullSemver(config, "4.5.1-beta.2");
         }
@@ -221,9 +222,9 @@ namespace GitVersionCore.Tests.IntegrationTests
             // feature branch from hotfix
             fixture.Repository.CreateBranch(featureBranch);
             Commands.Checkout(fixture.Repository, featureBranch);
-            fixture.Repository.MakeACommit("blabla"); // commit 1
+            fixture.Repository.MakeACommit("blabla"); // IGitCommit 1
             Commands.Checkout(fixture.Repository, hotfix451);
-            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // commit 2
+            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // IGitCommit 2
             fixture.AssertFullSemver(config, "4.5.1-beta.2");
         }
 

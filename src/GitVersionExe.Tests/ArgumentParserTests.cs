@@ -268,20 +268,20 @@ namespace GitVersionExe.Tests
         [Test]
         public void OverrideconfigWithSingleTagprefixOption()
         {
-            var arguments = argumentParser.ParseArguments("/overrideconfig tag-prefix=sample");
+            var arguments = argumentParser.ParseArguments("/overrideconfig IGitTag-prefix=sample");
             arguments.HasOverrideConfig.ShouldBe(true);
             arguments.OverrideConfig.TagPrefix.ShouldBe("sample");
         }
 
-        [TestCase("tag-prefix=sample;tag-prefix=other")]
-        [TestCase("tag-prefix=sample;param2=other")]
+        [TestCase("IGitTag-prefix=sample;IGitTag-prefix=other")]
+        [TestCase("IGitTag-prefix=sample;param2=other")]
         public void OverrideconfigWithSeveralOptions(string options)
         {
             var exception = Assert.Throws<WarningException>(() => argumentParser.ParseArguments($"/overrideconfig {options}"));
             exception.Message.ShouldContain("Can't specify multiple /overrideconfig options");
         }
 
-        [TestCase("tag-prefix=sample=asdf")]
+        [TestCase("IGitTag-prefix=sample=asdf")]
         public void OverrideconfigWithInvalidOption(string options)
         {
             var exception = Assert.Throws<WarningException>(() => argumentParser.ParseArguments($"/overrideconfig {options}"));

@@ -246,7 +246,7 @@ namespace GitVersionCore.Tests
             semVer.BuildMetaData.ShortSha = "commitShortSha";
             semVer.BuildMetaData.CommitDate = DateTimeOffset.Parse("2014-03-06 23:59:59Z");
 
-            var config = new TestEffectiveConfiguration(versioningMode: VersioningMode.ContinuousDeployment, tag: "useBranchName");
+            var config = new TestEffectiveConfiguration(versioningMode: VersioningMode.ContinuousDeployment, IGitTag: "useBranchName");
             var vars = variableProvider.GetVariablesFor(semVer, config, false);
 
             vars.FullSemVer.ShouldBe("1.2.3-feature.5");

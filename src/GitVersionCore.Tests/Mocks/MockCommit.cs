@@ -1,39 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GitVersion.Models;
+using GitVersion.Models.LibGitSharpWrappers;
 using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.Mocks
 {
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + "}")]
-    public class MockCommit : Commit
+    public class MockCommit : IGitCommit
     {
         private static int commitCount = 1;
         private static DateTimeOffset when = DateTimeOffset.Now;
 
-        public MockCommit(ObjectId id = null)
+        public MockCommit(LibGitObjectId id = null)
         {
-            idEx = id ?? new ObjectId(Guid.NewGuid().ToString().Replace("-", "") + "00000000");
-            MessageEx = "Commit " + commitCount++;
-            ParentsEx = new List<Commit> { null };
-            CommitterEx = new Signature("Joe", "Joe@bloggs.net", when);
+            idEx = id ?? new LibGitObjectId(Guid.NewGuid().ToString().Replace("-", "") + "00000000");
+            MessageEx = "IGitCommit " + commitCount++;
+            ParentsEx = new List<IGitCommit> { null };
+            CommitterEx = new LibGitSignature("Joe", "Joe@bloggs.net", when);
             // Make sure each commit is a different time
             when = when.AddSeconds(1);
         }
 
         public string MessageEx;
-        public override string Message => MessageEx;
+        public string Message => MessageEx;
 
-        public Signature CommitterEx;
-        public override Signature Committer => CommitterEx;
+        public IGitSignature CommitterEx;
+        public IGitSignature Committer => CommitterEx;
 
-        private readonly ObjectId idEx;
-        public override ObjectId Id => idEx;
+        private readonly IGitObjectId idEx;
+        public IGitObjectId Id => idEx;
 
-        public override string Sha => idEx.Sha;
+        public string Sha => idEx.Sha;
 
-        public IList<Commit> ParentsEx;
-        public override IEnumerable<Commit> Parents => ParentsEx;
+        public IList<IGitCommit> ParentsEx;
+        public IEnumerable<IGitCommit> Parents => ParentsEx;
 
         // ReSharper disable once UnusedMember.Local
         private string DebuggerDisplay => MessageEx;

@@ -20,7 +20,7 @@ namespace GitVersionCore.Tests
 
         static GitToolsTestingExtensions() => sp = ConfigureService();
 
-        public static VersionVariables GetVersion(this RepositoryFixtureBase fixture, Config configuration = null, IRepository repository = null, string commitId = null, bool onlyTrackedBranches = true, string targetBranch = null)
+        public static VersionVariables GetVersion(this RepositoryFixtureBase fixture, Config configuration = null, IGitRepository repository = null, string commitId = null, bool onlyTrackedBranches = true, string targetBranch = null)
         {
             if (configuration == null)
             {
@@ -48,12 +48,12 @@ namespace GitVersionCore.Tests
             }
         }
 
-        public static void AssertFullSemver(this RepositoryFixtureBase fixture, string fullSemver, IRepository repository = null, string commitId = null, bool onlyTrackedBranches = true, string targetBranch = null)
+        public static void AssertFullSemver(this RepositoryFixtureBase fixture, string fullSemver, IGitRepository repository = null, string commitId = null, bool onlyTrackedBranches = true, string targetBranch = null)
         {
             fixture.AssertFullSemver(new Config(), fullSemver, repository, commitId, onlyTrackedBranches, targetBranch);
         }
 
-        public static void AssertFullSemver(this RepositoryFixtureBase fixture, Config configuration, string fullSemver, IRepository repository = null, string commitId = null, bool onlyTrackedBranches = true, string targetBranch = null)
+        public static void AssertFullSemver(this RepositoryFixtureBase fixture, Config configuration, string fullSemver, IGitRepository repository = null, string commitId = null, bool onlyTrackedBranches = true, string targetBranch = null)
         {
             configuration.Reset();
             Console.WriteLine("---------");
@@ -65,7 +65,7 @@ namespace GitVersionCore.Tests
             }
             catch (Exception)
             {
-                (repository ?? fixture.Repository).DumpGraph();
+                (repository ?? new LibGitRepository(fixture.Repository)).DumpGraph();
                 throw;
             }
             if (commitId == null)

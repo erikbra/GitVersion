@@ -88,9 +88,9 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Repository.MakeACommit();
             fixture.Repository.MakeACommit();
 
-            var commit = fixture.Repository.Head.Tip;
+            var IGitCommit = fixture.Repository.Head.Tip;
             fixture.Repository.MakeACommit();
-            Commands.Checkout(fixture.Repository, commit);
+            Commands.Checkout(fixture.Repository, IGitCommit);
 
             // When
             fixture.AssertFullSemver("0.1.0+2", onlyTrackedBranches: false);
@@ -199,12 +199,12 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Repository.MakeATaggedCommit(taggedVersion);
             fixture.Repository.MakeCommits(5);
 
-            fixture.AssertFullSemver(config, "0.1.0+5");    //Fallback version + 5 commits since tag
+            fixture.AssertFullSemver(config, "0.1.0+5");    //Fallback version + 5 commits since IGitTag
 
             taggedVersion = "bad/1.0.3";
             fixture.Repository.MakeATaggedCommit(taggedVersion);
 
-            fixture.AssertFullSemver(config, "0.1.0+6");   //Fallback version + 6 commits since tag
+            fixture.AssertFullSemver(config, "0.1.0+6");   //Fallback version + 6 commits since IGitTag
         }
     }
 }

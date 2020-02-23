@@ -4,13 +4,14 @@ using System.Linq;
 using LibGit2Sharp;
 using GitVersion.Extensions;
 using GitVersion.Logging;
+using GitVersion.Models;
 
 namespace GitVersion.VersionCalculation
 {
     /// <summary>
-    /// Version is extracted from all tags on the branch which are valid, and not newer than the current commit.
-    /// BaseVersionSource is the tag's commit.
-    /// Increments if the tag is not the current commit.
+    /// Version is extracted from all tags on the branch which are valid, and not newer than the current IGitCommit.
+    /// BaseVersionSource is the IGitTag's IGitCommit.
+    /// Increments if the IGitTag is not the current IGitCommit.
     /// </summary>
     public class TaggedCommitVersionStrategy : IVersionStrategy
     {
@@ -26,7 +27,7 @@ namespace GitVersion.VersionCalculation
             return GetTaggedVersions(context, context.CurrentBranch, context.CurrentCommit.When());
         }
 
-        public IEnumerable<BaseVersion> GetTaggedVersions(GitVersionContext context, Branch currentBranch, DateTimeOffset? olderThan)
+        public IEnumerable<BaseVersion> GetTaggedVersions(GitVersionContext context, IGitBranch currentBranch, DateTimeOffset? olderThan)
         {
             var gitRepoMetadataProvider = new GitRepoMetadataProvider(context.Repository, log, context.FullConfiguration);
             var allTags = gitRepoMetadataProvider.GetValidVersionTags(context.Repository, context.Configuration.GitTagPrefix, olderThan);
@@ -36,9 +37,9 @@ namespace GitVersion.VersionCalculation
                 .SelectMany(commit => { return allTags.Where(t => IsValidTag(t.Item1, commit)); })
                 .Select(t =>
                 {
-                    var commit = t.Item1.PeeledTarget() as Commit;
-                    if (commit != null)
-                        return new VersionTaggedCommit(commit, t.Item2, t.Item1.FriendlyName);
+                    var IGitCommit = t.Item1.PeeledTarget() as IGitCommit;
+                    if (IGitCommit != null)
+                        return new VersionTaggedCommit(IGitCommit, t.Item2, t.Item1.FriendlyName);
 
                     return null;
                 })
@@ -50,37 +51,37 @@ namespace GitVersion.VersionCalculation
 
         private BaseVersion CreateBaseVersion(GitVersionContext context, VersionTaggedCommit version)
         {
-            var shouldUpdateVersion = version.Commit.Sha != context.CurrentCommit.Sha;
-            var baseVersion = new BaseVersion(context, FormatSource(version), shouldUpdateVersion, version.SemVer, version.Commit, null);
+            var shouldUpdateVersion = version.IGitCommit.Sha != context.CurrentCommit.Sha;
+            var baseVersion = new BaseVersion(context, FormatSource(version), shouldUpdateVersion, version.SemVer, version.IGitCommit, null);
             return baseVersion;
         }
 
         protected virtual string FormatSource(VersionTaggedCommit version)
         {
-            return $"Git tag '{version.Tag}'";
+            return $"Git IGitTag '{version.IGitTag}'";
         }
 
-        protected virtual bool IsValidTag(Tag tag, Commit commit)
+        protected virtual bool IsValidTag(IGitTag IGitTag, IGitCommit IGitCommit)
         {
-            return tag.PeeledTarget() == commit;
+            return IGitTag.PeeledTarget() == IGitCommit;
         }
 
         protected class VersionTaggedCommit
         {
-            public string Tag;
-            public Commit Commit;
+            public string IGitTag;
+            public IGitCommit IGitCommit;
             public SemanticVersion SemVer;
 
-            public VersionTaggedCommit(Commit commit, SemanticVersion semVer, string tag)
+            public VersionTaggedCommit(IGitCommit IGitCommit, SemanticVersion semVer, string IGitTag)
             {
-                Tag = tag;
-                Commit = commit;
+                IGitTag = IGitTag;
+                IGitCommit = IGitCommit;
                 SemVer = semVer;
             }
 
             public override string ToString()
             {
-                return $"{Tag} | {Commit} | {SemVer}";
+                return $"{IGitTag} | {IGitCommit} | {SemVer}";
             }
         }
     }

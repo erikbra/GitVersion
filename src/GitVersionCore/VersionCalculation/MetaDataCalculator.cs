@@ -3,6 +3,7 @@ using System.Linq;
 using LibGit2Sharp;
 using GitVersion.Logging;
 using GitVersion.Extensions;
+using GitVersion.Models;
 
 namespace GitVersion.VersionCalculation
 {
@@ -15,13 +16,13 @@ namespace GitVersion.VersionCalculation
             this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public SemanticVersionBuildMetaData Create(Commit baseVersionSource, GitVersionContext context)
+        public SemanticVersionBuildMetaData Create(IGitCommit baseVersionSource, GitVersionContext context)
         {
-            var qf = new CommitFilter
+            var qf = new GitCommitFilter
             {
                 IncludeReachableFrom = context.CurrentCommit,
                 ExcludeReachableFrom = baseVersionSource,
-                SortBy = CommitSortStrategies.Topological | CommitSortStrategies.Time
+                SortBy = GitCommitSortStrategies.Topological | GitCommitSortStrategies.Time
             };
 
             var commitLog = context.Repository.Commits.QueryBy(qf);

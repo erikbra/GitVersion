@@ -22,7 +22,7 @@ namespace GitVersion.VersionFilters
             if (version.BaseVersionSource != null &&
                 version.BaseVersionSource.When() < minimum)
             {
-                reason = "Source was ignored due to commit date being outside of configured range";
+                reason = "Source was ignored due to IGitCommit date being outside of configured range";
                 return true;
             }
 

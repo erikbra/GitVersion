@@ -1,6 +1,6 @@
 v4.0.0
  - When using GitFlow, a few things have changed. Hopefully the new settings just work for you
-    - develop has pre-release tag of `alpha` now, not unstable
+    - develop has pre-release IGitTag of `alpha` now, not unstable
     - develop will bump as soon as a release branch is created
     - Look at the [GitFlow examples](http://gitversion.readthedocs.io/en/latest/git-branching-strategies/gitflow-examples/) for details of how it works now
  - Regex's are no longer used as keys in branch config

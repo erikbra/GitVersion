@@ -180,8 +180,8 @@ namespace GitVersionCore.Tests.IntegrationTests
             {
                 Branches =
                 {
-                    { "release", new BranchConfig { Tag = "build" } },
-                    { "feature", new BranchConfig { Tag = "useBranchName" } }
+                    { "release", new BranchConfig { IGitTag = "build" } },
+                    { "feature", new BranchConfig { IGitTag = "useBranchName" } }
                 }
             };
 
@@ -199,13 +199,13 @@ namespace GitVersionCore.Tests.IntegrationTests
         [TestCase("alpha", "JIRA-123", "alpha")]
         [TestCase("useBranchName", "JIRA-123", "JIRA-123")]
         [TestCase("alpha.{BranchName}", "JIRA-123", "alpha.JIRA-123")]
-        public void ShouldUseConfiguredTag(string tag, string featureName, string preReleaseTagName)
+        public void ShouldUseConfiguredTag(string IGitTag, string featureName, string preReleaseTagName)
         {
             var config = new Config
             {
                 Branches =
                 {
-                    { "feature", new BranchConfig { Tag = tag } }
+                    { "feature", new BranchConfig { IGitTag = IGitTag } }
                 }
             };
 
@@ -485,7 +485,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                     {
                         "master", new BranchConfig()
                         {
-                            Tag = "pre",
+                            IGitTag = "pre",
                             TracksReleaseBranches = true,
                         }
                     },
@@ -493,7 +493,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                         "release", new BranchConfig()
                         {
                             IsReleaseBranch = true,
-                            Tag = "rc",
+                            IGitTag = "rc",
                         }
                     }
                 }
@@ -502,7 +502,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             using var fixture = new EmptyRepositoryFixture();
             fixture.MakeACommit();
 
-            // create a release branch and tag a release
+            // create a release branch and IGitTag a release
             fixture.BranchTo("release/0.10.0");
             fixture.MakeACommit();
             fixture.MakeACommit();
@@ -541,7 +541,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                     {
                         "feature", new BranchConfig()
                         {
-                            Tag = "feat-{BranchName}"
+                            IGitTag = "feat-{BranchName}"
                         }
                     }
                 }

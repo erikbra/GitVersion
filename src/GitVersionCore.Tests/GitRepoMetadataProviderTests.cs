@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Shouldly;
 using GitVersion.Logging;
 using GitVersion.Extensions;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersionCore.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,7 +31,7 @@ namespace GitVersionCore.Tests
         {
             //*9dfb8b4 49 minutes ago(develop)
             //*54f21b2 53 minutes ago
-            //    |\  
+            //    |\
             //    | | *a219831 51 minutes ago(HEAD -> release-2.0.0)
             //    | |/
             //    | *4441531 54 minutes ago
@@ -54,22 +55,22 @@ namespace GitVersionCore.Tests
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Make some new commit on release
+            // Make some new IGitCommit on release
             fixture.Checkout("release-2.0.0");
             fixture.MakeACommit("release 3 - after first merge");
 
-            // Make new commit on develop
+            // Make new IGitCommit on develop
             fixture.Checkout("develop");
 
-            // Checkout to release (no new commits) 
+            // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
 
             var develop = fixture.Repository.FindBranch("develop");
             var release = fixture.Repository.FindBranch("release-2.0.0");
-            var releaseBranchMergeBase = new GitRepoMetadataProvider(fixture.Repository, log, configuration)
+            var releaseBranchMergeBase = new GitRepoMetadataProvider(new LibGitRepository(fixture.Repository), log, configuration)
                 .FindMergeBase(release, develop);
 
-            var developMergeBase = new GitRepoMetadataProvider(fixture.Repository, log, configuration)
+            var developMergeBase = new GitRepoMetadataProvider(new LibGitRepository(fixture.Repository), log, configuration)
                 .FindMergeBase(develop, release);
 
             fixture.Repository.DumpGraph(Console.WriteLine);
@@ -83,7 +84,7 @@ namespace GitVersionCore.Tests
         {
             //*9dfb8b4 49 minutes ago(develop)
             //*54f21b2 53 minutes ago
-            //    |\  
+            //    |\
             //    | | *a219831 51 minutes ago(HEAD -> release-2.0.0)
             //    | |/
             //    | *4441531 54 minutes ago
@@ -107,24 +108,24 @@ namespace GitVersionCore.Tests
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Make some new commit on release
+            // Make some new IGitCommit on release
             fixture.Checkout("release-2.0.0");
             fixture.MakeACommit("release 3 - after first merge");
 
-            // Make new commit on develop
+            // Make new IGitCommit on develop
             fixture.Checkout("develop");
-            // Checkout to release (no new commits) 
+            // Checkout to release (no new commits)
             fixture.MakeACommit("develop after merge");
 
-            // Checkout to release (no new commits) 
+            // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
 
             var develop = fixture.Repository.FindBranch("develop");
             var release = fixture.Repository.FindBranch("release-2.0.0");
-            var releaseBranchMergeBase = new GitRepoMetadataProvider(fixture.Repository, log, configuration)
+            var releaseBranchMergeBase = new GitRepoMetadataProvider(new LibGitRepository(fixture.Repository), log, configuration)
                 .FindMergeBase(release, develop);
 
-            var developMergeBase = new GitRepoMetadataProvider(fixture.Repository, log, configuration)
+            var developMergeBase = new GitRepoMetadataProvider(new LibGitRepository(fixture.Repository), log, configuration)
                 .FindMergeBase(develop, release);
 
             fixture.Repository.DumpGraph(Console.WriteLine);
@@ -137,13 +138,13 @@ namespace GitVersionCore.Tests
         public void FindsCorrectMergeBaseForMultipleForwardMerges()
         {
             //*403b294 44 minutes ago(develop)
-            //|\  
+            //|\
             //| *306b243 45 minutes ago(HEAD -> release-2.0.0)
             //| *4cf5969 47 minutes ago
             //| *4814083 51 minutes ago
             //* | cddd3cc 49 minutes ago
             //* | 2b2b52a 53 minutes ago
-            //|\ \  
+            //|\ \
             //| |/
             //| *8113776 54 minutes ago
             //| *3c0235e 56 minutes ago
@@ -166,21 +167,21 @@ namespace GitVersionCore.Tests
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Make some new commit on release
+            // Make some new IGitCommit on release
             fixture.Checkout("release-2.0.0");
             fixture.Repository.MakeACommit("release 3 - after first merge");
 
-            // Make new commit on develop
+            // Make new IGitCommit on develop
             fixture.Checkout("develop");
-            // Checkout to release (no new commits) 
+            // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
             fixture.Checkout("develop");
             fixture.Repository.MakeACommit("develop after merge");
 
-            // Checkout to release (no new commits) 
+            // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
 
-            // Make some new commit on release
+            // Make some new IGitCommit on release
             fixture.Repository.MakeACommit("release 4");
             fixture.Repository.MakeACommit("release 5");
             var expectedDevelopMergeBase = fixture.Repository.Head.Tip;
@@ -189,16 +190,16 @@ namespace GitVersionCore.Tests
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Checkout to release (no new commits) 
+            // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
 
             var develop = fixture.Repository.FindBranch("develop");
             var release = fixture.Repository.FindBranch("release-2.0.0");
 
-            var releaseBranchMergeBase = new GitRepoMetadataProvider(fixture.Repository, log, configuration)
+            var releaseBranchMergeBase = new GitRepoMetadataProvider(new LibGitRepository(fixture.Repository), log, configuration)
                 .FindMergeBase(release, develop);
 
-            var developMergeBase = new GitRepoMetadataProvider(fixture.Repository, log, configuration)
+            var developMergeBase = new GitRepoMetadataProvider(new LibGitRepository(fixture.Repository), log, configuration)
                 .FindMergeBase(develop, release);
 
             fixture.Repository.DumpGraph(Console.WriteLine);

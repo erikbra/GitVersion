@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using GitVersion.Models;
 using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.Mocks
 {
-    public class MockReferenceCollection : ReferenceCollection, ICollection<Commit>
+    public class MockReferenceCollection : IGitReferenceCollection, ICollection<IGitCommit>
     {
-
-        public override ReflogCollection Log(string canonicalName)
+        public ReflogCollection Log(string canonicalName)
         {
             return new MockReflogCollection
             {
@@ -15,9 +15,14 @@ namespace GitVersionCore.Tests.Mocks
             };
         }
 
-        public List<Commit> Commits = new List<Commit>();
+        public List<IGitCommit> Commits = new List<IGitCommit>();
 
-        public new IEnumerator<Commit> GetEnumerator()
+        IEnumerator<IGitReference> IEnumerable<IGitReference>.GetEnumerator()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerator<IGitCommit> GetEnumerator()
         {
             return Commits.GetEnumerator();
         }
@@ -27,7 +32,7 @@ namespace GitVersionCore.Tests.Mocks
             return GetEnumerator();
         }
 
-        public void Add(Commit item)
+        public void Add(IGitCommit item)
         {
             Commits.Add(item);
         }
@@ -37,17 +42,17 @@ namespace GitVersionCore.Tests.Mocks
             Commits.Clear();
         }
 
-        public bool Contains(Commit item)
+        public bool Contains(IGitCommit item)
         {
             return Commits.Contains(item);
         }
 
-        public void CopyTo(Commit[] array, int arrayIndex)
+        public void CopyTo(IGitCommit[] array, int arrayIndex)
         {
             Commits.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(Commit item)
+        public bool Remove(IGitCommit item)
         {
             return Commits.Remove(item);
         }
@@ -55,5 +60,37 @@ namespace GitVersionCore.Tests.Mocks
         public int Count => Commits.Count;
 
         public bool IsReadOnly => false;
+        public IGitDirectReference Add(string localCanonicalName, IGitObjectId objectId, bool b)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IGitDirectReference Add(string localCanonicalName, string repoTipId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IGitDirectReference Add(string name, IGitObjectId targetId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IGitReference Head { get; }
+        public IGitReferenceCollection FromGlob(string s)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IGitReference this[string name] => throw new System.NotImplementedException();
+
+        public void UpdateTarget(IGitReference repoRef, string repoTipId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void UpdateTarget(IGitReference repoRef, IGitObjectId repoTipId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

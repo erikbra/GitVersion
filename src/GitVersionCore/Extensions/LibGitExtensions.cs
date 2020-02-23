@@ -4,19 +4,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GitVersion.Helpers;
+using GitVersion.Models;
+using GitVersion.Models.LibGitSharpWrappers;
 using LibGit2Sharp;
 
 namespace GitVersion.Extensions
 {
     public static class LibGitExtensions
     {
-        public static TResult WithRepository<TResult>(this string dotGitDirectory, Func<IRepository, TResult> action)
+        public static TResult WithRepository<TResult>(this string dotGitDirectory, Func<IGitRepository, TResult> action)
         {
-            using var repo = new Repository(dotGitDirectory);
+            using var repo = new LibGitRepository(dotGitDirectory);
             return action(repo);
         }
 
-        public static DateTimeOffset When(this Commit commit)
+        public static DateTimeOffset When(this IGitCommit commit)
         {
             return commit.Committer.When;
         }
@@ -28,7 +30,7 @@ namespace GitVersion.Extensions
                 : branch.FriendlyName;
         }
 
-        public static string NameWithoutOrigin(this Branch branch)
+        public static string NameWithoutOrigin(this IGitBranch branch)
         {
             return branch.IsRemote && branch.FriendlyName.StartsWith("origin/")
                 ? branch.FriendlyName.Substring("origin/".Length)
@@ -38,7 +40,7 @@ namespace GitVersion.Extensions
         /// <summary>
         /// Checks if the two branch objects refer to the same branch (have the same friendly name).
         /// </summary>
-        public static bool IsSameBranch(this Branch branch, Branch otherBranch)
+        public static bool IsSameBranch(this IGitBranch branch, IGitBranch otherBranch)
         {
             // For each branch, fixup the friendly name if the branch is remote.
             var otherBranchFriendlyName = otherBranch.NameWithoutRemote();
@@ -50,7 +52,7 @@ namespace GitVersion.Extensions
         /// <summary>
         /// Exclude the given branches (by value equality according to friendly name).
         /// </summary>
-        public static IEnumerable<BranchCommit> ExcludingBranches(this IEnumerable<BranchCommit> branches, IEnumerable<Branch> branchesToExclude)
+        public static IEnumerable<BranchCommit> ExcludingBranches(this IEnumerable<BranchCommit> branches, IEnumerable<IGitBranch> branchesToExclude)
         {
             return branches.Where(b => branchesToExclude.All(bte => !IsSameBranch(b.Branch, bte)));
         }
@@ -58,23 +60,23 @@ namespace GitVersion.Extensions
         /// <summary>
         /// Exclude the given branches (by value equality according to friendly name).
         /// </summary>
-        public static IEnumerable<Branch> ExcludingBranches(this IEnumerable<Branch> branches, IEnumerable<Branch> branchesToExclude)
+        public static IEnumerable<IGitBranch> ExcludingBranches(this IEnumerable<IGitBranch> branches, IEnumerable<IGitBranch> branchesToExclude)
         {
             return branches.Where(b => branchesToExclude.All(bte => !IsSameBranch(b, bte)));
         }
 
-        public static GitObject PeeledTarget(this Tag tag)
+        public static IGitObject PeeledTarget(this IGitTag tag)
         {
             var target = tag.Target;
 
-            while (target is TagAnnotation annotation)
+            while (target is IGitTagAnnotation annotation)
             {
                 target = annotation.Target;
             }
             return target;
         }
 
-        public static IEnumerable<Commit> CommitsPriorToThan(this Branch branch, DateTimeOffset olderThan)
+        public static IEnumerable<IGitCommit> CommitsPriorToThan(this IGitBranch branch, DateTimeOffset olderThan)
         {
             return branch.Commits.SkipWhile(c => c.When() > olderThan);
         }
@@ -84,7 +86,7 @@ namespace GitVersion.Extensions
             return branch.CanonicalName.Equals("(no branch)", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static string GetRepositoryDirectory(this IRepository repository, bool omitGitPostFix = true)
+        public static string GetRepositoryDirectory(this IGitRepository repository, bool omitGitPostFix = true)
         {
             var gitDirectory = repository.Info.Path;
 
@@ -99,12 +101,12 @@ namespace GitVersion.Extensions
             return gitDirectory;
         }
 
-        public static Branch FindBranch(this IRepository repository, string branchName)
+        public static IGitBranch FindBranch(this IGitRepository repository, string branchName)
         {
             return repository.Branches.FirstOrDefault(x => x.NameWithoutRemote() == branchName);
         }
 
-        public static void DumpGraph(this IRepository repository, Action<string> writer = null, int? maxCommits = null)
+        public static void DumpGraph(this IGitRepository repository, Action<string> writer = null, int? maxCommits = null)
         {
             DumpGraph(repository.Info.Path, writer, maxCommits);
         }

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using LibGit2Sharp;
+using GitVersion.Models;
 
 namespace GitVersion.Configuration
 {
@@ -8,6 +8,6 @@ namespace GitVersion.Configuration
         /// <summary>
         /// Gets the <see cref="BranchConfig"/> for the current commit.
         /// </summary>
-        BranchConfig GetBranchConfiguration(Branch targetBranch, IList<Branch> excludedInheritBranches = null);
+        BranchConfig GetBranchConfiguration(IGitBranch targetBranch, IList<IGitBranch> excludedInheritBranches = null);
     }
 }

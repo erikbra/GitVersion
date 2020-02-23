@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using LibGit2Sharp;
+using GitVersion.Models;
 
 namespace GitVersionCore.Tests.Mocks
 {
-    public class MockTagCollection : TagCollection, ICollection<Tag>
+    public class MockTagCollection : IGitTagCollection, ICollection<IGitTag>
     {
-
-        public List<Tag> Tags = new List<Tag>();
-        public override IEnumerator<Tag> GetEnumerator()
+        public List<IGitTag> Tags = new List<IGitTag>();
+        public IEnumerator<IGitTag> GetEnumerator()
         {
             return Tags.GetEnumerator();
         }
 
-        IEnumerator<Tag> IEnumerable<Tag>.GetEnumerator()
+        IEnumerator<IGitTag> IEnumerable<IGitTag>.GetEnumerator()
         {
             return GetEnumerator();
         }
@@ -23,7 +22,7 @@ namespace GitVersionCore.Tests.Mocks
             return GetEnumerator();
         }
 
-        public void Add(Tag item)
+        public void Add(IGitTag item)
         {
             Tags.Add(item);
         }
@@ -33,22 +32,22 @@ namespace GitVersionCore.Tests.Mocks
             Tags.Clear();
         }
 
-        public bool Contains(Tag item)
+        public bool Contains(IGitTag item)
         {
             return Tags.Contains(item);
         }
 
-        public void CopyTo(Tag[] array, int arrayIndex)
+        public void CopyTo(IGitTag[] array, int arrayIndex)
         {
             Tags.CopyTo(array, arrayIndex);
         }
 
-        public override void Remove(Tag tag)
+        public void Remove(IGitTag tag)
         {
             Tags.Remove(tag);
         }
 
-        bool ICollection<Tag>.Remove(Tag item)
+        bool ICollection<IGitTag>.Remove(IGitTag item)
         {
             return Tags.Remove(item);
         }

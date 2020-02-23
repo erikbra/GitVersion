@@ -4,6 +4,7 @@ using System.Linq;
 using GitVersion.Configuration;
 using GitVersion.Logging;
 using GitVersion.Extensions;
+using GitVersion.Models;
 
 namespace GitVersion
 {
@@ -14,12 +15,12 @@ namespace GitVersion
     {
         private readonly ILog log;
 
-        public GitVersionContext(IRepository repository, ILog log, string targetBranch, Config configuration, bool onlyTrackedBranches = false, string commitId = null)
+        public GitVersionContext(IGitRepository repository, ILog log, string targetBranch, Config configuration, bool onlyTrackedBranches = false, string commitId = null)
              : this(repository, log, GetTargetBranch(repository, targetBranch), configuration, onlyTrackedBranches, commitId)
         {
         }
 
-        public GitVersionContext(IRepository repository, ILog log, Branch currentBranch, Config configuration, bool onlyTrackedBranches = false, string commitId = null)
+        public GitVersionContext(IGitRepository repository, ILog log, IGitBranch currentBranch, Config configuration, bool onlyTrackedBranches = false, string commitId = null)
         {
             this.log = log;
             Repository = repository;
@@ -32,22 +33,22 @@ namespace GitVersion
 
             if (!string.IsNullOrWhiteSpace(commitId))
             {
-                log.Info($"Searching for specific commit '{commitId}'");
+                log.Info($"Searching for specific IGitCommit '{commitId}'");
 
-                var commit = repository.Commits.FirstOrDefault(c => string.Equals(c.Sha, commitId, StringComparison.OrdinalIgnoreCase));
-                if (commit != null)
+                var IGitCommit = repository.Commits.FirstOrDefault(c => string.Equals(c.Sha, commitId, StringComparison.OrdinalIgnoreCase));
+                if (IGitCommit != null)
                 {
-                    CurrentCommit = commit;
+                    CurrentCommit = IGitCommit;
                 }
                 else
                 {
-                    log.Warning($"Commit '{commitId}' specified but not found");
+                    log.Warning($"IGitCommit '{commitId}' specified but not found");
                 }
             }
 
             if (CurrentCommit == null)
             {
-                log.Info("Using latest commit on specified branch");
+                log.Info("Using latest IGitCommit on specified branch");
                 CurrentCommit = currentBranch.Tip;
             }
 
@@ -80,9 +81,9 @@ namespace GitVersion
         public SemanticVersion CurrentCommitTaggedVersion { get; }
         public bool OnlyTrackedBranches { get; }
         public EffectiveConfiguration Configuration { get; private set; }
-        public IRepository Repository { get; }
-        public Branch CurrentBranch { get; }
-        public Commit CurrentCommit { get; }
+        public IGitRepository Repository { get; }
+        public IGitBranch CurrentBranch { get; }
+        public IGitCommit CurrentCommit { get; }
         public bool IsCurrentCommitTagged { get; }
         public GitRepoMetadataProvider RepositoryMetadataProvider { get; }
 
@@ -118,7 +119,7 @@ namespace GitVersion
                 throw new Exception("Configuration value for 'CommitsSinceVersionSourcePadding' has no value. (this should not happen, please report an issue)");
 
             var versioningMode = currentBranchConfig.VersioningMode.Value;
-            var tag = currentBranchConfig.Tag;
+            var IGitTag = currentBranchConfig.IGitTag;
             var tagNumberPattern = currentBranchConfig.TagNumberPattern;
             var incrementStrategy = currentBranchConfig.Increment.Value;
             var preventIncrementForMergedBranchVersion = currentBranchConfig.PreventIncrementOfMergedBranchVersion.Value;
@@ -142,7 +143,7 @@ namespace GitVersion
 
             Configuration = new EffectiveConfiguration(
                 assemblyVersioningScheme, assemblyFileVersioningScheme, assemblyInformationalFormat, assemblyVersioningFormat, assemblyFileVersioningFormat, versioningMode, gitTagPrefix,
-                tag, nextVersion, incrementStrategy,
+                IGitTag, nextVersion, incrementStrategy,
                 currentBranchConfig.Regex,
                 preventIncrementForMergedBranchVersion,
                 tagNumberPattern, FullConfiguration.ContinuousDeploymentFallbackTag,
@@ -159,7 +160,7 @@ namespace GitVersion
                 preReleaseWeight);
         }
 
-        private static Branch GetTargetBranch(IRepository repository, string targetBranch)
+        private static IGitBranch GetTargetBranch(IGitRepository repository, string targetBranch)
         {
             // By default, we assume HEAD is pointing to the desired branch
             var desiredBranch = repository.Head;

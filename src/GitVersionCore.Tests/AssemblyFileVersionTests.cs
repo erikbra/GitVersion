@@ -15,11 +15,11 @@ namespace GitVersionCore.Tests
         [TestCase(AssemblyFileVersioningScheme.MajorMinorPatch, 1, 2, 3, 4, "1.2.3.0")]
         [TestCase(AssemblyFileVersioningScheme.MajorMinorPatchTag, 1, 2, 3, 4, "1.2.3.4")]
         public void ValidateAssemblyFileVersionBuilder(AssemblyFileVersioningScheme assemblyFileVersioningScheme, int major, int minor, int patch,
-        int tag, string versionString)
+        int IGitTag, string versionString)
         {
             var semVer = new SemanticVersion(major, minor, patch)
             {
-                PreReleaseTag = new SemanticVersionPreReleaseTag("Test", tag)
+                PreReleaseTag = new SemanticVersionPreReleaseTag("Test", IGitTag)
             };
 
             var assemblyFileVersion = semVer.GetAssemblyFileVersion(assemblyFileVersioningScheme);

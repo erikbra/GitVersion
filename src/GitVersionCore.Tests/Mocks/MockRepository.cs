@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using GitVersion.Models;
 using LibGit2Sharp;
 
 using Index = LibGit2Sharp.Index;
 namespace GitVersionCore.Tests.Mocks
 {
-    public class MockRepository : IRepository
+    public class MockRepository : IGitRepository
     {
-        private IQueryableCommitLog commits;
+        private IQueryableGitCommitLog commits;
 
         public MockRepository()
         {
@@ -30,7 +31,7 @@ namespace GitVersionCore.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public Branch Checkout(Commit commit, CheckoutOptions options, Signature signature = null)
+        public Branch Checkout(IGitCommit IGitCommit, CheckoutOptions options, Signature signature = null)
         {
             throw new NotImplementedException();
         }
@@ -45,7 +46,7 @@ namespace GitVersionCore.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public CherryPickResult CherryPick(Commit commit, Signature committer, CherryPickOptions options = null)
+        public CherryPickResult CherryPick(IGitCommit IGitCommit, Signature committer, CherryPickOptions options = null)
         {
             throw new NotImplementedException();
         }
@@ -70,32 +71,32 @@ namespace GitVersionCore.Tests.Mocks
             return new MockCommit();
         }
 
-        public Commit Commit(string message, Signature author, Signature committer, CommitOptions options = null)
+        public IGitCommit IGitCommit(string message, Signature author, Signature committer, CommitOptions options = null)
         {
             throw new NotImplementedException();
         }
 
-        public void Reset(ResetMode resetMode, Commit commit)
+        public void Reset(ResetMode resetMode, IGitCommit IGitCommit)
         {
             throw new NotImplementedException();
         }
 
-        public void Reset(ResetMode resetMode, Commit commit, CheckoutOptions options)
+        public void Reset(ResetMode resetMode, IGitCommit IGitCommit, CheckoutOptions options)
         {
             throw new NotImplementedException();
         }
 
-        public Commit Commit(string message, Signature author, Signature committer, bool amendPreviousCommit = false)
+        public IGitCommit IGitCommit(string message, Signature author, Signature committer, bool amendPreviousCommit = false)
         {
             throw new NotImplementedException();
         }
 
-        public void Reset(ResetMode resetMode, Commit commit, Signature signature = null, string logMessage = null)
+        public void Reset(ResetMode resetMode, IGitCommit IGitCommit, Signature signature = null, string logMessage = null)
         {
             throw new NotImplementedException();
         }
 
-        public void Reset(Commit commit, IEnumerable<string> paths = null, ExplicitPathsOptions explicitPathsOptions = null)
+        public void Reset(IGitCommit IGitCommit, IEnumerable<string> paths = null, ExplicitPathsOptions explicitPathsOptions = null)
         {
             throw new NotImplementedException();
         }
@@ -105,12 +106,12 @@ namespace GitVersionCore.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public RevertResult Revert(Commit commit, Signature reverter, RevertOptions options = null)
+        public RevertResult Revert(IGitCommit IGitCommit, Signature reverter, RevertOptions options = null)
         {
             throw new NotImplementedException();
         }
 
-        public MergeResult Merge(Commit commit, Signature merger, MergeOptions options = null)
+        public MergeResult Merge(IGitCommit IGitCommit, Signature merger, MergeOptions options = null)
         {
             throw new NotImplementedException();
         }
@@ -180,7 +181,7 @@ namespace GitVersionCore.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public string Describe(Commit commit, DescribeOptions options)
+        public string Describe(IGitCommit IGitCommit, DescribeOptions options)
         {
             throw new NotImplementedException();
         }
@@ -195,22 +196,22 @@ namespace GitVersionCore.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public Branch Head { get; set; }
+        public IGitBranch Head { get; set; }
         public LibGit2Sharp.Configuration Config { get; set; }
         public Index Index { get; set; }
-        public ReferenceCollection Refs { get; set; }
+        public IGitReferenceCollection Refs { get; set; }
 
-        public IQueryableCommitLog Commits
+        public IQueryableGitCommitLog Commits
         {
             get => commits ?? new MockQueryableCommitLog(Head.Commits);
             set => commits = value;
         }
 
-        public BranchCollection Branches { get; set; }
-        public TagCollection Tags { get; set; }
-        public RepositoryInformation Info { get; set; }
+        public IGitBranchCollection Branches { get; set; }
+        public IEnumerable<IGitTag> Tags { get; set; }
+        public IGitRepositoryInformation Info { get; set; }
         public Diff Diff { get; set; }
-        public ObjectDatabase ObjectDatabase { get; set; }
+        public IGitObjectDatabase ObjectDatabase { get; set; }
         public NoteCollection Notes { get; set; }
         public SubmoduleCollection Submodules { get; set; }
         public WorktreeCollection Worktrees { get; set; }
@@ -218,7 +219,7 @@ namespace GitVersionCore.Tests.Mocks
 
         public Ignore Ignore => throw new NotImplementedException();
 
-        public Network Network { get; set; }
+        public IGitNetwork Network { get; set; }
 
         public StashCollection Stashes => throw new NotImplementedException();
     }

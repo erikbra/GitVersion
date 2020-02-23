@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GitVersion.Models;
+using GitVersion.Models.LibGitSharpWrappers;
 using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.Mocks
 {
-    public class MockBranch : Branch, ICollection<Commit>
+    public class MockBranch : IGitBranch, ICollection<IGitCommit>
     {
         public MockBranch(string friendlyName)
         {
             this.friendlyName = friendlyName;
             CanonicalName = friendlyName;
         }
+
         public MockBranch(string friendlyName, string canonicalName)
         {
             this.friendlyName = friendlyName;
@@ -25,12 +28,31 @@ namespace GitVersionCore.Tests.Mocks
 
         private readonly MockCommitLog commits = new MockCommitLog();
         private readonly string friendlyName;
-        public override string FriendlyName => friendlyName;
-        public override ICommitLog Commits => commits;
-        public override Commit Tip => commits.First();
-        public override bool IsTracking => true;
+        public string FriendlyName => friendlyName;
+        public bool IsRemote { get; }
 
-        public override string CanonicalName { get; }
+        IGitCommitLog IGitBranch.Commits => commits;
+
+        public string NameWithoutRemote()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool IsDetachedHead()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool IsSameBranch(IGitBranch argBranch)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IGitCommitLog Commits => commits;
+        public IGitCommit Tip => commits.First();
+        public bool IsTracking => true;
+
+        public string CanonicalName { get; }
 
         public override int GetHashCode()
         {
@@ -42,7 +64,7 @@ namespace GitVersionCore.Tests.Mocks
             return ReferenceEquals(this, obj);
         }
 
-        public IEnumerator<Commit> GetEnumerator()
+        public IEnumerator<IGitCommit> GetEnumerator()
         {
             return commits.GetEnumerator();
         }
@@ -52,7 +74,7 @@ namespace GitVersionCore.Tests.Mocks
             return GetEnumerator();
         }
 
-        public void Add(Commit item)
+        public void Add(IGitCommit item)
         {
             commits.Add(item);
         }
@@ -62,17 +84,17 @@ namespace GitVersionCore.Tests.Mocks
             commits.Clear();
         }
 
-        public bool Contains(Commit item)
+        public bool Contains(IGitCommit item)
         {
             return commits.Contains(item);
         }
 
-        public void CopyTo(Commit[] array, int arrayIndex)
+        public void CopyTo(IGitCommit[] array, int arrayIndex)
         {
             commits.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(Commit item)
+        public bool Remove(IGitCommit item)
         {
             return commits.Remove(item);
         }
@@ -80,5 +102,6 @@ namespace GitVersionCore.Tests.Mocks
         public int Count => commits.Count;
 
         public bool IsReadOnly => false;
+        public string Sha { get; }
     }
 }

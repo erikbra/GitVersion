@@ -1,24 +1,31 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using LibGit2Sharp;
+using GitVersion.Models;
 
 namespace GitVersionCore.Tests.Mocks
 {
-    public class MockBranchCollection : BranchCollection, ICollection<Branch>
+    public class MockBranchCollection : IGitBranchCollection, ICollection<IGitBranch>
     {
-        public List<Branch> Branches = new List<Branch>();
+        public List<IGitBranch> Branches = new List<IGitBranch>();
 
-        public override IEnumerator<Branch> GetEnumerator()
+        public IEnumerator<IGitBranch> GetEnumerator()
         {
             return Branches.GetEnumerator();
         }
 
-        public override Branch this[string friendlyName]
+        public IGitBranch this[string friendlyName]
         {
             get { return Branches.FirstOrDefault(x => x.FriendlyName == friendlyName); }
         }
 
-        public void Add(Branch item)
+        public IGitBranch Update(IGitBranch branch, params Action<IGitBranchUpdater>[] actions)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(IGitBranch item)
         {
             Branches.Add(item);
         }
@@ -28,26 +35,32 @@ namespace GitVersionCore.Tests.Mocks
             Branches.Clear();
         }
 
-        public bool Contains(Branch item)
+        public bool Contains(IGitBranch item)
         {
             return Branches.Contains(item);
         }
 
-        public void CopyTo(Branch[] array, int arrayIndex)
+        public void CopyTo(IGitBranch[] array, int arrayIndex)
         {
             Branches.CopyTo(array, arrayIndex);
         }
 
-        public override void Remove(Branch item)
+        bool ICollection<IGitBranch>.Remove(IGitBranch item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(IGitBranch item)
         {
             Branches.Remove(item);
         }
-        bool ICollection<Branch>.Remove(Branch item)
-        {
-            return Branches.Remove(item);
-        }
+
 
         public int Count => Branches.Count;
         public bool IsReadOnly => false;
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

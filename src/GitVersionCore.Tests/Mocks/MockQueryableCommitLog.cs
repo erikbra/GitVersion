@@ -1,20 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GitVersion.Models;
 using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.Mocks
 {
-    public class MockQueryableCommitLog : IQueryableCommitLog
+    public class MockQueryableCommitLog : IQueryableGitCommitLog
     {
-        private readonly ICommitLog commits;
+        private readonly IGitCommitLog commits;
 
-        public MockQueryableCommitLog(ICommitLog commits)
+        public MockQueryableCommitLog(IGitCommitLog commits)
         {
             this.commits = commits;
         }
 
-        public IEnumerator<Commit> GetEnumerator()
+        public IEnumerator<IGitCommit> GetEnumerator()
         {
             return commits.GetEnumerator();
         }
@@ -24,29 +25,29 @@ namespace GitVersionCore.Tests.Mocks
             return GetEnumerator();
         }
 
-        public CommitSortStrategies SortedBy => throw new NotImplementedException();
+        public GitCommitSortStrategies SortedBy => throw new NotImplementedException();
 
-        public ICommitLog QueryBy(CommitFilter filter)
+        public IGitCommitLog QueryBy(IGitCommitFilter filter)
         {
             return this;
         }
 
-        public IEnumerable<LogEntry> QueryBy(string path)
+        public IEnumerable<IGitLogEntry> QueryBy(string path)
         {
             throw new NotImplementedException();
         }
 
-        public Commit FindMergeBase(Commit first, Commit second)
+        public IGitCommit FindMergeBase(IGitCommit first, IGitCommit second)
         {
             return null;
         }
 
-        public Commit FindMergeBase(IEnumerable<Commit> commits, MergeBaseFindingStrategy strategy)
+        public IGitCommit FindMergeBase(IEnumerable<IGitCommit> commits, MergeBaseFindingStrategy strategy)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<LogEntry> QueryBy(string path, CommitFilter filter)
+        public IEnumerable<IGitLogEntry> QueryBy(string path, IGitCommitFilter filter)
         {
             throw new NotImplementedException();
         }

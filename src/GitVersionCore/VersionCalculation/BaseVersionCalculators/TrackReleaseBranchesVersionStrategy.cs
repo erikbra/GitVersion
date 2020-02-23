@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using LibGit2Sharp;
 using GitVersion.Extensions;
 using GitVersion.Logging;
+using GitVersion.Models;
 
 namespace GitVersion.VersionCalculation
 {
@@ -13,14 +14,14 @@ namespace GitVersion.VersionCalculation
     /// <para>
     /// Using <see cref="VersionInBranchNameVersionStrategy"/>:
     /// Version is that of any child branches marked with IsReleaseBranch (except if they have no commits of their own).
-    /// BaseVersionSource is the commit where the child branch was created.
+    /// BaseVersionSource is the IGitCommit where the child branch was created.
     /// Always increments.
     /// </para>
     /// <para>
     /// Using <see cref="TaggedCommitVersionStrategy"/>:
     /// Version is extracted from all tags on the <c>master</c> branch which are valid.
-    /// BaseVersionSource is the tag's commit (same as base strategy).
-    /// Increments if the tag is not the current commit (same as base strategy).
+    /// BaseVersionSource is the IGitTag's IGitCommit (same as base strategy).
+    /// Increments if the IGitTag is not the current IGitCommit (same as base strategy).
     /// </para>
     /// </summary>
     public class TrackReleaseBranchesVersionStrategy : IVersionStrategy
@@ -84,11 +85,11 @@ namespace GitVersion.VersionCalculation
             return new BaseVersion[0];
         }
 
-        private IEnumerable<BaseVersion> GetReleaseVersion(GitVersionContext context, Branch releaseBranch)
+        private IEnumerable<BaseVersion> GetReleaseVersion(GitVersionContext context, IGitBranch releaseBranch)
         {
             var tagPrefixRegex = context.Configuration.GitTagPrefix;
 
-            // Find the commit where the child branch was created.
+            // Find the IGitCommit where the child branch was created.
             var baseSource = context.RepositoryMetadataProvider.FindMergeBase(releaseBranch, context.CurrentBranch);
             if (baseSource == context.CurrentCommit)
             {

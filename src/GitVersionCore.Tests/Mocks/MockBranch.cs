@@ -9,6 +9,8 @@ namespace GitVersionCore.Tests.Mocks
 {
     public class MockBranch : IGitBranch, ICollection<IGitCommit>
     {
+        object IGitObject.Wrapped => this;
+
         public MockBranch(string friendlyName)
         {
             this.friendlyName = friendlyName;
@@ -33,20 +35,9 @@ namespace GitVersionCore.Tests.Mocks
 
         IGitCommitLog IGitBranch.Commits => commits;
 
-        public string NameWithoutRemote()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool IsDetachedHead()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool IsSameBranch(IGitBranch argBranch)
-        {
-            throw new System.NotImplementedException();
-        }
+        public string NameWithoutRemote() => this.FriendlyName;
+        public bool IsDetachedHead() => false;
+        public bool IsSameBranch(IGitBranch argBranch) => false;
 
         public IGitCommitLog Commits => commits;
         public IGitCommit Tip => commits.First();

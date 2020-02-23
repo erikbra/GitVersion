@@ -10,7 +10,7 @@ namespace GitVersion
     {
         private static readonly IList<MergeMessageFormat> DefaultFormats = new List<MergeMessageFormat>
         {
-            new MergeMessageFormat("Default", @"^Merge (branch|IGitTag) '(?<SourceBranch>[^']*)'(?: into (?<TargetBranch>[^\s]*))*"),
+            new MergeMessageFormat("Default", @"^Merge (branch|Tag) '(?<SourceBranch>[^']*)'(?: into (?<TargetBranch>[^\s]*))*"),
             new MergeMessageFormat("SmartGit",  @"^Finish (?<SourceBranch>[^\s]*)(?: into (?<TargetBranch>[^\s]*))*"),
             new MergeMessageFormat("BitBucketPull", @"^Merge pull request #(?<PullRequestNumber>\d+) (from|in) (?<Source>.*) from (?<SourceBranch>[^\s]*) to (?<TargetBranch>[^\s]*)"),
             new MergeMessageFormat("GitHubPull", @"^Merge pull request #(?<PullRequestNumber>\d+) (from|in) (?:(?<SourceBranch>[^\s]*))(?: into (?<TargetBranch>[^\s]*))*"),

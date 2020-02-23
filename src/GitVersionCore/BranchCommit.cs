@@ -4,7 +4,7 @@ using LibGit2Sharp;
 namespace GitVersion
 {
     /// <summary>
-    /// A IGitCommit, together with the branch to which the IGitCommit belongs.
+    /// A Commit, together with the branch to which the Commit belongs.
     /// </summary>
     public struct BranchCommit
     {

@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 using GitVersion.Extensions;
 using LibGit2Sharp;
 
@@ -6,22 +6,23 @@ namespace GitVersion.Models.LibGitSharpWrappers
 {
     public class LibGitBranch: IGitBranch
     {
-        private Branch _wrapped;
+        public Branch Wrapped { get; }
+        object IGitObject.Wrapped => Wrapped;
 
         public LibGitBranch(Branch branch)
         {
-            _wrapped = branch;
+            Wrapped = branch;
         }
 
-        public string Sha { get; }
-        public string CanonicalName => _wrapped.CanonicalName;
-        public string FriendlyName => _wrapped.FriendlyName;
-        public IGitCommit Tip => new LibGitCommit(_wrapped.Tip);
-        public bool IsTracking => _wrapped.IsTracking;
-        public bool IsRemote => _wrapped.IsRemote;
-        public IGitCommitLog Commits => new LibGitCommitLog(_wrapped.Commits);
-        public string NameWithoutRemote() => _wrapped.NameWithoutRemote();
-        public bool IsDetachedHead() => _wrapped.IsDetachedHead();
+        public string Sha => throw new NotImplementedException();
+        public string CanonicalName => Wrapped.CanonicalName;
+        public string FriendlyName => Wrapped.FriendlyName;
+        public IGitCommit Tip => new LibGitCommit(Wrapped.Tip);
+        public bool IsTracking => Wrapped.IsTracking;
+        public bool IsRemote => Wrapped.IsRemote;
+        public IGitCommitLog Commits => new LibGitCommitLog(Wrapped.Commits);
+        public string NameWithoutRemote() => Wrapped.NameWithoutRemote();
+        public bool IsDetachedHead() => Wrapped.IsDetachedHead();
 
     }
 }

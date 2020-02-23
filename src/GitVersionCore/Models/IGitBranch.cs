@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace GitVersion.Models
 {
-    public interface IGitBranch: IGitObject //, ICollection<IGitCommit>
+    public interface IGitBranch: IGitObject //, ICollection<Commit>
     {
         string CanonicalName { get; }
         string FriendlyName { get; }

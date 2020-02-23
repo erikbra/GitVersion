@@ -13,10 +13,12 @@ namespace GitVersionCore.Tests.Mocks
         private static int commitCount = 1;
         private static DateTimeOffset when = DateTimeOffset.Now;
 
-        public MockCommit(LibGitObjectId id = null)
+        object IGitObject.Wrapped => this;
+
+        public MockCommit(IGitObjectId id = null)
         {
             idEx = id ?? new LibGitObjectId(Guid.NewGuid().ToString().Replace("-", "") + "00000000");
-            MessageEx = "IGitCommit " + commitCount++;
+            MessageEx = "Commit " + commitCount++;
             ParentsEx = new List<IGitCommit> { null };
             CommitterEx = new LibGitSignature("Joe", "Joe@bloggs.net", when);
             // Make sure each commit is a different time

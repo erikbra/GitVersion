@@ -14,7 +14,7 @@ namespace GitVersionCore.Tests.IntegrationTests
     public class OtherScenarios : TestBase
     {
         // This is an attempt to automatically resolve the issue where you cannot build
-        // when multiple branches point at the same IGitCommit
+        // when multiple branches point at the same Commit
         // Current implementation favors master, then branches without - or / in their name
         [Test]
         public void DoNotBlowUpWhenMasterAndDevelopPointAtSameCommit()
@@ -65,7 +65,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             {
                 Regex = "main",
                 VersioningMode = VersioningMode.ContinuousDelivery,
-                IGitTag = "useBranchName",
+                Tag = "useBranchName",
                 Increment = IncrementStrategy.Patch,
                 PreventIncrementOfMergedBranchVersion = true,
                 TrackMergeTarget = false,

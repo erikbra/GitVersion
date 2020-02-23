@@ -85,7 +85,7 @@ namespace GitVersionCore.Tests
                         "develop", new BranchConfig
                         {
                             VersioningMode = VersioningMode.ContinuousDeployment,
-                            IGitTag = "alpha"
+                            Tag = "alpha"
                         }
                     }
                 }
@@ -101,7 +101,7 @@ namespace GitVersionCore.Tests
                 }
             };
             var context = new GitVersionContext(mockRepository, log, develop, config);
-            context.Configuration.IGitTag.ShouldBe("alpha");
+            context.Configuration.Tag.ShouldBe("alpha");
         }
 
         [Test]

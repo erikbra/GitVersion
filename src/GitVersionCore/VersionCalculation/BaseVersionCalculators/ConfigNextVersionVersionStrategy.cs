@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace GitVersion.VersionCalculation
 {
     /// <summary>
-    /// Version is from NextVersion (the configuration value), unless the current IGitCommit is tagged.
+    /// Version is from NextVersion (the configuration value), unless the current Commit is tagged.
     /// BaseVersionSource is null.
     /// Does not increment.
     /// </summary>

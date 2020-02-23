@@ -96,7 +96,7 @@ namespace GitVersion
             if (!match.Success)
             {
                 // TODO check how to log this
-                Console.WriteLine($"Unable to successfully parse semver IGitTag {preReleaseTag}");
+                Console.WriteLine($"Unable to successfully parse semver Tag {preReleaseTag}");
                 return new SemanticVersionPreReleaseTag();
             }
 
@@ -134,9 +134,9 @@ namespace GitVersion
 
         /// <summary>
         /// Default formats:
-        /// <para>t - SemVer 2.0 formatted IGitTag [beta.1]</para>
-        /// <para>l - Legacy SemVer IGitTag with the IGitTag number padded. [beta1]</para>
-        /// <para>lp - Legacy SemVer IGitTag with the IGitTag number padded. [beta0001]. Can specify an integer to control padding (i.e., lp5)</para>
+        /// <para>t - SemVer 2.0 formatted Tag [beta.1]</para>
+        /// <para>l - Legacy SemVer Tag with the Tag number padded. [beta1]</para>
+        /// <para>lp - Legacy SemVer Tag with the Tag number padded. [beta0001]. Can specify an integer to control padding (i.e., lp5)</para>
         /// </summary>
         public string ToString(string format, IFormatProvider formatProvider = null)
         {

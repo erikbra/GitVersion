@@ -8,7 +8,7 @@ namespace GitVersion.VersioningModes
     {
         public override SemanticVersionPreReleaseTag GetPreReleaseTag(GitVersionContext context, List<IGitTag> possibleTags, int numberOfCommits)
         {
-            return context.Configuration.IGitTag + "." + numberOfCommits;
+            return context.Configuration.Tag + "." + numberOfCommits;
         }
     }
 }

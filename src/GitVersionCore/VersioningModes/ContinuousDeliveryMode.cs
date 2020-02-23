@@ -10,7 +10,7 @@ namespace GitVersion.VersioningModes
     {
         public override SemanticVersionPreReleaseTag GetPreReleaseTag(GitVersionContext context, List<IGitTag> possibleCommits, int numberOfCommits)
         {
-            return RetrieveMostRecentOptionalTagVersion(context, possibleCommits) ?? context.Configuration.IGitTag + ".1";
+            return RetrieveMostRecentOptionalTagVersion(context, possibleCommits) ?? context.Configuration.Tag + ".1";
         }
 
         private static SemanticVersionPreReleaseTag RetrieveMostRecentOptionalTagVersion(GitVersionContext context, List<IGitTag> applicableTagsInDescendingOrder)

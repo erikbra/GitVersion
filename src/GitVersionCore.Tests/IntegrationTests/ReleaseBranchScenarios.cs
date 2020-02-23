@@ -106,7 +106,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             {
                 Branches =
                 {
-                    { "release", new BranchConfig { IGitTag = "rc" } }
+                    { "release", new BranchConfig { Tag = "rc" } }
                 }
             };
             using var fixture = new EmptyRepositoryFixture();
@@ -250,7 +250,7 @@ namespace GitVersionCore.Tests.IntegrationTests
 
             fixture.AssertFullSemver("2.0.0-beta.1+1");
 
-            //IGitTag it to bump to beta 2
+            //Tag it to bump to beta 2
             fixture.Repository.ApplyTag("2.0.0-beta1");
 
             fixture.Repository.MakeCommits(1);
@@ -289,7 +289,7 @@ namespace GitVersionCore.Tests.IntegrationTests
 
             fixture.AssertFullSemver(config, "2.0.0-beta.1");
 
-            //IGitTag it to bump to beta 2
+            //Tag it to bump to beta 2
             fixture.Repository.MakeCommits(4);
 
             fixture.AssertFullSemver(config, "2.0.0-beta.5");
@@ -360,12 +360,12 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Make some new IGitCommit on release
+            // Make some new Commit on release
             fixture.Checkout("release-2.0.0");
             fixture.Repository.MakeACommit("release 3 - after first merge");
             fixture.AssertFullSemver(config, "2.0.0-beta.3");
 
-            // Make new IGitCommit on develop
+            // Make new Commit on develop
             fixture.Checkout("develop");
             // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
@@ -377,7 +377,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Checkout("release-2.0.0");
             fixture.AssertFullSemver(config, "2.0.0-beta.3");
 
-            // Make some new IGitCommit on release
+            // Make some new Commit on release
             fixture.Repository.MakeACommit("release 4");
             fixture.Repository.MakeACommit("release 5");
             fixture.AssertFullSemver(config, "2.0.0-beta.5");
@@ -412,7 +412,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Repository.MakeACommit();
             fixture.AssertFullSemver(config, "2.0.0-beta.2");
 
-            // Merge release to develop - emulate IGitCommit beetween other person release IGitCommit push and this IGitCommit merge to develop
+            // Merge release to develop - emulate Commit beetween other person release Commit push and this Commit merge to develop
             Commands.Checkout(fixture.Repository, "develop");
             fixture.Repository.Merge(commit1, Generate.SignatureNow(), new MergeOptions { FastForwardStrategy = FastForwardStrategy.NoFastForward });
             fixture.Repository.MergeNoFF("release-2.0.0", Generate.SignatureNow());
@@ -497,7 +497,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Repository.MakeACommit("release 11");
             fixture.AssertFullSemver(config, "2.0.0-beta.11");
 
-            // Make new IGitCommit on feature
+            // Make new Commit on feature
             Commands.Checkout(fixture.Repository, "feature/xxx");
             fixture.Repository.MakeACommit("feature 3");
 
@@ -582,9 +582,9 @@ namespace GitVersionCore.Tests.IntegrationTests
 
             fixture.Repository.CreateBranch(featureBranch);
             Commands.Checkout(fixture.Repository, featureBranch);
-            fixture.Repository.MakeACommit("blabla"); // IGitCommit 1
+            fixture.Repository.MakeACommit("blabla"); // Commit 1
             Commands.Checkout(fixture.Repository, release450);
-            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // IGitCommit 2
+            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // Commit 2
             fixture.Repository.Branches.Remove(featureBranch);
 
             fixture.AssertFullSemver(config, "4.5.0-beta.2");
@@ -617,9 +617,9 @@ namespace GitVersionCore.Tests.IntegrationTests
 
             fixture.Repository.CreateBranch(featureBranch);
             Commands.Checkout(fixture.Repository, featureBranch);
-            fixture.Repository.MakeACommit("blabla"); // IGitCommit 1
+            fixture.Repository.MakeACommit("blabla"); // Commit 1
             Commands.Checkout(fixture.Repository, release450);
-            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // IGitCommit 2
+            fixture.Repository.MergeNoFF(featureBranch, Generate.SignatureNow()); // Commit 2
 
             fixture.AssertFullSemver(config, "4.5.0-beta.2");
         }

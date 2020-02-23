@@ -29,7 +29,7 @@ namespace GitVersion.VersionCalculation
 
         public override string ToString()
         {
-            return $"{Source}: {SemanticVersion.ToString("f")} with IGitCommit count source {(BaseVersionSource == null ? "External Source" : BaseVersionSource.Sha)} (Incremented: {(ShouldIncrement ? BaseVersionCalculator.MaybeIncrement(context, this).ToString("t") : "None")})";
+            return $"{Source}: {SemanticVersion.ToString("f")} with Commit count source {(BaseVersionSource == null ? "External Source" : BaseVersionSource.Sha)} (Incremented: {(ShouldIncrement ? BaseVersionCalculator.MaybeIncrement(context, this).ToString("t") : "None")})";
         }
     }
 }

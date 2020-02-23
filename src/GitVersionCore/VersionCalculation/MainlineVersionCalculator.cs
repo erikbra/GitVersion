@@ -59,7 +59,7 @@ namespace GitVersion.VersionCalculation
                 .ToList();
                 var directCommits = new List<IGitCommit>(mainlineCommitLog.Count);
 
-                // Scans IGitCommit log in reverse, aggregating merge commits
+                // Scans Commit log in reverse, aggregating merge commits
                 foreach (var IGitCommit in mainlineCommitLog)
                 {
                     directCommits.Add(IGitCommit);
@@ -88,20 +88,20 @@ namespace GitVersion.VersionCalculation
 
         private SemanticVersion AggregateMergeCommitIncrement(GitVersionContext context, IGitCommit IGitCommit, List<IGitCommit> directCommits, SemanticVersion mainlineVersion, IGitBranch mainline)
         {
-            // Merge IGitCommit, process all merged commits as a batch
+            // Merge Commit, process all merged commits as a batch
             var mergeCommit = IGitCommit;
             var mergedHead = GetMergedHead(mergeCommit);
             var findMergeBase = context.Repository.ObjectDatabase.FindMergeBase(mergeCommit.Parents.First(), mergedHead);
             var findMessageIncrement = FindMessageIncrement(context, mergeCommit, mergedHead, findMergeBase, directCommits);
 
             // If this collection is not empty there has been some direct commits against master
-            // Treat each IGitCommit as it's own 'release', we need to do this before we increment the branch
+            // Treat each Commit as it's own 'release', we need to do this before we increment the branch
             mainlineVersion = IncrementForEachCommit(context, directCommits, mainlineVersion, mainline);
             directCommits.Clear();
 
             // Finally increment for the branch
             mainlineVersion = mainlineVersion.IncrementVersion(findMessageIncrement);
-            log.Info($"Merge IGitCommit {mergeCommit.Sha} incremented base versions {findMessageIncrement}, now {mainlineVersion}");
+            log.Info($"Merge Commit {mergeCommit.Sha} incremented base versions {findMessageIncrement}, now {mainlineVersion}");
             return mainlineVersion;
         }
 
@@ -143,7 +143,7 @@ namespace GitVersion.VersionCalculation
                 return context.CurrentBranch;
             }
 
-            // prefer a branch on which the merge base was a direct IGitCommit, if there is such a branch
+            // prefer a branch on which the merge base was a direct Commit, if there is such a branch
             var firstMatchingCommitBranch = possibleMainlineBranches
                 .FirstOrDefault(b =>
                 {
@@ -160,7 +160,7 @@ namespace GitVersion.VersionCalculation
             if (firstMatchingCommitBranch != null)
             {
                 var message = string.Format(
-                    "Choosing {0} as mainline because {1}'s merge base was a direct IGitCommit to {0}",
+                    "Choosing {0} as mainline because {1}'s merge base was a direct Commit to {0}",
                     firstMatchingCommitBranch.FriendlyName,
                     context.CurrentBranch.FriendlyName);
                 log.Info(message);
@@ -174,18 +174,18 @@ namespace GitVersion.VersionCalculation
         }
 
         /// <summary>
-        /// Gets the IGitCommit on mainline at which <paramref name="mergeBase"/> was fully integrated.
+        /// Gets the Commit on mainline at which <paramref name="mergeBase"/> was fully integrated.
         /// </summary>
         /// <param name="mainlineCommitLog">The collection of commits made directly to mainline, in reverse order.</param>
-        /// <param name="mergeBase">The best possible merge base between <paramref name="mainlineTip"/> and the current IGitCommit.</param>
+        /// <param name="mergeBase">The best possible merge base between <paramref name="mainlineTip"/> and the current Commit.</param>
         /// <param name="mainlineTip">The tip of the mainline branch.</param>
-        /// <returns>The IGitCommit on mainline at which <paramref name="mergeBase"/> was merged, if such a IGitCommit exists; otherwise, <paramref name="mainlineTip"/>.</returns>
+        /// <returns>The Commit on mainline at which <paramref name="mergeBase"/> was merged, if such a Commit exists; otherwise, <paramref name="mainlineTip"/>.</returns>
         /// <remarks>
-        /// This method gets the most recent IGitCommit on mainline that should be considered for versioning the current branch.
+        /// This method gets the most recent Commit on mainline that should be considered for versioning the current branch.
         /// </remarks>
         private IGitCommit GetEffectiveMainlineTip(IEnumerable<IGitCommit> mainlineCommitLog, IGitCommit mergeBase, IGitCommit mainlineTip)
         {
-            // find the IGitCommit that merged mergeBase into mainline
+            // find the Commit that merged mergeBase into mainline
             foreach (var IGitCommit in mainlineCommitLog)
             {
                 if (IGitCommit == mergeBase || IGitCommit.Parents.Contains(mergeBase))
@@ -199,13 +199,13 @@ namespace GitVersion.VersionCalculation
         }
 
         /// <summary>
-        /// Gets the best possible merge base between the current IGitCommit and <paramref name="mainline"/> that is not the child of a forward merge.
+        /// Gets the best possible merge base between the current Commit and <paramref name="mainline"/> that is not the child of a forward merge.
         /// </summary>
         /// <param name="context">The current versioning context.</param>
-        /// <param name="baseVersionSource">The IGitCommit that establishes the contextual base version.</param>
+        /// <param name="baseVersionSource">The Commit that establishes the contextual base version.</param>
         /// <param name="mainline">The mainline branch.</param>
-        /// <param name="mainlineTip">The IGitCommit on mainline at which the returned merge base was fully integrated.</param>
-        /// <returns>The best possible merge base between the current IGitCommit and <paramref name="mainline"/> that is not the child of a forward merge.</returns>
+        /// <param name="mainlineTip">The Commit on mainline at which the returned merge base was fully integrated.</param>
+        /// <returns>The best possible merge base between the current Commit and <paramref name="mainline"/> that is not the child of a forward merge.</returns>
         private IGitCommit FindMergeBaseBeforeForwardMerge(GitVersionContext context, IGitCommit baseVersionSource, IGitBranch mainline, out IGitCommit mainlineTip)
         {
             var mergeBase = context.Repository.ObjectDatabase.FindMergeBase(context.CurrentCommit, mainline.Tip);
@@ -219,14 +219,14 @@ namespace GitVersion.VersionCalculation
                 })
                 .ToList();
 
-            // find the mainline IGitCommit effective for versioning the current branch
+            // find the mainline Commit effective for versioning the current branch
             mainlineTip = GetEffectiveMainlineTip(mainlineCommitLog, mergeBase, mainline.Tip);
 
             // detect forward merge and rewind mainlineTip to before it
             if (mergeBase == context.CurrentCommit && !mainlineCommitLog.Contains(mergeBase))
             {
                 var mainlineTipPrevious = mainlineTip.Parents.First();
-                var message = $"Detected forward merge at {mainlineTip}; rewinding mainline to previous IGitCommit {mainlineTipPrevious}";
+                var message = $"Detected forward merge at {mainlineTip}; rewinding mainline to previous Commit {mainlineTipPrevious}";
 
                 log.Info(message);
 
@@ -247,7 +247,7 @@ namespace GitVersion.VersionCalculation
                                                 directCommit
                                             }) ?? IncrementStrategyFinder.FindDefaultIncrementForBranch(context, mainline.FriendlyName);
                 mainlineVersion = mainlineVersion.IncrementVersion(directCommitIncrement);
-                log.Info($"Direct IGitCommit on master {directCommit.Sha} incremented base versions {directCommitIncrement}, now {mainlineVersion}");
+                log.Info($"Direct Commit on master {directCommit.Sha} incremented base versions {directCommitIncrement}, now {mainlineVersion}");
             }
             return mainlineVersion;
         }
@@ -291,7 +291,7 @@ namespace GitVersion.VersionCalculation
         {
             var parents = mergeCommit.Parents.Skip(1).ToList();
             if (parents.Count > 1)
-                throw new NotSupportedException("Mainline development does not support more than one merge source in a single IGitCommit yet");
+                throw new NotSupportedException("Mainline development does not support more than one merge source in a single Commit yet");
             return parents.Single();
         }
     }

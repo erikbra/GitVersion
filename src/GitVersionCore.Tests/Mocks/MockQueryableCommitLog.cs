@@ -27,7 +27,7 @@ namespace GitVersionCore.Tests.Mocks
 
         public GitCommitSortStrategies SortedBy => throw new NotImplementedException();
 
-        public IGitCommitLog QueryBy(IGitCommitFilter filter)
+        public IGitCommitLog QueryBy(GitCommitFilter filter)
         {
             return this;
         }
@@ -47,7 +47,7 @@ namespace GitVersionCore.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IGitLogEntry> QueryBy(string path, IGitCommitFilter filter)
+        public IEnumerable<IGitLogEntry> QueryBy(string path, GitCommitFilter filter)
         {
             throw new NotImplementedException();
         }

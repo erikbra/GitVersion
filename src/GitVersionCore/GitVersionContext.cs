@@ -33,7 +33,7 @@ namespace GitVersion
 
             if (!string.IsNullOrWhiteSpace(commitId))
             {
-                log.Info($"Searching for specific IGitCommit '{commitId}'");
+                log.Info($"Searching for specific Commit '{commitId}'");
 
                 var IGitCommit = repository.Commits.FirstOrDefault(c => string.Equals(c.Sha, commitId, StringComparison.OrdinalIgnoreCase));
                 if (IGitCommit != null)
@@ -42,13 +42,13 @@ namespace GitVersion
                 }
                 else
                 {
-                    log.Warning($"IGitCommit '{commitId}' specified but not found");
+                    log.Warning($"Commit '{commitId}' specified but not found");
                 }
             }
 
             if (CurrentCommit == null)
             {
-                log.Info("Using latest IGitCommit on specified branch");
+                log.Info("Using latest Commit on specified branch");
                 CurrentCommit = currentBranch.Tip;
             }
 
@@ -119,7 +119,7 @@ namespace GitVersion
                 throw new Exception("Configuration value for 'CommitsSinceVersionSourcePadding' has no value. (this should not happen, please report an issue)");
 
             var versioningMode = currentBranchConfig.VersioningMode.Value;
-            var IGitTag = currentBranchConfig.IGitTag;
+            var IGitTag = currentBranchConfig.Tag;
             var tagNumberPattern = currentBranchConfig.TagNumberPattern;
             var incrementStrategy = currentBranchConfig.Increment.Value;
             var preventIncrementForMergedBranchVersion = currentBranchConfig.PreventIncrementOfMergedBranchVersion.Value;

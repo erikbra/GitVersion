@@ -39,7 +39,7 @@ namespace GitVersionCore.Tests.IntegrationTests
         public void ShouldNotGetVersionFromFeatureBranchIfNotMerged()
         {
             using var fixture = new EmptyRepositoryFixture();
-            fixture.Repository.MakeATaggedCommit("1.0.0-unstable.0"); // initial IGitCommit in master
+            fixture.Repository.MakeATaggedCommit("1.0.0-unstable.0"); // initial Commit in master
 
             fixture.Repository.CreateBranch("feature");
             Commands.Checkout(fixture.Repository, "feature");

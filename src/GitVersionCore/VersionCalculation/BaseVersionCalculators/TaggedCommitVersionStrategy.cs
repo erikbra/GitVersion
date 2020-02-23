@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LibGit2Sharp;
 using GitVersion.Extensions;
 using GitVersion.Logging;
 using GitVersion.Models;
@@ -9,9 +8,9 @@ using GitVersion.Models;
 namespace GitVersion.VersionCalculation
 {
     /// <summary>
-    /// Version is extracted from all tags on the branch which are valid, and not newer than the current IGitCommit.
-    /// BaseVersionSource is the IGitTag's IGitCommit.
-    /// Increments if the IGitTag is not the current IGitCommit.
+    /// Version is extracted from all tags on the branch which are valid, and not newer than the current commit.
+    /// BaseVersionSource is the Tag's commit.
+    /// Increments if the Tag is not the current commit.
     /// </summary>
     public class TaggedCommitVersionStrategy : IVersionStrategy
     {
@@ -51,14 +50,14 @@ namespace GitVersion.VersionCalculation
 
         private BaseVersion CreateBaseVersion(GitVersionContext context, VersionTaggedCommit version)
         {
-            var shouldUpdateVersion = version.IGitCommit.Sha != context.CurrentCommit.Sha;
-            var baseVersion = new BaseVersion(context, FormatSource(version), shouldUpdateVersion, version.SemVer, version.IGitCommit, null);
+            var shouldUpdateVersion = version.Commit.Sha != context.CurrentCommit.Sha;
+            var baseVersion = new BaseVersion(context, FormatSource(version), shouldUpdateVersion, version.SemVer, version.Commit, null);
             return baseVersion;
         }
 
         protected virtual string FormatSource(VersionTaggedCommit version)
         {
-            return $"Git IGitTag '{version.IGitTag}'";
+            return $"Git Tag '{version.Tag}'";
         }
 
         protected virtual bool IsValidTag(IGitTag IGitTag, IGitCommit IGitCommit)
@@ -68,20 +67,20 @@ namespace GitVersion.VersionCalculation
 
         protected class VersionTaggedCommit
         {
-            public string IGitTag;
-            public IGitCommit IGitCommit;
+            public string Tag;
+            public IGitCommit Commit;
             public SemanticVersion SemVer;
 
-            public VersionTaggedCommit(IGitCommit IGitCommit, SemanticVersion semVer, string IGitTag)
+            public VersionTaggedCommit(IGitCommit commit, SemanticVersion semVer, string tag)
             {
-                IGitTag = IGitTag;
-                IGitCommit = IGitCommit;
+                Tag = tag;
+                Commit = commit;
                 SemVer = semVer;
             }
 
             public override string ToString()
             {
-                return $"{IGitTag} | {IGitCommit} | {SemVer}";
+                return $"{Tag} | {Commit} | {SemVer}";
             }
         }
     }

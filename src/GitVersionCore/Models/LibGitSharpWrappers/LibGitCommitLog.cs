@@ -31,23 +31,40 @@ namespace GitVersion.Models.LibGitSharpWrappers
 
         public GitCommitSortStrategies SortedBy { get; }
 
-        public IGitCommitLog QueryBy(IGitCommitFilter filter)
+        public IGitCommitLog QueryBy(GitCommitFilter filter)
             => new LibGitCommitLog(_wrapped.QueryBy(GetCommitFilter(filter)));
 
         public IEnumerable<IGitLogEntry> QueryBy(string path) => _wrapped.QueryBy(path).Select(c => new LibGitLogEntry(c));
 
-        public IEnumerable<IGitLogEntry> QueryBy(string path, IGitCommitFilter filter)
+        public IEnumerable<IGitLogEntry> QueryBy(string path, GitCommitFilter filter)
             => _wrapped.QueryBy(path, GetCommitFilter(filter)).Select(l => new LibGitLogEntry(l));
 
 
-        private CommitFilter GetCommitFilter(IGitCommitFilter filter)
+        private static CommitFilter GetCommitFilter(GitCommitFilter filter)
         {
-            if (!(filter is LibGitCommitFilter lgf))
+            var commitFilter = new CommitFilter();
+
+            if (filter.ExcludeReachableFrom != null)
             {
-                throw new ArgumentException(nameof(filter));
+                commitFilter.ExcludeReachableFrom = filter.ExcludeReachableFrom.Wrapped;
             }
 
-            return lgf.Wrapped;
+            if (filter.IncludeReachableFrom != null)
+            {
+                commitFilter.IncludeReachableFrom = filter.IncludeReachableFrom.Wrapped;
+            }
+
+            if (filter.FirstParentOnly.HasValue)
+            {
+                commitFilter.FirstParentOnly = filter.FirstParentOnly.Value;
+            }
+
+            if (filter.SortBy.HasValue)
+            {
+                commitFilter.SortBy = (CommitSortStrategies) filter.SortBy.Value;
+            }
+
+            return commitFilter;
         }
     }
 }

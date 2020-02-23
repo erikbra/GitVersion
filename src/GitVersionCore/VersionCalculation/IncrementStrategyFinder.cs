@@ -35,19 +35,19 @@ namespace GitVersion
             var commitMessageIncrement = FindCommitMessageIncrement(context, baseVersion);
             var defaultIncrement = context.Configuration.Increment.ToVersionField();
 
-            // use the default branch config increment strategy if there are no IGitCommit message overrides
+            // use the default branch config increment strategy if there are no Commit message overrides
             if (commitMessageIncrement == null)
             {
                 return baseVersion.ShouldIncrement ? defaultIncrement : (VersionField?)null;
             }
 
-            // cap the IGitCommit message severity to minor for alpha versions
+            // cap the Commit message severity to minor for alpha versions
             if (baseVersion.SemanticVersion < new SemanticVersion(1) && commitMessageIncrement > VersionField.Minor)
             {
                 commitMessageIncrement = VersionField.Minor;
             }
 
-            // don't increment for less than the branch config increment, if the absence of IGitCommit messages would have
+            // don't increment for less than the branch config increment, if the absence of Commit messages would have
             // still resulted in an increment of configuration.Increment
             if (baseVersion.ShouldIncrement && commitMessageIncrement < defaultIncrement)
             {

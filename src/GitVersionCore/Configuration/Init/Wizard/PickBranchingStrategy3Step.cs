@@ -16,7 +16,7 @@ namespace GitVersion.Configuration.Init.Wizard
                 case "y":
                     Console.WriteLine("GitFlow could be a better fit than GitHubFlow for you.");
                     Console.WriteLine();
-                    Console.WriteLine("GitVersion increments the SemVer for each IGitCommit on the develop branch by default, " +
+                    Console.WriteLine("GitVersion increments the SemVer for each Commit on the develop branch by default, " +
                                       "this means all packages built from develop can be published to a single NuGet feed.");
                     break;
                 case "n":

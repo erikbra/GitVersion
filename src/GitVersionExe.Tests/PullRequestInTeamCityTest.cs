@@ -33,12 +33,12 @@ namespace GitVersionExe.Tests
                 Commands.Checkout(remoteRepository, branch);
                 remoteRepository.MakeCommits(2);
                 Commands.Checkout(remoteRepository, remoteRepository.Head.Tip.Sha);
-                //Emulate merge IGitCommit
+                //Emulate merge Commit
                 var mergeCommitSha = remoteRepository.MakeACommit().Sha;
-                Commands.Checkout(remoteRepository, "master"); // HEAD cannot be pointing at the merge IGitCommit
+                Commands.Checkout(remoteRepository, "master"); // HEAD cannot be pointing at the merge Commit
                 remoteRepository.Refs.Add(pullRequestRef, new ObjectId(mergeCommitSha));
 
-                // Checkout PR IGitCommit
+                // Checkout PR Commit
                 Commands.Fetch((Repository)fixture.Repository, "origin", new string[0], new FetchOptions(), null);
                 Commands.Checkout(fixture.Repository, mergeCommitSha);
             }

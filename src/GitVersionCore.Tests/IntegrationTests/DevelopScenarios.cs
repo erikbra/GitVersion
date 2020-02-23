@@ -62,7 +62,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                     {
                         "develop", new BranchConfig
                         {
-                            IGitTag = "alpha",
+                            Tag = "alpha",
                             SourceBranches = new List<string>()
                         }
                     }
@@ -82,7 +82,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Repository.MakeATaggedCommit("1.0.0");
             Commands.Checkout(fixture.Repository, fixture.Repository.CreateBranch("developer"));
             fixture.Repository.MakeACommit();
-            fixture.AssertFullSemver("1.0.1-developer.1+1"); // this IGitTag should be the branch name by default, not unstable
+            fixture.AssertFullSemver("1.0.1-developer.1+1"); // this Tag should be the branch name by default, not unstable
         }
 
         [Test]
@@ -214,27 +214,27 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MakeACommit();
             fixture.ApplyTag("1.1.0");
             fixture.BranchTo("develop");
-            fixture.MakeACommit("IGitCommit in develop - 1");
+            fixture.MakeACommit("Commit in develop - 1");
             fixture.AssertFullSemver("1.2.0-alpha.1");
             fixture.BranchTo("release/1.2.0");
             fixture.AssertFullSemver("1.2.0-beta.1+0");
             fixture.Checkout("develop");
-            fixture.MakeACommit("IGitCommit in develop - 2");
-            fixture.MakeACommit("IGitCommit in develop - 3");
-            fixture.MakeACommit("IGitCommit in develop - 4");
-            fixture.MakeACommit("IGitCommit in develop - 5");
+            fixture.MakeACommit("Commit in develop - 2");
+            fixture.MakeACommit("Commit in develop - 3");
+            fixture.MakeACommit("Commit in develop - 4");
+            fixture.MakeACommit("Commit in develop - 5");
             fixture.AssertFullSemver("1.3.0-alpha.4");
             fixture.Checkout("release/1.2.0");
-            fixture.MakeACommit("IGitCommit in release/1.2.0 - 1");
-            fixture.MakeACommit("IGitCommit in release/1.2.0 - 2");
-            fixture.MakeACommit("IGitCommit in release/1.2.0 - 3");
+            fixture.MakeACommit("Commit in release/1.2.0 - 1");
+            fixture.MakeACommit("Commit in release/1.2.0 - 2");
+            fixture.MakeACommit("Commit in release/1.2.0 - 3");
             fixture.AssertFullSemver("1.2.0-beta.1+3");
             fixture.Checkout("master");
             fixture.MergeNoFF("release/1.2.0");
             fixture.ApplyTag("1.2.0");
             fixture.Checkout("develop");
             fixture.MergeNoFF("release/1.2.0");
-            fixture.MakeACommit("IGitCommit in develop - 6");
+            fixture.MakeACommit("Commit in develop - 6");
             fixture.AssertFullSemver("1.3.0-alpha.9");
             fixture.SequenceDiagram.Destroy("release/1.2.0");
             fixture.Repository.Branches.Remove("release/1.2.0");
@@ -252,19 +252,19 @@ namespace GitVersionCore.Tests.IntegrationTests
             };
 
             using var fixture = new EmptyRepositoryFixture();
-            fixture.MakeACommit("IGitCommit in master - 1");
+            fixture.MakeACommit("Commit in master - 1");
             fixture.ApplyTag("1.1.0");
             fixture.BranchTo("develop");
-            fixture.MakeACommit("IGitCommit in develop - 1");
+            fixture.MakeACommit("Commit in develop - 1");
             fixture.AssertFullSemver("1.2.0-alpha.1");
             fixture.BranchTo("release/1.2.0");
-            fixture.MakeACommit("IGitCommit in release - 1");
-            fixture.MakeACommit("IGitCommit in release - 2");
-            fixture.MakeACommit("IGitCommit in release - 3");
+            fixture.MakeACommit("Commit in release - 1");
+            fixture.MakeACommit("Commit in release - 2");
+            fixture.MakeACommit("Commit in release - 3");
             fixture.AssertFullSemver("1.2.0-beta.1+3");
             fixture.ApplyTag("1.2.0");
             fixture.Checkout("develop");
-            fixture.MakeACommit("IGitCommit in develop - 2");
+            fixture.MakeACommit("Commit in develop - 2");
             fixture.AssertFullSemver("1.3.0-alpha.1");
             fixture.MergeNoFF("release/1.2.0");
             fixture.AssertFullSemver("1.3.0-alpha.5");

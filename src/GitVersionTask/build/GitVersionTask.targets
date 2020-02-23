@@ -90,9 +90,9 @@
             <Output TaskParameter="NuGetVersion" PropertyName="GitVersion_NuGetVersion" />
             <Output TaskParameter="NuGetPreReleaseTagV2" PropertyName="GitVersion_NuGetPreReleaseTagV2" />
             <Output TaskParameter="NuGetPreReleaseTag" PropertyName="GitVersion_NuGetPreReleaseTag" />
-            <Output TaskParameter="CommitDate" PropertyName="GitVersion_CommitDate" />
-            <Output TaskParameter="CommitsSinceVersionSource" PropertyName="GitVersion_CommitsSinceVersionSource" />
-            <Output TaskParameter="CommitsSinceVersionSourcePadded" PropertyName="GitVersion_CommitsSinceVersionSourcePadded" />
+            <Output TaskParameter="commitDate" PropertyName="GitVersion_commitDate" />
+            <Output TaskParameter="commitsSinceVersionSource" PropertyName="GitVersion_commitsSinceVersionSource" />
+            <Output TaskParameter="commitsSinceVersionSourcePadded" PropertyName="GitVersion_commitsSinceVersionSourcePadded" />
         </GetVersion>
 
         <PropertyGroup Condition=" '$(UpdateVersionProperties)' == 'true' ">
@@ -106,7 +106,7 @@
             <AssemblyVersion Condition=" '$(AssemblyVersion)' == '' ">$(GitVersion_AssemblySemVer)</AssemblyVersion>
             <FileVersion Condition=" '$(FileVersion)' == '' ">$(GitVersion_AssemblySemFileVer)</FileVersion>
             <RepositoryBranch Condition=" '$(RepositoryBranch)' == '' ">$(GitVersion_BranchName)</RepositoryBranch>
-            <RepositoryCommit Condition=" '$(RepositoryCommit)' == '' ">$(GitVersion_Sha)</RepositoryCommit>
+            <Repositorycommit Condition=" '$(Repositorycommit)' == '' ">$(GitVersion_Sha)</Repositorycommit>
         </PropertyGroup>
 
         <PropertyGroup Condition=" '$(WixTargetsImported)' == 'true' And '$(GenerateGitVersionWixDefines)' == 'true' ">
@@ -134,9 +134,9 @@
             <DefineConstants Condition=" '$(GitVersion_NuGetVersion)' != '' ">GitVersion_NuGetVersion=$(GitVersion_NuGetVersion);$(DefineConstants)</DefineConstants>
             <DefineConstants Condition=" '$(GitVersion_NuGetPreReleaseTagV2)' != '' ">GitVersion_NuGetPreReleaseTagV2=$(GitVersion_NuGetPreReleaseTagV2);$(DefineConstants)</DefineConstants>
             <DefineConstants Condition=" '$(GitVersion_NuGetPreReleaseTag)' != '' ">GitVersion_NuGetPreReleaseTag=$(GitVersion_NuGetPreReleaseTag);$(DefineConstants)</DefineConstants>
-            <DefineConstants Condition=" '$(GitVersion_CommitDate)' != '' ">GitVersion_CommitDate=$(GitVersion_CommitDate);$(DefineConstants)</DefineConstants>
-            <DefineConstants Condition=" '$(GitVersion_CommitsSinceVersionSource)' != '' ">GitVersion_CommitsSinceVersionSource=$(GitVersion_CommitsSinceVersionSource);$(DefineConstants)</DefineConstants>
-            <DefineConstants Condition=" '$(GitVersion_CommitsSinceVersionSourcePadded)' != '' ">GitVersion_CommitsSinceVersionSourcePadded=$(GitVersion_CommitsSinceVersionSourcePadded);$(DefineConstants)</DefineConstants>
+            <DefineConstants Condition=" '$(GitVersion_commitDate)' != '' ">GitVersion_commitDate=$(GitVersion_commitDate);$(DefineConstants)</DefineConstants>
+            <DefineConstants Condition=" '$(GitVersion_commitsSinceVersionSource)' != '' ">GitVersion_commitsSinceVersionSource=$(GitVersion_commitsSinceVersionSource);$(DefineConstants)</DefineConstants>
+            <DefineConstants Condition=" '$(GitVersion_commitsSinceVersionSourcePadded)' != '' ">GitVersion_commitsSinceVersionSourcePadded=$(GitVersion_commitsSinceVersionSourcePadded);$(DefineConstants)</DefineConstants>
         </PropertyGroup>
 
     </Target>

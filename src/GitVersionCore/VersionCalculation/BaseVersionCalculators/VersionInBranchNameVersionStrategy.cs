@@ -9,7 +9,7 @@ namespace GitVersion.VersionCalculation
 {
     /// <summary>
     /// Version is extracted from the name of the branch.
-    /// BaseVersionSource is the IGitCommit where the branch was branched from its parent.
+    /// BaseVersionSource is the Commit where the branch was branched from its parent.
     /// Does not increment.
     /// </summary>
     public class VersionInBranchNameVersionStrategy : IVersionStrategy

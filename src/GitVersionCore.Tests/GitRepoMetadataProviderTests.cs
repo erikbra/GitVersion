@@ -41,7 +41,7 @@ namespace GitVersionCore.Tests
             using var fixture = new EmptyRepositoryFixture();
             fixture.MakeACommit("initial");
             fixture.BranchTo("develop");
-            var expectedReleaseMergeBase = fixture.Repository.Head.Tip;
+            var expectedReleaseMergeBase = new LibGitCommit(fixture.Repository.Head.Tip);
 
             // Create release from develop
             fixture.BranchTo("release-2.0.0");
@@ -49,17 +49,17 @@ namespace GitVersionCore.Tests
             // Make some commits on release
             fixture.MakeACommit("release 1");
             fixture.MakeACommit("release 2");
-            var expectedDevelopMergeBase = fixture.Repository.Head.Tip;
+            var expectedDevelopMergeBase =  new LibGitCommit(fixture.Repository.Head.Tip);
 
             // First forward merge release to develop
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Make some new IGitCommit on release
+            // Make some new Commit on release
             fixture.Checkout("release-2.0.0");
             fixture.MakeACommit("release 3 - after first merge");
 
-            // Make new IGitCommit on develop
+            // Make new Commit on develop
             fixture.Checkout("develop");
 
             // Checkout to release (no new commits)
@@ -94,7 +94,7 @@ namespace GitVersionCore.Tests
             using var fixture = new EmptyRepositoryFixture();
             fixture.MakeACommit("initial");
             fixture.BranchTo("develop");
-            var expectedReleaseMergeBase = fixture.Repository.Head.Tip;
+            var expectedReleaseMergeBase = new LibGitCommit(fixture.Repository.Head.Tip);
 
             // Create release from develop
             fixture.BranchTo("release-2.0.0");
@@ -102,17 +102,17 @@ namespace GitVersionCore.Tests
             // Make some commits on release
             fixture.MakeACommit("release 1");
             fixture.MakeACommit("release 2");
-            var expectedDevelopMergeBase = fixture.Repository.Head.Tip;
+            var expectedDevelopMergeBase = new LibGitCommit(fixture.Repository.Head.Tip);
 
             // First forward merge release to develop
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Make some new IGitCommit on release
+            // Make some new Commit on release
             fixture.Checkout("release-2.0.0");
             fixture.MakeACommit("release 3 - after first merge");
 
-            // Make new IGitCommit on develop
+            // Make new Commit on develop
             fixture.Checkout("develop");
             // Checkout to release (no new commits)
             fixture.MakeACommit("develop after merge");
@@ -154,7 +154,7 @@ namespace GitVersionCore.Tests
             using var fixture = new EmptyRepositoryFixture();
             fixture.MakeACommit("initial");
             fixture.BranchTo("develop");
-            var expectedReleaseMergeBase = fixture.Repository.Head.Tip;
+            var expectedReleaseMergeBase = new LibGitCommit(fixture.Repository.Head.Tip);
 
             // Create release from develop
             fixture.BranchTo("release-2.0.0");
@@ -167,11 +167,11 @@ namespace GitVersionCore.Tests
             fixture.Checkout("develop");
             fixture.MergeNoFF("release-2.0.0");
 
-            // Make some new IGitCommit on release
+            // Make some new Commit on release
             fixture.Checkout("release-2.0.0");
             fixture.Repository.MakeACommit("release 3 - after first merge");
 
-            // Make new IGitCommit on develop
+            // Make new Commit on develop
             fixture.Checkout("develop");
             // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
@@ -181,10 +181,10 @@ namespace GitVersionCore.Tests
             // Checkout to release (no new commits)
             fixture.Checkout("release-2.0.0");
 
-            // Make some new IGitCommit on release
+            // Make some new Commit on release
             fixture.Repository.MakeACommit("release 4");
             fixture.Repository.MakeACommit("release 5");
-            var expectedDevelopMergeBase = fixture.Repository.Head.Tip;
+            var expectedDevelopMergeBase = new LibGitCommit(fixture.Repository.Head.Tip);
 
             // Second merge release to develop
             fixture.Checkout("develop");

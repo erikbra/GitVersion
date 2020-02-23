@@ -40,7 +40,7 @@ namespace GitVersionCore.Tests
             Commands.Checkout(fixture.Repository, featureBranch);
             _ = fixture.Repository.MakeACommit();
 
-            var context = new GitVersionContext(fixture.Repository, log, fixture.Repository.Head, config);
+            var context = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(fixture.Repository.Head), config);
             var version = nextVersionCalculator.FindVersion(context);
 
             version.BuildMetaData.VersionSourceSha.ShouldBe(initialCommit.Sha);
@@ -65,22 +65,24 @@ namespace GitVersionCore.Tests
         [Test]
         public void VersionSourceShaUsingTag()
         {
+            // ReSharper disable UnusedVariable
             var config = new Config().ApplyDefaults();
 
             using var fixture = new EmptyRepositoryFixture();
-            _ = fixture.Repository.MakeACommit();
+            var commit1 = fixture.Repository.MakeACommit();
             Commands.Checkout(fixture.Repository, fixture.Repository.CreateBranch("develop"));
             var secondCommit = fixture.Repository.MakeACommit();
-            _ = fixture.Repository.Tags.Add("1.0", secondCommit);
+            var commit2 = fixture.Repository.Tags.Add("1.0", secondCommit);
             var featureBranch = fixture.Repository.CreateBranch("feature/foo");
             Commands.Checkout(fixture.Repository, featureBranch);
-            _ = fixture.Repository.MakeACommit();
+            var commit3 = fixture.Repository.MakeACommit();
 
             var context = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(fixture.Repository.Head), config);
             var version = nextVersionCalculator.FindVersion(context);
 
             version.BuildMetaData.VersionSourceSha.ShouldBe(secondCommit.Sha);
             version.BuildMetaData.CommitsSinceVersionSource.ShouldBe(1);
+            // ReSharper restore UnusedVariable
         }
     }
 }

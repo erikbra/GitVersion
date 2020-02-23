@@ -17,7 +17,7 @@ namespace GitVersion.Configuration
             string assemblyVersioningFormat,
             string assemblyFileVersioningFormat,
             VersioningMode versioningMode, string gitTagPrefix,
-            string IGitTag, string nextVersion, IncrementStrategy increment,
+            string tag, string nextVersion, IncrementStrategy increment,
             string branchPrefixToTrim,
             bool preventIncrementForMergedBranchVersion,
             string tagNumberPattern,
@@ -44,7 +44,7 @@ namespace GitVersion.Configuration
             AssemblyFileVersioningFormat = assemblyFileVersioningFormat;
             VersioningMode = versioningMode;
             GitTagPrefix = gitTagPrefix;
-            IGitTag = IGitTag;
+            Tag = tag;
             NextVersion = nextVersion;
             Increment = increment;
             BranchPrefixToTrim = branchPrefixToTrim;
@@ -79,14 +79,14 @@ namespace GitVersion.Configuration
         public string AssemblyFileVersioningFormat { get; private set; }
 
         /// <summary>
-        /// Git IGitTag prefix
+        /// Git Tag prefix
         /// </summary>
         public string GitTagPrefix { get; private set; }
 
         /// <summary>
-        /// IGitTag to use when calculating SemVer
+        /// Tag to use when calculating SemVer
         /// </summary>
-        public string IGitTag { get; private set; }
+        public string Tag { get; private set; }
 
         public string NextVersion { get; private set; }
 

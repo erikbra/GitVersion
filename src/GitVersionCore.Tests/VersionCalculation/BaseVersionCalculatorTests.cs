@@ -11,6 +11,7 @@ using NUnit.Framework;
 using Shouldly;
 using GitVersion.Extensions;
 using GitVersion.Models;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersionCore.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -168,7 +169,7 @@ namespace GitVersionCore.Tests.VersionCalculation
 
             public V1Strategy(DateTimeOffset? when)
             {
-                this.when = when == null ? null : new MockCommit { CommitterEx = Generate.Signature(when.Value) };
+                this.when = when == null ? null : new MockCommit { CommitterEx = new LibGitSignature(Generate.Signature(when.Value)) };
             }
 
             public IEnumerable<BaseVersion> GetVersions(GitVersionContext context)
@@ -183,7 +184,7 @@ namespace GitVersionCore.Tests.VersionCalculation
 
             public V2Strategy(DateTimeOffset? when)
             {
-                this.when = when == null ? null : new MockCommit { CommitterEx = Generate.Signature(when.Value) };
+                this.when = when == null ? null : new MockCommit { CommitterEx = new LibGitSignature(Generate.Signature(when.Value)) };
             }
 
             public IEnumerable<BaseVersion> GetVersions(GitVersionContext context)

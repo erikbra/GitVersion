@@ -22,7 +22,7 @@ namespace GitVersion.Configuration
         }
 
         /// <summary>
-        /// Gets the <see cref="BranchConfig"/> for the current IGitCommit.
+        /// Gets the <see cref="BranchConfig"/> for the current Commit.
         /// </summary>
         public BranchConfig GetBranchConfiguration(IGitBranch targetBranch, IList<IGitBranch> excludedInheritBranches = null)
         {
@@ -57,7 +57,7 @@ namespace GitVersion.Configuration
             using (log.IndentLog("Attempting to inherit branch configuration from parent branch"))
             {
                 var excludedBranches = new[] { targetBranch };
-                // Check if we are a merge IGitCommit. If so likely we are a pull request
+                // Check if we are a merge Commit. If so likely we are a pull request
                 var parentCount = context.CurrentCommit.Parents.Count();
                 if (parentCount == 2)
                 {
@@ -216,7 +216,7 @@ namespace GitVersion.Configuration
                 }
             }
 
-            log.Info("HEAD is merge IGitCommit, this is likely a pull request using " + currentBranch.FriendlyName + " as base");
+            log.Info("HEAD is merge Commit, this is likely a pull request using " + currentBranch.FriendlyName + " as base");
 
             return excludedBranches;
         }

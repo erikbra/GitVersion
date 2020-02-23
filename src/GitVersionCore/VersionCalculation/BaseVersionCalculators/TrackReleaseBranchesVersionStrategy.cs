@@ -14,14 +14,14 @@ namespace GitVersion.VersionCalculation
     /// <para>
     /// Using <see cref="VersionInBranchNameVersionStrategy"/>:
     /// Version is that of any child branches marked with IsReleaseBranch (except if they have no commits of their own).
-    /// BaseVersionSource is the IGitCommit where the child branch was created.
+    /// BaseVersionSource is the Commit where the child branch was created.
     /// Always increments.
     /// </para>
     /// <para>
     /// Using <see cref="TaggedCommitVersionStrategy"/>:
     /// Version is extracted from all tags on the <c>master</c> branch which are valid.
-    /// BaseVersionSource is the IGitTag's IGitCommit (same as base strategy).
-    /// Increments if the IGitTag is not the current IGitCommit (same as base strategy).
+    /// BaseVersionSource is the Tag's Commit (same as base strategy).
+    /// Increments if the Tag is not the current Commit (same as base strategy).
     /// </para>
     /// </summary>
     public class TrackReleaseBranchesVersionStrategy : IVersionStrategy
@@ -89,7 +89,7 @@ namespace GitVersion.VersionCalculation
         {
             var tagPrefixRegex = context.Configuration.GitTagPrefix;
 
-            // Find the IGitCommit where the child branch was created.
+            // Find the Commit where the child branch was created.
             var baseSource = context.RepositoryMetadataProvider.FindMergeBase(releaseBranch, context.CurrentBranch);
             if (baseSource == context.CurrentCommit)
             {

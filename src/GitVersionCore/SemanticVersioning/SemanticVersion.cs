@@ -9,7 +9,7 @@ namespace GitVersion
         public static SemanticVersion Empty = new SemanticVersion();
 
         private static readonly Regex ParseSemVer = new Regex(
-            @"^(?<SemVer>(?<Major>\d+)(\.(?<Minor>\d+))(\.(?<Patch>\d+))?)(\.(?<FourthPart>\d+))?(-(?<IGitTag>[^\+]*))?(\+(?<BuildMetaData>.*))?$",
+            @"^(?<SemVer>(?<Major>\d+)(\.(?<Minor>\d+))(\.(?<Patch>\d+))?)(\.(?<FourthPart>\d+))?(-(?<Tag>[^\+]*))?(\+(?<BuildMetaData>.*))?$",
             RegexOptions.Compiled);
 
         public int Major;
@@ -176,7 +176,7 @@ namespace GitVersion
                 Major = int.Parse(parsed.Groups["Major"].Value),
                 Minor = parsed.Groups["Minor"].Success ? int.Parse(parsed.Groups["Minor"].Value) : 0,
                 Patch = parsed.Groups["Patch"].Success ? int.Parse(parsed.Groups["Patch"].Value) : 0,
-                PreReleaseTag = SemanticVersionPreReleaseTag.Parse(parsed.Groups["IGitTag"].Value),
+                PreReleaseTag = SemanticVersionPreReleaseTag.Parse(parsed.Groups["Tag"].Value),
                 BuildMetaData = semanticVersionBuildMetaData
             };
 
@@ -240,9 +240,9 @@ namespace GitVersion
         /// <para>f - Full SemVer [1.2.3-beta.4+5]</para>
         /// <para>i - Informational SemVer [1.2.3-beta.4+5.Branch.master.BranchType.Master.Sha.000000]</para>
         /// <para>j - Just the SemVer part [1.2.3]</para>
-        /// <para>t - SemVer with the IGitTag [1.2.3-beta.4]</para>
-        /// <para>l - Legacy SemVer IGitTag for systems which do not support SemVer 2.0 properly [1.2.3-beta4]</para>
-        /// <para>lp - Legacy SemVer IGitTag for systems which do not support SemVer 2.0 properly (padded) [1.2.3-beta0004]</para>
+        /// <para>t - SemVer with the Tag [1.2.3-beta.4]</para>
+        /// <para>l - Legacy SemVer Tag for systems which do not support SemVer 2.0 properly [1.2.3-beta4]</para>
+        /// <para>lp - Legacy SemVer Tag for systems which do not support SemVer 2.0 properly (padded) [1.2.3-beta0004]</para>
         /// </summary>
         public string ToString(string format, IFormatProvider formatProvider = null)
         {

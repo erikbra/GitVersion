@@ -12,7 +12,7 @@ namespace GitVersion.VersionCalculation
 {
     /// <summary>
     /// Version is extracted from older commits's merge messages.
-    /// BaseVersionSource is the IGitCommit where the message was found.
+    /// BaseVersionSource is the Commit where the message was found.
     /// Increments if PreventIncrementForMergedBranchVersion (from the branch config) is false.
     /// </summary>
     public class MergeMessageVersionStrategy : IVersionStrategy
@@ -35,7 +35,7 @@ namespace GitVersion.VersionCalculation
                         mergeMessage.Version != null &&
                         context.FullConfiguration.IsReleaseBranch(TrimRemote(mergeMessage.MergedBranch)))
                     {
-                        log.Info($"Found IGitCommit [{context.CurrentCommit.Sha}] matching merge message format: {mergeMessage.FormatName}");
+                        log.Info($"Found Commit [{context.CurrentCommit.Sha}] matching merge message format: {mergeMessage.FormatName}");
                         var shouldIncrement = !context.Configuration.PreventIncrementForMergedBranchVersion;
                         return new[]
                         {

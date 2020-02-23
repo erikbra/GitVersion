@@ -10,6 +10,7 @@ using NUnit.Framework;
 using Shouldly;
 using GitVersion;
 using GitVersion.Extensions;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersionCore.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -93,7 +94,7 @@ namespace GitVersionCore.Tests.VersionCalculation
                         "custom", new BranchConfig
                         {
                             Regex = "custom/",
-                            IGitTag = "useBranchName",
+                            Tag = "useBranchName",
                             SourceBranches = new List<string>()
                         }
                     }
@@ -122,7 +123,7 @@ namespace GitVersionCore.Tests.VersionCalculation
                         "custom", new BranchConfig
                         {
                             Regex = "custom/",
-                            IGitTag = "alpha.{BranchName}",
+                            Tag = "alpha.{BranchName}",
                             SourceBranches = new List<string>()
                         }
                     }
@@ -150,7 +151,7 @@ namespace GitVersionCore.Tests.VersionCalculation
                     {
                         "master", new BranchConfig()
                         {
-                            IGitTag = "beta"
+                            Tag = "beta"
                         }
                     },
                 }
@@ -167,7 +168,8 @@ namespace GitVersionCore.Tests.VersionCalculation
             fixture.AssertFullSemver(config, "0.1.0-test.2+2");
 
             Commands.Checkout(fixture.Repository, "master");
-            fixture.Repository.Merge(fixture.Repository.FindBranch("feature/test"), Generate.SignatureNow());
+            var findBranch = ((LibGitRepository) fixture.Repository.FindBranch("feature/test")).Wrapped;
+            fixture.Repository.Merge((Commit) findBranch, Generate.SignatureNow());
 
             fixture.AssertFullSemver(config, "0.1.0-beta.1+2");
         }

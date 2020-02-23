@@ -88,7 +88,7 @@ namespace GitVersion
 
                 if (arguments.Diag)
                 {
-                    log.Info("Dumping IGitCommit graph: ");
+                    log.Info("Dumping Commit graph: ");
                     LibGitExtensions.DumpGraph(targetPath, mess => log.Info(mess), 100);
                 }
                 if (!Directory.Exists(targetPath))

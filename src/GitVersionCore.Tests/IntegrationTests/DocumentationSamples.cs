@@ -94,7 +94,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MakeACommit();
             fixture.AssertFullSemver("1.2.1-beta.1+2");
 
-            // Apply beta.1 IGitTag should be exact IGitTag
+            // Apply beta.1 Tag should be exact Tag
             fixture.ApplyTag("1.2.1-beta.1");
             fixture.AssertFullSemver("1.2.1-beta.1");
             fixture.Checkout("master");
@@ -125,21 +125,21 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.SequenceDiagram.Activate("release/1.3.0");
             fixture.AssertFullSemver("1.3.0-beta.1+0");
 
-            // Make another IGitCommit on develop
+            // Make another Commit on develop
             fixture.Checkout("develop");
             fixture.MakeACommit();
             fixture.AssertFullSemver("1.4.0-alpha.1");
 
-            // Make a IGitCommit to release-1.3.0
+            // Make a Commit to release-1.3.0
             fixture.Checkout("release/1.3.0");
             fixture.MakeACommit();
             fixture.AssertFullSemver("1.3.0-beta.1+1");
 
-            // Apply beta.1 IGitTag should be exact IGitTag
+            // Apply beta.1 Tag should be exact Tag
             fixture.ApplyTag("1.3.0-beta.1");
             fixture.AssertFullSemver("1.3.0-beta.1");
 
-            // Make a IGitCommit after a IGitTag should bump up the beta
+            // Make a Commit after a Tag should bump up the beta
             fixture.MakeACommit();
             fixture.AssertFullSemver("1.3.0-beta.2+2");
 
@@ -155,7 +155,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.ApplyTag("1.3.0");
             fixture.AssertFullSemver("1.3.0");
 
-            // Not 0 for IGitCommit count as we can't know the increment rules of the merged branch
+            // Not 0 for Commit count as we can't know the increment rules of the merged branch
             fixture.Checkout("develop");
             fixture.AssertFullSemver("1.4.0-alpha.4");
             Console.WriteLine(fixture.SequenceDiagram.GetDiagram());
@@ -180,21 +180,21 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.SequenceDiagram.Activate("release/2.0.0");
             fixture.AssertFullSemver("2.0.0-beta.1+0");
 
-            // Make another IGitCommit on develop
+            // Make another Commit on develop
             fixture.Checkout("develop");
             fixture.MakeACommit();
             fixture.AssertFullSemver("2.1.0-alpha.1");
 
-            // Make a IGitCommit to release-2.0.0
+            // Make a Commit to release-2.0.0
             fixture.Checkout("release/2.0.0");
             fixture.MakeACommit();
             fixture.AssertFullSemver("2.0.0-beta.1+1");
 
-            // Apply beta.1 IGitTag should be exact IGitTag
+            // Apply beta.1 Tag should be exact Tag
             fixture.ApplyTag("2.0.0-beta.1");
             fixture.AssertFullSemver("2.0.0-beta.1");
 
-            // Make a IGitCommit after a IGitTag should bump up the beta
+            // Make a Commit after a Tag should bump up the beta
             fixture.MakeACommit();
             fixture.AssertFullSemver("2.0.0-beta.2+2");
 
@@ -211,7 +211,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.ApplyTag("2.0.0");
             fixture.AssertFullSemver("2.0.0");
 
-            // Not 0 for IGitCommit count as we can't know the increment rules of the merged branch
+            // Not 0 for Commit count as we can't know the increment rules of the merged branch
             fixture.Checkout("develop");
             fixture.AssertFullSemver("2.1.0-alpha.4");
             Console.WriteLine(fixture.SequenceDiagram.GetDiagram());
@@ -246,7 +246,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MakeACommit();
             fixture.AssertFullSemver("1.3.1-beta.1+3");
 
-            // Apply beta.1 IGitTag should be exact IGitTag
+            // Apply beta.1 Tag should be exact Tag
             fixture.ApplyTag("1.3.1-beta.1");
             fixture.AssertFullSemver("1.3.1-beta.1");
             fixture.Checkout("support/1.x");
@@ -289,7 +289,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MakeACommit();
             fixture.AssertFullSemver("1.4.0-beta.1+2");
 
-            // Apply beta.1 IGitTag should be exact IGitTag
+            // Apply beta.1 Tag should be exact Tag
             fixture.ApplyTag("1.4.0-beta.1");
             fixture.AssertFullSemver("1.4.0-beta.1");
             fixture.Checkout("support/1.x");
@@ -380,15 +380,15 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.MakeACommit();
             fixture.AssertFullSemver("2.0.0-beta.1+2");
 
-            // Apply beta.1 IGitTag should be exact IGitTag
+            // Apply beta.1 Tag should be exact Tag
             fixture.ApplyTag("2.0.0-beta.1");
             fixture.AssertFullSemver("2.0.0-beta.1");
 
-            // test that the CommitsSinceVersionSource should still return IGitCommit count
+            // test that the CommitsSinceVersionSource should still return Commit count
             var version = fixture.GetVersion();
             version.CommitsSinceVersionSource.ShouldBe("2");
 
-            // Make a IGitCommit after a IGitTag should bump up the beta
+            // Make a Commit after a Tag should bump up the beta
             fixture.MakeACommit();
             fixture.AssertFullSemver("2.0.0-beta.2+3");
 

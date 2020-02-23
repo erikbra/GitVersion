@@ -1,10 +1,10 @@
-using LibGit2Sharp;
+using GitVersion.Models;
 
 namespace GitVersionCore.Tests.Mocks
 {
     public class MockMergeCommit : MockCommit
     {
-        public MockMergeCommit(ObjectId id = null) : base(id)
+        public MockMergeCommit(IGitObjectId id = null) : base(id)
         {
             ParentsEx.Add(null);
         }

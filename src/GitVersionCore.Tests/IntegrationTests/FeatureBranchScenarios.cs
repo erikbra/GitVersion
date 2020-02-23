@@ -180,8 +180,8 @@ namespace GitVersionCore.Tests.IntegrationTests
             {
                 Branches =
                 {
-                    { "release", new BranchConfig { IGitTag = "build" } },
-                    { "feature", new BranchConfig { IGitTag = "useBranchName" } }
+                    { "release", new BranchConfig { Tag = "build" } },
+                    { "feature", new BranchConfig { Tag = "useBranchName" } }
                 }
             };
 
@@ -205,7 +205,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             {
                 Branches =
                 {
-                    { "feature", new BranchConfig { IGitTag = IGitTag } }
+                    { "feature", new BranchConfig { Tag = IGitTag } }
                 }
             };
 
@@ -485,7 +485,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                     {
                         "master", new BranchConfig()
                         {
-                            IGitTag = "pre",
+                            Tag = "pre",
                             TracksReleaseBranches = true,
                         }
                     },
@@ -493,7 +493,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                         "release", new BranchConfig()
                         {
                             IsReleaseBranch = true,
-                            IGitTag = "rc",
+                            Tag = "rc",
                         }
                     }
                 }
@@ -502,7 +502,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             using var fixture = new EmptyRepositoryFixture();
             fixture.MakeACommit();
 
-            // create a release branch and IGitTag a release
+            // create a release branch and Tag a release
             fixture.BranchTo("release/0.10.0");
             fixture.MakeACommit();
             fixture.MakeACommit();
@@ -541,7 +541,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                     {
                         "feature", new BranchConfig()
                         {
-                            IGitTag = "feat-{BranchName}"
+                            Tag = "feat-{BranchName}"
                         }
                     }
                 }

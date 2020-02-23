@@ -48,7 +48,7 @@ namespace GitVersion.Configuration.Init.SetConfig
 
 0) Go Back
 1) Follow SemVer and only increment when a release has been tagged (continuous delivery mode)
-2) Increment based on branch config every IGitCommit (continuous deployment mode)";
+2) Increment based on branch config every Commit (continuous deployment mode)";
         }
 
         protected override string DefaultResult => "0";

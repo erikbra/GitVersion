@@ -66,7 +66,7 @@ namespace GitVersionCore.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public GitObject Lookup(string objectish, ObjectType type)
+        public IGitObject Lookup(string objectish, ObjectType type)
         {
             return new MockCommit();
         }

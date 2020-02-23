@@ -4,6 +4,7 @@ using GitTools.Testing;
 using GitVersion;
 using GitVersion.Configuration;
 using GitVersion.Logging;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersion.VersionCalculation;
 using GitVersionCore.Tests.Helpers;
 using LibGit2Sharp;
@@ -32,9 +33,9 @@ namespace GitVersionCore.Tests.VersionCalculation.Strategies
         {
             using var fixture = new EmptyRepositoryFixture();
             fixture.Repository.MakeACommit();
-            var branch = fixture.Repository.CreateBranch(branchName);
+            var branch = new LibGitBranch(fixture.Repository.CreateBranch(branchName));
 
-            var gitVersionContext = new GitVersionContext(fixture.Repository, log, branch, configuration);
+            var gitVersionContext = new GitVersionContext(new LibGitRepository(fixture.Repository), log, branch, configuration);
             var baseVersion = strategy.GetVersions(gitVersionContext).Single();
 
             baseVersion.SemanticVersion.ToString().ShouldBe(expectedBaseVersion);
@@ -48,9 +49,9 @@ namespace GitVersionCore.Tests.VersionCalculation.Strategies
         {
             using var fixture = new EmptyRepositoryFixture();
             fixture.Repository.MakeACommit();
-            var branch = fixture.Repository.CreateBranch(branchName);
+            var branch = new LibGitBranch(fixture.Repository.CreateBranch(branchName));
 
-            var gitVersionContext = new GitVersionContext(fixture.Repository, log, branch, configuration);
+            var gitVersionContext = new GitVersionContext(new LibGitRepository(fixture.Repository), log, branch, configuration);
             var baseVersions = strategy.GetVersions(gitVersionContext);
 
             baseVersions.ShouldBeEmpty();
@@ -62,11 +63,11 @@ namespace GitVersionCore.Tests.VersionCalculation.Strategies
         {
             using var fixture = new EmptyRepositoryFixture();
             fixture.Repository.MakeACommit();
-            var branch = fixture.Repository.CreateBranch(branchName);
+            var branch = new LibGitBranch(fixture.Repository.CreateBranch(branchName));
             var branchConfigs = new Dictionary<string, BranchConfig> { { "support", new BranchConfig { IsReleaseBranch = true } } };
             configuration.Branches = branchConfigs;
 
-            var gitVersionContext = new GitVersionContext(fixture.Repository, log, branch, configuration);
+            var gitVersionContext = new GitVersionContext(new LibGitRepository(fixture.Repository), log, branch, configuration);
             var baseVersion = strategy.GetVersions(gitVersionContext).Single();
 
             baseVersion.SemanticVersion.ToString().ShouldBe(expectedBaseVersion);
@@ -84,7 +85,7 @@ namespace GitVersionCore.Tests.VersionCalculation.Strategies
             Commands.Fetch((Repository)fixture.LocalRepositoryFixture.Repository, fixture.LocalRepositoryFixture.Repository.Network.Remotes.First().Name, new string[0], new FetchOptions(), null);
             fixture.LocalRepositoryFixture.Checkout($"origin/{branchName}");
 
-            var gitVersionContext = new GitVersionContext(fixture.Repository, log, branch, configuration);
+            var gitVersionContext = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(branch), configuration);
             var baseVersion = strategy.GetVersions(gitVersionContext).Single();
 
             baseVersion.SemanticVersion.ToString().ShouldBe(expectedBaseVersion);

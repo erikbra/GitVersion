@@ -57,7 +57,7 @@ namespace GitVersion.Configuration.Init
 
 3) Set next version number
 4) Branch specific configuration
-5) Branch Increment mode (per IGitCommit/after IGitTag) (Current: {config.VersioningMode})
+5) Branch Increment mode (per Commit/after Tag) (Current: {config.VersioningMode})
 6) Assembly versioning scheme (Current: {config.AssemblyVersioningScheme})
 7) Setup build scripts";
         }

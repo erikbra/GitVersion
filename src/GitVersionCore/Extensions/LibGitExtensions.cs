@@ -106,7 +106,17 @@ namespace GitVersion.Extensions
             return repository.Branches.FirstOrDefault(x => x.NameWithoutRemote() == branchName);
         }
 
+        public static IGitBranch FindBranch(this IRepository repository, string branchName)
+        {
+            return new LibGitBranch(repository.Branches.FirstOrDefault(x => x.NameWithoutRemote() == branchName));
+        }
+
         public static void DumpGraph(this IGitRepository repository, Action<string> writer = null, int? maxCommits = null)
+        {
+            DumpGraph(repository.Info.Path, writer, maxCommits);
+        }
+
+        public static void DumpGraph(this IRepository repository, Action<string> writer = null, int? maxCommits = null)
         {
             DumpGraph(repository.Info.Path, writer, maxCommits);
         }

@@ -199,12 +199,12 @@ namespace GitVersionCore.Tests.IntegrationTests
             fixture.Repository.MakeATaggedCommit(taggedVersion);
             fixture.Repository.MakeCommits(5);
 
-            fixture.AssertFullSemver(config, "0.1.0+5");    //Fallback version + 5 commits since IGitTag
+            fixture.AssertFullSemver(config, "0.1.0+5");    //Fallback version + 5 commits since Tag
 
             taggedVersion = "bad/1.0.3";
             fixture.Repository.MakeATaggedCommit(taggedVersion);
 
-            fixture.AssertFullSemver(config, "0.1.0+6");   //Fallback version + 6 commits since IGitTag
+            fixture.AssertFullSemver(config, "0.1.0+6");   //Fallback version + 6 commits since Tag
         }
     }
 }

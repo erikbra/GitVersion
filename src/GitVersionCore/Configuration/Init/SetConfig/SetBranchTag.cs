@@ -34,11 +34,11 @@ namespace GitVersion.Configuration.Init.SetConfig
                     steps.Enqueue(configureBranchStep.WithData(name, branchConfig));
                     return StepResult.Ok();
                 case "1":
-                    branchConfig.IGitTag = string.Empty;
+                    branchConfig.Tag = string.Empty;
                     steps.Enqueue(configureBranchStep.WithData(name, branchConfig));
                     return StepResult.Ok();
                 default:
-                    branchConfig.IGitTag = result;
+                    branchConfig.Tag = result;
                     steps.Enqueue(configureBranchStep.WithData(name, branchConfig));
                     return StepResult.Ok();
             }
@@ -46,12 +46,12 @@ namespace GitVersion.Configuration.Init.SetConfig
 
         protected override string GetPrompt(Config config, string workingDirectory)
         {
-            return @"This sets the pre-release IGitTag which will be used for versions on this branch (beta, rc etc)
+            return @"This sets the pre-release Tag which will be used for versions on this branch (beta, rc etc)
 
 0) Go Back
-1) No IGitTag
+1) No Tag
 
-Anything else will be used as the IGitTag";
+Anything else will be used as the Tag";
         }
 
         protected override string DefaultResult => "0";

@@ -68,21 +68,21 @@ namespace GitVersion
         }
 
         // TODO Should we cache this?
-        public IEnumerable<IGitBranch> GetBranchesContainingCommit(IGitCommit IGitCommit, IList<IGitBranch> branches, bool onlyTrackedBranches)
+        public IEnumerable<IGitBranch> GetBranchesContainingCommit(IGitCommit commit, IList<IGitBranch> branches, bool onlyTrackedBranches)
         {
-            if (IGitCommit == null)
+            if (commit == null)
             {
-                throw new ArgumentNullException(nameof(IGitCommit));
+                throw new ArgumentNullException(nameof(commit));
             }
 
-            using (log.IndentLog($"Getting branches containing the IGitCommit '{IGitCommit.Id}'."))
+            using (log.IndentLog($"Getting branches containing the commit '{commit.Id}'."))
             {
                 var directBranchHasBeenFound = false;
                 log.Info("Trying to find direct branches.");
                 // TODO: It looks wasteful looping through the branches twice. Can't these loops be merged somehow? @asbjornu
                 foreach (var branch in branches)
                 {
-                    if (branch.Tip != null && branch.Tip.Sha != IGitCommit.Sha || ((onlyTrackedBranches && branch.IsTracking) || !onlyTrackedBranches))
+                    if (branch.Tip != null && branch.Tip.Sha != commit.Sha || ((onlyTrackedBranches && branch.IsTracking) || !onlyTrackedBranches))
                     {
                         continue;
                     }
@@ -105,7 +105,7 @@ namespace GitVersion
                     var commits = Repository.Commits.QueryBy(new GitCommitFilter
                     {
                         IncludeReachableFrom = branch
-                    }).Where(c => c.Sha == IGitCommit.Sha);
+                    }).Where(c => c.Sha == commit.Sha);
 
                     if (!commits.Any())
                     {
@@ -113,7 +113,7 @@ namespace GitVersion
                         continue;
                     }
 
-                    log.Info($"The branch '{branch.FriendlyName}' has a matching IGitCommit.");
+                    log.Info($"The branch '{branch.FriendlyName}' has a matching commit.");
                     yield return branch;
                 }
             }
@@ -194,8 +194,8 @@ namespace GitVersion
         }
 
         /// <summary>
-        /// Find the IGitCommit where the given branch was branched from another branch.
-        /// If there are multiple such commits and branches, tries to guess based on IGitCommit histories.
+        /// Find the commit where the given branch was branched from another branch.
+        /// If there are multiple such commits and branches, tries to guess based on commit histories.
         /// </summary>
         public BranchCommit FindCommitBranchWasBranchedFrom(IGitBranch branch, params IGitBranch[] excludedBranches)
         {
@@ -220,7 +220,7 @@ namespace GitVersion
                 {
                     var first = possibleBranches.First();
                     log.Info($"Multiple source branches have been found, picking the first one ({first.Branch.FriendlyName}).\n" +
-                        "This may result in incorrect IGitCommit counting.\nOptions were:\n " +
+                        "This may result in incorrect commit counting.\nOptions were:\n " +
                         string.Join(", ", possibleBranches.Select(b => b.Branch.FriendlyName)));
                     return first;
                 }

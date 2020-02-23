@@ -2,7 +2,7 @@ namespace GitVersion.Models
 {
     public interface IGitRefSpec
     {
-        string Specification { get; set; }
-        string Source { get; set; }
+        string Specification { get; }
+        string Source { get; }
     }
 }

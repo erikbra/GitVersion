@@ -3,7 +3,6 @@ using GitTools.Testing;
 using GitVersion;
 using GitVersion.Configuration;
 using GitVersion.OutputVariables;
-using LibGit2Sharp;
 using Shouldly;
 using GitVersion.Logging;
 using Microsoft.Extensions.Options;

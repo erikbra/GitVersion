@@ -105,7 +105,7 @@ namespace GitVersion.VersionCalculation
                 }
                 else
                 {
-                    // set the Commit count on the tagged ver
+                    // set the commit count on the tagged ver
                     taggedSemanticVersion.BuildMetaData.CommitsSinceVersionSource = semver.BuildMetaData.CommitsSinceVersionSource;
                 }
             }
@@ -159,7 +159,7 @@ namespace GitVersion.VersionCalculation
             }
             if (tagToUse.Contains("{BranchName}"))
             {
-                log.Info("Using branch name to calculate version Tag");
+                log.Info("Using branch name to calculate version tag");
 
                 var branchName = branchNameOverride ?? branchFriendlyName;
                 if (!string.IsNullOrWhiteSpace(configuration.BranchPrefixToTrim))

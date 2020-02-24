@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using GitVersion.Exceptions;
 using GitVersion.Logging;
-using LibGit2Sharp;
 using GitVersion.Extensions;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 using GitVersion.Models.LibGitSharpWrappers;
 
 namespace GitVersion.Helpers
@@ -63,12 +62,12 @@ namespace GitVersion.Helpers
                     return;
                 }
 
-                log.Info($"HEAD is detached and points at Commit '{headSha}'.");
+                log.Info($"HEAD is detached and points at commit '{headSha}'.");
                 log.Info(string.Format("Local Refs:\r\n" + string.Join(System.Environment.NewLine, repo.Refs.FromGlob("*").Select(r => $"{r.CanonicalName} ({r.TargetIdentifier})"))));
 
-                // In order to decide whether a fake branch is required or not, first check to see if any local branches have the same Commit SHA of the head SHA.
+                // In order to decide whether a fake branch is required or not, first check to see if any local branches have the same commit SHA of the head SHA.
                 // If they do, go ahead and checkout that branch
-                // If no, go ahead and check out a new branch, using the known Commit SHA as the pointer
+                // If no, go ahead and check out a new branch, using the known commit SHA as the pointer
                 var localBranchesWhereCommitShaIsHead = repo.Branches.Where(b => !b.IsRemote && b.Tip.Sha == headSha).ToList();
 
                 var matchingCurrentBranch = !string.IsNullOrEmpty(currentBranch)
@@ -83,9 +82,9 @@ namespace GitVersion.Helpers
                 {
                     var branchNames = localBranchesWhereCommitShaIsHead.Select(r => r.CanonicalName);
                     var csvNames = string.Join(", ", branchNames);
-                    const string moveBranchMsg = "Move one of the branches along a Commit to remove warning";
+                    const string moveBranchMsg = "Move one of the branches along a commit to remove warning";
 
-                    log.Warning($"Found more than one local branch pointing at the Commit '{headSha}' ({csvNames}).");
+                    log.Warning($"Found more than one local branch pointing at the commit '{headSha}' ({csvNames}).");
                     var master = localBranchesWhereCommitShaIsHead.SingleOrDefault(n => n.FriendlyName == "master");
                     if (master != null)
                     {
@@ -109,7 +108,7 @@ namespace GitVersion.Helpers
                 }
                 else if (localBranchesWhereCommitShaIsHead.Count == 0)
                 {
-                    log.Info($"No local branch pointing at the Commit '{headSha}'. Fake branch needs to be created.");
+                    log.Info($"No local branch pointing at the commit '{headSha}'. Fake branch needs to be created.");
                     CreateFakeBranchPointingAtThePullRequestTip(log, repo, authentication);
                 }
                 else
@@ -214,24 +213,24 @@ Please run `git {CreateGitLogArgs(100)}` and submit it along with your build log
 
             if (refs.Count == 0)
             {
-                var message = $"Couldn't find any remote tips from remote '{remote.Url}' pointing at the Commit '{headTipSha}'.";
+                var message = $"Couldn't find any remote tips from remote '{remote.Url}' pointing at the commit '{headTipSha}'.";
                 throw new WarningException(message);
             }
 
             if (refs.Count > 1)
             {
                 var names = string.Join(", ", refs.Select(r => r.CanonicalName));
-                var message = $"Found more than one remote tip from remote '{remote.Url}' pointing at the Commit '{headTipSha}'. Unable to determine which one to use ({names}).";
+                var message = $"Found more than one remote tip from remote '{remote.Url}' pointing at the commit '{headTipSha}'. Unable to determine which one to use ({names}).";
                 throw new WarningException(message);
             }
 
             var reference = refs[0];
             var canonicalName = reference.CanonicalName;
-            log.Info($"Found remote tip '{canonicalName}' pointing at the Commit '{headTipSha}'.");
+            log.Info($"Found remote tip '{canonicalName}' pointing at the commit '{headTipSha}'.");
 
             if (canonicalName.StartsWith("refs/tags"))
             {
-                log.Info($"Checking out Tag '{canonicalName}'");
+                log.Info($"Checking out tag '{canonicalName}'");
                 GitCommands.Checkout(repo, reference.Target.Sha);
                 return;
             }

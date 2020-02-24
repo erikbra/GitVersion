@@ -1,24 +1,15 @@
+using GitVersion.Models.Abstractions;
 using LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers
 {
-    public class LibGitDirectReference : IGitDirectReference
+    public class LibGitDirectReference : LibGitReference, IGitDirectReference
     {
-        public DirectReference Wrapped { get; }
+        public new DirectReference Wrapped => (DirectReference) base.Wrapped;
 
-        public LibGitDirectReference(Reference wrapped)
+        public LibGitDirectReference(Reference wrapped): base(wrapped)
         {
-            Wrapped = (DirectReference) wrapped;
         }
-
-        public string CanonicalName => Wrapped.CanonicalName;
-        public string TargetIdentifier => Wrapped.TargetIdentifier;
-        public string Id => Target.Id;
-        public string Sha => Target.Sha;
-
-        IGitDirectReference IGitReference.ResolveToDirectReference() => this;
-
-        public IGitReference Target { get; }
 
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 using LibGit2Sharp;
 
 using Index = LibGit2Sharp.Index;

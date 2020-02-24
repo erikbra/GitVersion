@@ -46,12 +46,12 @@ namespace GitVersion.Configuration.Init.SetConfig
 
         protected override string GetPrompt(Config config, string workingDirectory)
         {
-            return @"This sets the pre-release Tag which will be used for versions on this branch (beta, rc etc)
+            return @"This sets the pre-release tag which will be used for versions on this branch (beta, rc etc)
 
 0) Go Back
-1) No Tag
+1) No tag
 
-Anything else will be used as the Tag";
+Anything else will be used as the tag";
         }
 
         protected override string DefaultResult => "0";

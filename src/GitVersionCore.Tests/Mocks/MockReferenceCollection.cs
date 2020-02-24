@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.Mocks
@@ -60,35 +60,35 @@ namespace GitVersionCore.Tests.Mocks
         public int Count => Commits.Count;
 
         public bool IsReadOnly => false;
-        public IGitDirectReference Add(string localCanonicalName, IGitObjectId objectId, bool b)
+        public IGitReference Add(string localCanonicalName, IGitObjectId objectId, bool allowOverwrite)
         {
             throw new System.NotImplementedException();
         }
 
-        public IGitDirectReference Add(string localCanonicalName, string repoTipId)
+        public IGitReference Add(string localCanonicalName, string repoTipId)
         {
             throw new System.NotImplementedException();
         }
 
-        public IGitDirectReference Add(string name, IGitObjectId targetId)
+        public IGitReference Add(string name, IGitObjectId targetId)
         {
             throw new System.NotImplementedException();
         }
 
         public IGitReference Head { get; }
-        public IGitReferenceCollection FromGlob(string s)
+        public IEnumerable<IGitReference> FromGlob(string pattern)
         {
             throw new System.NotImplementedException();
         }
 
         public IGitReference this[string name] => throw new System.NotImplementedException();
 
-        public void UpdateTarget(IGitReference repoRef, string repoTipId)
+        public void UpdateTarget(IGitReference repoRef, string objectish)
         {
             throw new System.NotImplementedException();
         }
 
-        public void UpdateTarget(IGitReference repoRef, IGitObjectId repoTipId)
+        public void UpdateTarget(IGitReference repoRef, IGitObjectId targetId)
         {
             throw new System.NotImplementedException();
         }

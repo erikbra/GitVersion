@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using LibGit2Sharp;
 using GitVersion.Extensions;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.VersioningModes
 {

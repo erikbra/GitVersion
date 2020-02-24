@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitVersion.Models.Abstractions;
 using lgs =  LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers
@@ -9,12 +10,14 @@ namespace GitVersion.Models.LibGitSharpWrappers
     {
         public lgs.Network Wrapped { get; }
 
+
         public LibGitNetwork(lgs.Network wrapped)
         {
             Wrapped = wrapped;
         }
 
         public IGitRemoteCollection Remotes => new LibGitRemoteCollection(Wrapped.Remotes);
+
         public IEnumerable<IGitDirectReference> ListReferences(IGitRemote remote)
         {
             if (!(remote is LibGitRemote lgr))

@@ -10,7 +10,6 @@ using NUnit.Framework;
 using Shouldly;
 using GitVersion;
 using GitVersion.Extensions;
-using GitVersion.Models.LibGitSharpWrappers;
 using GitVersionCore.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -168,8 +167,8 @@ namespace GitVersionCore.Tests.VersionCalculation
             fixture.AssertFullSemver(config, "0.1.0-test.2+2");
 
             Commands.Checkout(fixture.Repository, "master");
-            var findBranch = ((LibGitRepository) fixture.Repository.FindBranch("feature/test")).Wrapped;
-            fixture.Repository.Merge((Commit) findBranch, Generate.SignatureNow());
+            var findBranch = (Branch) fixture.Repository.FindBranch("feature/test").Wrapped;
+            fixture.Repository.Merge(findBranch, Generate.SignatureNow());
 
             fixture.AssertFullSemver(config, "0.1.0-beta.1+2");
         }

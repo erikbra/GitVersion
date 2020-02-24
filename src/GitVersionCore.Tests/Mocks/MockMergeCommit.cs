@@ -1,4 +1,4 @@
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersionCore.Tests.Mocks
 {

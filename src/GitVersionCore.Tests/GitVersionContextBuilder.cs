@@ -2,10 +2,9 @@ using GitTools.Testing;
 using GitVersion;
 using GitVersion.Configuration;
 using GitVersion.Logging;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 using GitVersion.Models.LibGitSharpWrappers;
 using GitVersionCore.Tests.Mocks;
-using LibGit2Sharp;
 
 namespace GitVersionCore.Tests
 {

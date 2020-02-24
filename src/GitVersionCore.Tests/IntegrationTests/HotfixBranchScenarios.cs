@@ -5,7 +5,6 @@ using NUnit.Framework;
 using GitVersion.Configuration;
 using GitVersion.VersioningModes;
 using GitVersion.Extensions;
-using GitVersion.Models;
 using GitVersionCore.Tests.Helpers;
 
 namespace GitVersionCore.Tests.IntegrationTests

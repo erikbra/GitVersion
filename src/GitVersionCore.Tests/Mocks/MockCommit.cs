@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 using GitVersion.Models.LibGitSharpWrappers;
-using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.Mocks
 {

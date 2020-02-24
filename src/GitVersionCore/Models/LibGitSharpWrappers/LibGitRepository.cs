@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using GitVersion.Models.Abstractions;
 using lgs = LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers

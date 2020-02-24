@@ -1,58 +1,82 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using GitVersion.Models.Abstractions;
+using LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers
 {
     public class LibGitReferenceCollection : IGitReferenceCollection
     {
-        private IEnumerator<IGitReference> _enumerator;
-        public LibGit2Sharp.ReferenceCollection Wrapped { get; }
+        private ReferenceCollection Wrapped { get; }
 
-        public LibGitReferenceCollection(LibGit2Sharp.ReferenceCollection wrapped)
+        public LibGitReferenceCollection(ReferenceCollection wrapped)
         {
             Wrapped = wrapped;
-            _enumerator = new LibGitReferenceEnumerator(wrapped.GetEnumerator());
         }
 
-        public IEnumerator<IGitReference> GetEnumerator() => _enumerator;
+        public IEnumerator<IGitReference> GetEnumerator() => new LibGitReferenceEnumerator(Wrapped.GetEnumerator());
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public IGitReference Add(string localCanonicalName, IGitObjectId objectId, bool allowOverwrite)
         {
-            return GetEnumerator();
+            return Wrap(Wrapped.Add(localCanonicalName, LibGit(objectId).Wrapped, allowOverwrite));
         }
 
-        public IGitDirectReference Add(string localCanonicalName, IGitObjectId objectId, bool b)
+        public IGitReference Add(string localCanonicalName, string repoTipId)
         {
-            throw new NotImplementedException();
+            return Wrap(Wrapped.Add(localCanonicalName, repoTipId));
         }
 
-        public IGitDirectReference Add(string localCanonicalName, string repoTipId)
+        public IGitReference Add(string name, IGitObjectId targetId)
         {
-            throw new NotImplementedException();
+            return Wrap(Wrapped.Add(name, LibGit(targetId).Wrapped));
         }
 
-        public IGitDirectReference Add(string name, IGitObjectId targetId)
+        public IGitReference Head => new LibGitReference(Wrapped.Head);
+
+        public IEnumerable<IGitReference> FromGlob(string pattern)
         {
-            throw new NotImplementedException();
+            return Wrapped.FromGlob(pattern).Select(Wrap);
         }
 
-        public IGitReference Head { get; }
-        public IGitReferenceCollection FromGlob(string s)
+        public IGitReference this[string name] => Wrap(Wrapped[name]);
+
+        public void UpdateTarget(IGitReference repoRef, string objectish)
         {
-            throw new NotImplementedException();
+            Wrapped.UpdateTarget(LibGit(repoRef).Wrapped, objectish);
         }
 
-        public IGitReference this[string name] => throw new NotImplementedException();
-
-        public void UpdateTarget(IGitReference repoRef, string repoTipId)
+        public void UpdateTarget(IGitReference repoRef, IGitObjectId targetId)
         {
-            throw new NotImplementedException();
+            Wrapped.UpdateTarget(LibGit(repoRef).Wrapped, LibGit(targetId).Wrapped);
         }
 
-        public void UpdateTarget(IGitReference repoRef, IGitObjectId repoTipId)
+        private static LibGitObjectId LibGit(IGitObjectId objectId)
         {
-            throw new NotImplementedException();
+            if (!(objectId is LibGitObjectId libGitObjectId))
+            {
+                throw new ArgumentException("Unknown reference type: " + objectId.GetType(), nameof(objectId));
+            }
+            return libGitObjectId;
         }
+
+        private static LibGitReference LibGit(IGitReference reference)
+        {
+            if (!(reference is LibGitReference libGitReference))
+            {
+                throw new ArgumentException("Unknown reference type: " + reference.GetType(), nameof(reference));
+            }
+            return libGitReference;
+        }
+
+        private static LibGitReference Wrap(Reference reference) =>
+            reference switch
+            {
+                Reference r => new LibGitReference(r),
+                null => null
+            };
+
     }
 }

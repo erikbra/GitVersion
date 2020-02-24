@@ -1,4 +1,5 @@
 using System;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.Models.LibGitSharpWrappers
 {

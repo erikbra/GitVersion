@@ -1,4 +1,3 @@
-using LibGit2Sharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +5,7 @@ using System.Text.RegularExpressions;
 using GitVersion.Logging;
 using GitVersion.Configuration;
 using GitVersion.Extensions;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.VersionCalculation
 {
@@ -186,12 +185,12 @@ namespace GitVersion.VersionCalculation
         private IGitCommit GetEffectiveMainlineTip(IEnumerable<IGitCommit> mainlineCommitLog, IGitCommit mergeBase, IGitCommit mainlineTip)
         {
             // find the Commit that merged mergeBase into mainline
-            foreach (var IGitCommit in mainlineCommitLog)
+            foreach (var commit in mainlineCommitLog)
             {
-                if (IGitCommit == mergeBase || IGitCommit.Parents.Contains(mergeBase))
+                if (commit.Equals(mergeBase) || commit.Parents.Contains(mergeBase))
                 {
-                    log.Info($"Found branch merge point; choosing {IGitCommit} as effective mainline tip");
-                    return IGitCommit;
+                    log.Info($"Found branch merge point; choosing {commit} as effective mainline tip");
+                    return commit;
                 }
             }
 
@@ -223,7 +222,7 @@ namespace GitVersion.VersionCalculation
             mainlineTip = GetEffectiveMainlineTip(mainlineCommitLog, mergeBase, mainline.Tip);
 
             // detect forward merge and rewind mainlineTip to before it
-            if (mergeBase == context.CurrentCommit && !mainlineCommitLog.Contains(mergeBase))
+            if (Equals(mergeBase, context.CurrentCommit) && !mainlineCommitLog.Contains(mergeBase))
             {
                 var mainlineTipPrevious = mainlineTip.Parents.First();
                 var message = $"Detected forward merge at {mainlineTip}; rewinding mainline to previous Commit {mainlineTipPrevious}";

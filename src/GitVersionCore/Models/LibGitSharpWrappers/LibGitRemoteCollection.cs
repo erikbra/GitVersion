@@ -1,22 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GitVersion.Models.Abstractions;
 using LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers
 {
     public class LibGitRemoteCollection : IGitRemoteCollection
     {
-        private IEnumerator<IGitRemote> _enumerator;
         public RemoteCollection Wrapped { get; }
 
         public LibGitRemoteCollection(RemoteCollection wrapped)
         {
             Wrapped = wrapped;
-            _enumerator = new LibGitRemoteEnumerator(wrapped);
         }
 
-        public IEnumerator<IGitRemote> GetEnumerator() => _enumerator;
+        public IEnumerator<IGitRemote> GetEnumerator() => new LibGitRemoteEnumerator(Wrapped.GetEnumerator());
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 
         public void Update(string remoteName, params Action<IGitRemoteUpdater>[] actions)
@@ -24,9 +24,5 @@ namespace GitVersion.Models.LibGitSharpWrappers
             throw new NotImplementedException();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
     }
 }

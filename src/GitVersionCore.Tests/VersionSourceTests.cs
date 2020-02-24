@@ -1,6 +1,9 @@
+using System;
+using System.Text;
 using GitTools.Testing;
 using GitVersion;
 using GitVersion.Configuration;
+using GitVersion.Extensions;
 using GitVersion.Logging;
 using GitVersion.Models.LibGitSharpWrappers;
 using GitVersion.VersionCalculation;
@@ -77,7 +80,24 @@ namespace GitVersionCore.Tests
             Commands.Checkout(fixture.Repository, featureBranch);
             var commit3 = fixture.Repository.MakeACommit();
 
-            var context = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(fixture.Repository.Head), config);
+            var wrappedRepository = new LibGitRepository(fixture.Repository);
+            var context = new GitVersionContext(wrappedRepository, log, new LibGitBranch(fixture.Repository.Head), config);
+
+
+            // DEBUGGING
+            var coreGraph = new StringBuilder();
+            fixture.Repository.DumpGraph(s => coreGraph.Append(s));
+
+            var wrappedGraph = new StringBuilder();
+            wrappedRepository.DumpGraph(s => wrappedGraph.Append(s));
+
+            Console.WriteLine(coreGraph.ToString());
+            Console.WriteLine(wrappedGraph.ToString());
+
+            wrappedGraph.ToString().ShouldBe(coreGraph.ToString());
+            // END DEBUGGING
+
+
             var version = nextVersionCalculator.FindVersion(context);
 
             version.BuildMetaData.VersionSourceSha.ShouldBe(secondCommit.Sha);

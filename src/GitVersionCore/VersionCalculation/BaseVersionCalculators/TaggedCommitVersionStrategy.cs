@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using GitVersion.Extensions;
 using GitVersion.Logging;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.VersionCalculation
 {
     /// <summary>
     /// Version is extracted from all tags on the branch which are valid, and not newer than the current commit.
-    /// BaseVersionSource is the Tag's commit.
-    /// Increments if the Tag is not the current commit.
+    /// BaseVersionSource is the tag's commit.
+    /// Increments if the tag is not the current commit.
     /// </summary>
     public class TaggedCommitVersionStrategy : IVersionStrategy
     {
@@ -36,9 +36,9 @@ namespace GitVersion.VersionCalculation
                 .SelectMany(commit => { return allTags.Where(t => IsValidTag(t.Item1, commit)); })
                 .Select(t =>
                 {
-                    var IGitCommit = t.Item1.PeeledTarget() as IGitCommit;
-                    if (IGitCommit != null)
-                        return new VersionTaggedCommit(IGitCommit, t.Item2, t.Item1.FriendlyName);
+                    var commit = t.Item1.PeeledTarget() as IGitCommit;
+                    if (commit != null)
+                        return new VersionTaggedCommit(commit, t.Item2, t.Item1.FriendlyName);
 
                     return null;
                 })
@@ -57,12 +57,12 @@ namespace GitVersion.VersionCalculation
 
         protected virtual string FormatSource(VersionTaggedCommit version)
         {
-            return $"Git Tag '{version.Tag}'";
+            return $"Git tag '{version.Tag}'";
         }
 
-        protected virtual bool IsValidTag(IGitTag IGitTag, IGitCommit IGitCommit)
+        protected virtual bool IsValidTag(IGitTag tag, IGitCommit commit)
         {
-            return IGitTag.PeeledTarget() == IGitCommit;
+            return commit != null && tag != null && commit.Equals(tag.PeeledTarget());
         }
 
         protected class VersionTaggedCommit

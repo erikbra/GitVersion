@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitVersion.Logging;
-using LibGit2Sharp;
 using GitVersion.Extensions;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.Configuration
 {
@@ -83,7 +82,7 @@ namespace GitVersion.Configuration
                 var branchPoint = context.RepositoryMetadataProvider
                     .FindCommitBranchWasBranchedFrom(targetBranch, excludedInheritBranches.ToArray());
                 List<IGitBranch> possibleParents;
-                if (branchPoint == BranchCommit.Empty)
+                if (Equals(branchPoint, BranchCommit.Empty))
                 {
                     possibleParents = context.RepositoryMetadataProvider.GetBranchesContainingCommit(targetBranch.Tip, branchesToEvaluate, false)
                         // It fails to inherit Increment branch configuration if more than 1 parent;
@@ -188,7 +187,7 @@ namespace GitVersion.Configuration
         private IGitBranch[] CalculateWhenMultipleParents(IGitRepository repository, IGitCommit currentCommit, ref IGitBranch currentBranch, IGitBranch[] excludedBranches)
         {
             var parents = currentCommit.Parents.ToArray();
-            var branches = repository.Branches.Where(b => !b.IsRemote && b.Tip == parents[1]).ToList();
+            var branches = repository.Branches.Where(b => !b.IsRemote && b.Tip.Equals(parents[1])).ToList();
             if (branches.Count == 1)
             {
                 var branch = branches[0];
@@ -205,7 +204,7 @@ namespace GitVersion.Configuration
             }
             else
             {
-                var possibleTargetBranches = repository.Branches.Where(b => !b.IsRemote && b.Tip == parents[0]).ToList();
+                var possibleTargetBranches = repository.Branches.Where(b => !b.IsRemote && Equals(b.Tip, parents[0])).ToList();
                 if (possibleTargetBranches.Count > 1)
                 {
                     currentBranch = possibleTargetBranches.FirstOrDefault(b => b.NameWithoutRemote() == "master") ?? possibleTargetBranches.First();

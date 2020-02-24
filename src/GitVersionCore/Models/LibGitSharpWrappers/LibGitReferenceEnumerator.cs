@@ -1,21 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
+using LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers
 {
-    public class LibGitReferenceEnumerator : IEnumerator<IGitReference>
+    public class LibGitReferenceEnumerator : WrappingEnumerator<LibGitDirectReference, Reference>
     {
-        public IEnumerator<LibGit2Sharp.Reference> Wrapped { get; }
-
-        public LibGitReferenceEnumerator(IEnumerator<LibGit2Sharp.Reference> wrapped)
+        public LibGitReferenceEnumerator(IEnumerator<Reference> wrapped) : base(wrapped)
         {
-            Wrapped = wrapped;
         }
 
-        public bool MoveNext() => Wrapped.MoveNext();
-        public void Reset() => Wrapped.Reset();
-        public IGitReference Current => new LibGitDirectReference(Wrapped.Current);
-        object IEnumerator.Current => Current;
-        public void Dispose() => Wrapped.Dispose();
     }
 }

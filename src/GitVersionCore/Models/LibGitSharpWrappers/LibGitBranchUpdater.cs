@@ -1,3 +1,4 @@
+using GitVersion.Models.Abstractions;
 using LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers

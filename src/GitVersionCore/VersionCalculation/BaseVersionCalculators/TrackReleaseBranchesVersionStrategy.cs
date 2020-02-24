@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using LibGit2Sharp;
 using GitVersion.Extensions;
 using GitVersion.Logging;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.VersionCalculation
 {
@@ -91,7 +90,7 @@ namespace GitVersion.VersionCalculation
 
             // Find the Commit where the child branch was created.
             var baseSource = context.RepositoryMetadataProvider.FindMergeBase(releaseBranch, context.CurrentBranch);
-            if (baseSource == context.CurrentCommit)
+            if (Equals(baseSource, context.CurrentCommit))
             {
                 // Ignore the branch if it has no commits.
                 return new BaseVersion[0];

@@ -1,10 +1,9 @@
-using LibGit2Sharp;
 using System;
 using System.Linq;
 using GitVersion.Configuration;
 using GitVersion.Logging;
 using GitVersion.Extensions;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion
 {
@@ -66,7 +65,7 @@ namespace GitVersion
             CurrentCommitTaggedVersion = repository.Tags
                 .SelectMany(t =>
                 {
-                    if (t.PeeledTarget() == CurrentCommit && SemanticVersion.TryParse(t.FriendlyName, Configuration.GitTagPrefix, out var version))
+                    if (Equals(t.PeeledTarget(), CurrentCommit) && SemanticVersion.TryParse(t.FriendlyName, Configuration.GitTagPrefix, out var version))
                         return new[] { version };
                     return new SemanticVersion[0];
                 })

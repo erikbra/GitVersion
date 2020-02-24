@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersionCore.Tests.Mocks
 {

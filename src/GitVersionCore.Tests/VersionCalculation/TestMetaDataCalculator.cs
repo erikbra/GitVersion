@@ -1,7 +1,6 @@
 using GitVersion;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 using GitVersion.VersionCalculation;
-using LibGit2Sharp;
 
 namespace GitVersionCore.Tests.VersionCalculation
 {

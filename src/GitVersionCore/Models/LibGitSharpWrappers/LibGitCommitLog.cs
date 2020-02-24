@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GitVersion.Models.Abstractions;
 using LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers
@@ -9,7 +10,6 @@ namespace GitVersion.Models.LibGitSharpWrappers
     public class LibGitCommitLog: IQueryableGitCommitLog
     {
         private IQueryableCommitLog _wrapped;
-        private IEnumerator<IGitCommit> _enumerator;
 
         public LibGitCommitLog(IQueryableCommitLog wrapped)
         {
@@ -26,7 +26,7 @@ namespace GitVersion.Models.LibGitSharpWrappers
         }
 
 
-        public IEnumerator<IGitCommit> GetEnumerator() => _enumerator ??= new LibGitCommitEnumerator(_wrapped);
+        public IEnumerator<IGitCommit> GetEnumerator() => new LibGitCommitEnumerator(_wrapped.GetEnumerator());
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public GitCommitSortStrategies SortedBy { get; }

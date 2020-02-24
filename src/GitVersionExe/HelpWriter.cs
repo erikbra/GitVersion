@@ -41,8 +41,8 @@ GitVersion [path]
     /l              Path to logfile.
     /config         Path to config file (defaults to GitVersion.yml)
     /showconfig     Outputs the effective GitVersion config (defaults + custom from GitVersion.yml) in yaml format
-    /overrideconfig Overrides GitVersion config values inline (semicolon-separated key value pairs e.g. /overrideconfig Tag-prefix=Foo)
-                    Currently supported config overrides: Tag-prefix
+    /overrideconfig Overrides GitVersion config values inline (semicolon-separated key value pairs e.g. /overrideconfig tag-prefix=Foo)
+                    Currently supported config overrides: tag-prefix
     /nocache        Bypasses the cache, result will not be written to the cache.
     /nonormalize    Disables normalize step on a build server.
 
@@ -67,7 +67,7 @@ GitVersion [path]
     /b              Name of the branch to use on the remote repository, must be used in combination with /url.
     /u              Username in case authentication is required.
     /p              Password in case authentication is required.
-    /c              The Commit id to check. If not specified, the latest available Commit on the specified branch will be used.
+    /c              The commit id to check. If not specified, the latest available commit on the specified branch will be used.
     /dynamicRepoLocation
                     By default dynamic repositories will be cloned to %tmp%. Use this switch to override
     /nofetch        Disables 'git fetch' during version calculation. Might cause GitVersion to not calculate your version as expected.

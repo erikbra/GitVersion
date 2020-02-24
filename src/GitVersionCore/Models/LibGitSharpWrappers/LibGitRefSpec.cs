@@ -1,3 +1,5 @@
+using GitVersion.Models.Abstractions;
+
 namespace GitVersion.Models.LibGitSharpWrappers
 {
     public class LibGitRefSpec : IGitRefSpec

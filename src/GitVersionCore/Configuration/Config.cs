@@ -38,10 +38,10 @@ namespace GitVersion.Configuration
         [YamlMember(Alias = "mode")]
         public VersioningMode? VersioningMode { get; set; }
 
-        [YamlMember(Alias = "Tag-prefix")]
+        [YamlMember(Alias = "tag-prefix")]
         public string TagPrefix { get; set; }
 
-        [YamlMember(Alias = "continuous-delivery-fallback-Tag")]
+        [YamlMember(Alias = "continuous-delivery-fallback-tag")]
         public string ContinuousDeploymentFallbackTag { get; set; }
 
         [YamlMember(Alias = "next-version")]
@@ -75,7 +75,7 @@ namespace GitVersion.Configuration
         [YamlMember(Alias = "commits-since-version-source-padding")]
         public int? CommitsSinceVersionSourcePadding { get; set; }
 
-        [YamlMember(Alias = "Commit-message-incrementing")]
+        [YamlMember(Alias = "commit-message-incrementing")]
         public CommitMessageIncrementMode? CommitMessageIncrementing { get; set; }
 
         [YamlMember(Alias = "branches")]
@@ -111,7 +111,7 @@ namespace GitVersion.Configuration
         [YamlMember(Alias = "increment")]
         public IncrementStrategy? Increment { get; set; }
 
-        [YamlMember(Alias = "Commit-date-format")]
+        [YamlMember(Alias = "commit-date-format")]
         public string CommitDateFormat { get; set; }
 
         [YamlMember(Alias = "merge-message-formats")]

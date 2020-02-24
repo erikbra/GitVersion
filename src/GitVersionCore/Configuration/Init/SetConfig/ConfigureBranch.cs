@@ -43,8 +43,8 @@ namespace GitVersion.Configuration.Init.SetConfig
             return $@"What would you like to change for '{name}':
 
 0) Go Back
-1) Branch Pre-release Tag (Current: {branchConfig.Tag})
-2) Branch Increment mode (per Commit/after Tag) (Current: {branchConfig.VersioningMode})";
+1) Branch Pre-release tag (Current: {branchConfig.Tag})
+2) Branch Increment mode (per commit/after tag) (Current: {branchConfig.VersioningMode})";
         }
 
         protected override string DefaultResult => "0";

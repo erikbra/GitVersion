@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using GitVersion.Models;
-using GitVersion.Models.LibGitSharpWrappers;
-using LibGit2Sharp;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersionCore.Tests.Mocks
 {

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.Configuration
 {

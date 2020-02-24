@@ -59,11 +59,11 @@ namespace GitVersionCore.Tests
         {
             new object[] { "Merge branch 'feature/one'", "feature/one", null, null },
             new object[] { "Merge branch 'origin/feature/one'", "origin/feature/one", null, null },
-            new object[] { "Merge Tag 'v4.0.0' into master", "v4.0.0", "master", new SemanticVersion(4) },
-            new object[] { "Merge Tag 'V4.0.0' into master", "V4.0.0", "master", new SemanticVersion(4) },
+            new object[] { "Merge tag 'v4.0.0' into master", "v4.0.0", "master", new SemanticVersion(4) },
+            new object[] { "Merge tag 'V4.0.0' into master", "V4.0.0", "master", new SemanticVersion(4) },
             new object[] { "Merge branch 'feature/4.1/one'", "feature/4.1/one", null, new SemanticVersion(4, 1) },
             new object[] { "Merge branch 'origin/4.1/feature/one'", "origin/4.1/feature/one", null, new SemanticVersion(4, 1) },
-            new object[] { "Merge Tag 'v://10.10.10.10' into master", "v://10.10.10.10", "master", null }
+            new object[] { "Merge tag 'v://10.10.10.10' into master", "v://10.10.10.10", "master", null }
          };
 
         [TestCaseSource(nameof(MergeMessages))]
@@ -317,7 +317,7 @@ namespace GitVersionCore.Tests
         public void ReturnsAfterFirstMatchingPattern()
         {
             // Arrange
-            var format = @"^Merge (branch|Tag) '(?<SourceBranch>[^']*)'(?: into (?<TargetBranch>[^\s]*))*";
+            var format = @"^Merge (branch|tag) '(?<SourceBranch>[^']*)'(?: into (?<TargetBranch>[^\s]*))*";
             var definition = "Mycustom";
             config.MergeMessageFormats = new Dictionary<string, string>
             {

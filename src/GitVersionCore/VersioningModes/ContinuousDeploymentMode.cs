@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using GitVersion.Models;
-using LibGit2Sharp;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.VersioningModes
 {

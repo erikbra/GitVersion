@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using LibGit2Sharp;
 using GitVersion.Configuration;
 using GitVersion.Extensions;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion.VersionCalculation
 {

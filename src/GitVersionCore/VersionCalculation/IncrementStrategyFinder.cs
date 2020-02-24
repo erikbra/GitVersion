@@ -5,8 +5,7 @@ using System.Text.RegularExpressions;
 using GitVersion.VersionCalculation;
 using LibGit2Sharp;
 using GitVersion.Configuration;
-using GitVersion.Extensions;
-using GitVersion.Models;
+using GitVersion.Models.Abstractions;
 
 namespace GitVersion
 {

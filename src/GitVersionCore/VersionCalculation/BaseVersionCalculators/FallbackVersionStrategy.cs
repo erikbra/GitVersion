@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GitVersion.Exceptions;
 using GitVersion.Models.Abstractions;
-using LibGit2Sharp;
 
 namespace GitVersion.VersionCalculation
 {
@@ -25,7 +25,8 @@ namespace GitVersion.VersionCalculation
                     IncludeReachableFrom = currentBranchTip
                 }).First(c => !c.Parents.Any());
             }
-            catch (NotFoundException exception)
+            //catch (NotFoundException exception)
+            catch (InvalidOperationException exception)
             {
                 throw new GitVersionException($"Can't find commit {currentBranchTip.Sha}. Please ensure that the repository is an unshallow clone with `git fetch --unshallow`.", exception);
             }

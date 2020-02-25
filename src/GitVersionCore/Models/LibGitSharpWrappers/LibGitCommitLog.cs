@@ -29,7 +29,7 @@ namespace GitVersion.Models.LibGitSharpWrappers
         public IEnumerator<IGitCommit> GetEnumerator() => new LibGitCommitEnumerator(_wrapped.GetEnumerator());
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public GitCommitSortStrategies SortedBy { get; }
+        public GitCommitSortStrategies SortedBy => (GitCommitSortStrategies) _wrapped.SortedBy;
 
         public IGitCommitLog QueryBy(GitCommitFilter filter)
             => new LibGitCommitLog(_wrapped.QueryBy(GetCommitFilter(filter)));

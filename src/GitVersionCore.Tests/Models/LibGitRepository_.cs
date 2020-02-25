@@ -90,7 +90,6 @@ namespace GitVersionCore.Tests.Models
             });
 
             Shas(wrappedCommitLog).ShouldBeEquivalentTo(Shas(coreCommitLog));
-
         }
 
         private static List<string> Shas(ICommitLog commits) => commits.Select(c => c.Sha).ToList();

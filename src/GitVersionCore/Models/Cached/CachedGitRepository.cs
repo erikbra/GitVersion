@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using GitVersion.Models.Abstractions;
 
 namespace GitVersion.Models
 {
-    public class CachedGitRepository: IGitRepository
+    public class CachedGitRepository : IGitRepository
     {
         public CachedGitRepository(IGitRepository wrapped)
         {
@@ -20,5 +21,16 @@ namespace GitVersion.Models
         public IGitNetwork Network => Wrapped.Network;
         public IGitObjectDatabase ObjectDatabase => Wrapped.ObjectDatabase;
         public IGitReferenceCollection Refs => Wrapped.Refs.Cached();
+
+        //public IGitReferenceCollection Refs => GetCachedOrUnderlying(nameof(Refs), ref _cachedRefs, Wrapped.Refs.Cached);
+
+
+        private T GetCachedOrUnderlying<T>(string methodName, T cached, Func<T> underlying, object lockObject)
+        {
+            lock (lockObject)
+            {
+                return Utils.GetCachedOrUnderlying(GetType().Name + "." + methodName, cached, underlying);
+            }
+        }
     }
 }

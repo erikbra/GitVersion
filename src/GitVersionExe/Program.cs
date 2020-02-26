@@ -1,5 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using GitVersion.Extensions;
+using GitVersion.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +14,8 @@ namespace GitVersion
         private static async Task Main(string[] args)
         {
             await CreateHostBuilder(args).Build().RunAsync();
+            Stats.Dump(Console.Out);
+            Console.Out.Flush();
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>

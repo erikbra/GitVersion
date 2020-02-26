@@ -15,7 +15,7 @@ namespace GitVersion.Models.LibGitSharpWrappers
             Wrapped = branch;
         }
 
-        public string Sha => throw new NotImplementedException();
+        public string Sha => Tip?.Sha;
         public string CanonicalName => Wrapped.CanonicalName;
         public string FriendlyName => Wrapped.FriendlyName;
         public IGitCommit Tip => new LibGitCommit(Wrapped.Tip);
@@ -24,6 +24,12 @@ namespace GitVersion.Models.LibGitSharpWrappers
         public IGitCommitLog Commits => new LibGitCommitLog(Wrapped.Commits);
         public string NameWithoutRemote() => Wrapped.NameWithoutRemote();
         public bool IsDetachedHead() => Wrapped.IsDetachedHead();
+
+        private T Log<T>(string name, Func<T> func)
+        {
+            Stats.Called(GetType().Name + "." + name);
+            return func();
+        }
 
     }
 }

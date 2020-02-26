@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using GitVersion.Models.Abstractions;
 using LibGit2Sharp;
 
 namespace GitVersion.Models.LibGitSharpWrappers
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class LibGitCommit : IGitCommit, IEquatable<LibGitCommit>
     {
         public Commit Wrapped { get; }
@@ -39,6 +42,19 @@ namespace GitVersion.Models.LibGitSharpWrappers
         public override int GetHashCode()
         {
             return (Wrapped != null ? Wrapped.GetHashCode() : 0);
+        }
+
+        private Lazy<string> MessageShort => new Lazy<string>(() => Wrapped.MessageShort);
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return string.Format(CultureInfo.InvariantCulture,
+                    "{0} {1}",
+                    Id.ToString(7),
+                    MessageShort.Value);
+            }
         }
     }
 }

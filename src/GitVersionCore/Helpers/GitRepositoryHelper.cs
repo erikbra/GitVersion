@@ -3,6 +3,7 @@ using System.Linq;
 using GitVersion.Exceptions;
 using GitVersion.Logging;
 using GitVersion.Extensions;
+using GitVersion.Models;
 using GitVersion.Models.Abstractions;
 using GitVersion.Models.LibGitSharpWrappers;
 
@@ -17,7 +18,8 @@ namespace GitVersion.Helpers
         public static void NormalizeGitDirectory(ILog log, IEnvironment environment, string gitDirectory, AuthenticationInfo authentication,
             bool noFetch, string currentBranch, bool isDynamicRepository)
         {
-            using var repo = new LibGitRepository(gitDirectory);
+            using var libGitRepo = new LibGitRepository(gitDirectory);
+            var repo = libGitRepo.Cached();
             // Need to ensure the HEAD does not move, this is essentially a BugCheck
             var expectedSha = repo.Head.Tip.Sha;
             var expectedBranchName = repo.Head.CanonicalName;

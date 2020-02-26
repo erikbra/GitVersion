@@ -7,6 +7,7 @@ using Shouldly;
 using GitVersion.Logging;
 using Microsoft.Extensions.Options;
 using GitVersion.Extensions;
+using GitVersion.Models.LibGitSharpWrappers;
 using GitVersion.VersionCalculation;
 using GitVersionCore.Tests.Helpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,7 @@ namespace GitVersionCore.Tests
             var variableProvider = sp.GetService<IVariableProvider>();
             var nextVersionCalculator = sp.GetService<INextVersionCalculator>();
 
-            var gitVersionContext = new GitVersionContext(repository ?? fixture.Repository, log, targetBranch, configuration, onlyTrackedBranches, commitId);
+            var gitVersionContext = new GitVersionContext(repository ?? fixture.Repository.Wrap(), log, targetBranch, configuration, onlyTrackedBranches, commitId);
             var executeGitVersion = nextVersionCalculator.FindVersion(gitVersionContext);
             var variables = variableProvider.GetVariablesFor(executeGitVersion, gitVersionContext.Configuration, gitVersionContext.IsCurrentCommitTagged);
 
@@ -64,7 +65,7 @@ namespace GitVersionCore.Tests
             }
             catch (Exception)
             {
-                (repository ?? new LibGitRepository(fixture.Repository)).DumpGraph();
+                (repository ?? fixture.Repository.Wrap()).DumpGraph();
                 throw;
             }
             if (commitId == null)

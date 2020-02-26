@@ -69,7 +69,7 @@ namespace GitVersionCore.Tests
             fixture.BranchTo(dummyBranchName);
             fixture.MakeACommit();
 
-            var context = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(fixture.Repository.Branches[dummyBranchName]), config);
+            var context = new GitVersionContext(fixture.Repository.Wrap(), log, new LibGitBranch(fixture.Repository.Branches[dummyBranchName]), config);
             context.Configuration.Increment.ShouldBe(alternateExpected ?? increment);
         }
 
@@ -156,7 +156,7 @@ namespace GitVersionCore.Tests
             Commands.Checkout(repo.Repository, featureBranch);
             repo.Repository.MakeACommit();
 
-            var context = new GitVersionContext(new LibGitRepository(repo.Repository), log, new LibGitBranch(repo.Repository.Head), config);
+            var context = new GitVersionContext(repo.Repository.Wrap(), log, new LibGitBranch(repo.Repository.Head), config);
             context.Configuration.Increment.ShouldBe(IncrementStrategy.Major);
         }
     }

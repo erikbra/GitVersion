@@ -4,24 +4,25 @@ namespace GitVersion.Models
 {
     public static class CachedEnumeratorExtensions
     {
-        public static IEnumerator<T> Cached<T>(this IEnumerator<T> enumerator)
-        {
-            return Cached(enumerator, new List<T>());
-        }
+        private static IDictionary<string, object> _enumerators = new Dictionary<string, object>();
 
-        private static IEnumerator<T> Cached<T>(IEnumerator<T> enumerator, IList<T> cache)
+        public static IEnumerator<T> Cached<T>(this IEnumerator<T> enumerator, string cacheKey)
         {
-            for (var i = 0;; i++)
+            IEnumerator<T> e;
+
+            if (_enumerators.ContainsKey(cacheKey))
             {
-                if (i < cache.Count) yield return cache[i];
-                else if (enumerator.MoveNext())
-                {
-                    var t = enumerator.Current;
-                    cache.Add(t);
-                    yield return t;
-                }
-                else break;
+                e = (IEnumerator<T>) _enumerators[cacheKey];
+                // TOOD: This is not thread-safe, as someone else might be using the enumerator already
+                e.Reset();
             }
+            else
+            {
+                e = new  CachedEnumerator<T>(enumerator);
+                _enumerators.Add(cacheKey, e);
+            }
+
+            return e;
         }
 
     }

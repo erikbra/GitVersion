@@ -20,7 +20,7 @@ namespace GitVersionCore.Tests.IntegrationTests
         {
             using var fixture = new RemoteRepositoryFixture();
             fixture.AssertFullSemver("0.1.0+4");
-            fixture.AssertFullSemver("0.1.0+4", new LibGitRepository(fixture.LocalRepositoryFixture.Repository));
+            fixture.AssertFullSemver("0.1.0+4", fixture.LocalRepositoryFixture.Repository.Wrap());
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             GitRepositoryHelper.NormalizeGitDirectory(new NullLog(), new TestEnvironment(), fixture.LocalRepositoryFixture.RepositoryPath, new AuthenticationInfo(), noFetch: false, currentBranch: string.Empty, isDynamicRepository: true);
 
             fixture.AssertFullSemver("1.0.0-beta.1+5");
-            fixture.AssertFullSemver("1.0.0-beta.1+5", new LibGitRepository(fixture.LocalRepositoryFixture.Repository));
+            fixture.AssertFullSemver("1.0.0-beta.1+5", fixture.LocalRepositoryFixture.Repository.Wrap());
         }
 
         [Test]
@@ -55,10 +55,10 @@ namespace GitVersionCore.Tests.IntegrationTests
             using var fixture = new RemoteRepositoryFixture();
             fixture.Repository.MakeACommit();
             fixture.AssertFullSemver("0.1.0+5");
-            fixture.AssertFullSemver("0.1.0+4", new LibGitRepository(fixture.LocalRepositoryFixture.Repository));
+            fixture.AssertFullSemver("0.1.0+4", fixture.LocalRepositoryFixture.Repository.Wrap());
             var buildSignature = fixture.LocalRepositoryFixture.Repository.Config.BuildSignature(new DateTimeOffset(DateTime.Now));
             Commands.Pull((Repository)fixture.LocalRepositoryFixture.Repository, buildSignature, new PullOptions());
-            fixture.AssertFullSemver("0.1.0+5", new LibGitRepository(fixture.LocalRepositoryFixture.Repository));
+            fixture.AssertFullSemver("0.1.0+5", fixture.LocalRepositoryFixture.Repository.Wrap());
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace GitVersionCore.Tests.IntegrationTests
                 fixture.LocalRepositoryFixture.Repository,
                 fixture.LocalRepositoryFixture.Repository.Head.Tip);
 
-            Should.Throw<WarningException>(() => fixture.AssertFullSemver("0.1.0+4", new LibGitRepository(fixture.LocalRepositoryFixture.Repository), onlyTrackedBranches: false),
+            Should.Throw<WarningException>(() => fixture.AssertFullSemver("0.1.0+4", fixture.LocalRepositoryFixture.Repository.Wrap(), onlyTrackedBranches: false),
                 $"It looks like the branch being examined is a detached Head pointing to Commit '{fixture.LocalRepositoryFixture.Repository.Head.Tip.Id.ToString(7)}'. Without a proper branch name GitVersion cannot determine the build version.");
         }
 
@@ -79,7 +79,7 @@ namespace GitVersionCore.Tests.IntegrationTests
             using var fixture = new RemoteRepositoryFixture();
             Commands.Checkout(fixture.LocalRepositoryFixture.Repository, fixture.LocalRepositoryFixture.Repository.Head.Tip);
 
-            fixture.AssertFullSemver("0.1.0+4", new LibGitRepository(fixture.LocalRepositoryFixture.Repository));
+            fixture.AssertFullSemver("0.1.0+4", fixture.LocalRepositoryFixture.Repository.Wrap());
         }
     }
 }

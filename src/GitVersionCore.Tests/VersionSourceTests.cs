@@ -43,7 +43,7 @@ namespace GitVersionCore.Tests
             Commands.Checkout(fixture.Repository, featureBranch);
             _ = fixture.Repository.MakeACommit();
 
-            var context = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(fixture.Repository.Head), config);
+            var context = new GitVersionContext(fixture.Repository.Wrap(), log, new LibGitBranch(fixture.Repository.Head), config);
             var version = nextVersionCalculator.FindVersion(context);
 
             version.BuildMetaData.VersionSourceSha.ShouldBe(initialCommit.Sha);
@@ -58,7 +58,7 @@ namespace GitVersionCore.Tests
             using var fixture = new EmptyRepositoryFixture();
             var initialCommit = fixture.Repository.MakeACommit();
 
-            var context = new GitVersionContext(new LibGitRepository(fixture.Repository), log, new LibGitBranch(fixture.Repository.Head), config);
+            var context = new GitVersionContext(fixture.Repository.Wrap(), log, new LibGitBranch(fixture.Repository.Head), config);
             var version = nextVersionCalculator.FindVersion(context);
 
             version.BuildMetaData.VersionSourceSha.ShouldBe(initialCommit.Sha);
@@ -80,7 +80,7 @@ namespace GitVersionCore.Tests
             Commands.Checkout(fixture.Repository, featureBranch);
             var commit3 = fixture.Repository.MakeACommit();
 
-            var wrappedRepository = new LibGitRepository(fixture.Repository);
+            var wrappedRepository = fixture.Repository.Wrap();
             var context = new GitVersionContext(wrappedRepository, log, new LibGitBranch(fixture.Repository.Head), config);
 
 

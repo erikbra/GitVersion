@@ -12,7 +12,7 @@ using Shouldly;
 
 namespace GitVersionCore.Tests.Models
 {
-    public class LibGitRepository_
+    public class LibGitRepository_Cached
     {
         [Test]
         public void Can_List_All_Commits()
@@ -25,7 +25,7 @@ namespace GitVersionCore.Tests.Models
             }
 
             var coreRepo = fixture.Repository;
-            var wrapperRepo = new LibGitRepository(coreRepo);
+            var wrapperRepo = coreRepo.Wrap();
 
             Shas(wrapperRepo.Commits).ShouldBeEquivalentTo(Shas(coreRepo.Commits));
         }
@@ -44,7 +44,7 @@ namespace GitVersionCore.Tests.Models
             }
 
             var coreRepo = fixture.Repository;
-            var wrapperRepo = new LibGitRepository(coreRepo);
+            var wrapperRepo = coreRepo.Wrap();
 
             var wrapperGraph = new StringBuilder();
             wrapperRepo.DumpGraph(s => wrapperGraph.Append(s));
@@ -75,7 +75,7 @@ namespace GitVersionCore.Tests.Models
             var wrappedTip = new LibGitCommit(tip);
 
             var coreRepo = fixture.Repository;
-            var wrapperRepo = new LibGitRepository(coreRepo);
+            var wrapperRepo = coreRepo.Wrap();
 
             var coreCommitLog = coreRepo.Commits.QueryBy(
                 new CommitFilter()

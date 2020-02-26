@@ -12,14 +12,15 @@ namespace GitVersion.Models.LibGitSharpWrappers
         public LibGitBranchCollection(BranchCollection wrapped)
         {
             Wrapped = wrapped;
+            Stats.Called(GetType().Name + "." + "<ctor>", wrapped.ToString());
         }
 
         private BranchCollection Wrapped { get; }
 
-        public IEnumerator<IGitBranch> GetEnumerator() => new LibGitBranchEnumerator(Wrapped.GetEnumerator());
+        public IEnumerator<IGitBranch> GetEnumerator() => Log(nameof(GetEnumerator),  new LibGitBranchEnumerator(Wrapped.GetEnumerator()));
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public IGitBranch this[string name] => Wrap(Wrapped[name]);
+        public IGitBranch this[string name] => Log($"this[{name}]", Wrap(Wrapped[name]));
 
         public IGitBranch Update(IGitBranch branch, params Action<IGitBranchUpdater>[] actions)
         {
@@ -38,5 +39,13 @@ namespace GitVersion.Models.LibGitSharpWrappers
                 Branch b => new LibGitBranch(b),
                 null => null
             };
+
+        protected T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
+        }
     }
 }

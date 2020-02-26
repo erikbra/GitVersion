@@ -14,12 +14,11 @@ namespace GitVersion.Models
 
         protected CachedGitCollection()
         {
-            Stats.Called(GetType().Name + "." + "<ctor>");
+            Stats.Called(GetType().Name, "<ctor>");
         }
 
         public IEnumerator<TItem> GetEnumerator()
         {
-            var msg = GetType().Name + "." + nameof(GetEnumerator);
             var status = Status.Existed;
 
             if (_enumerator == null)
@@ -30,7 +29,7 @@ namespace GitVersion.Models
                 //_enumerator = Wrapped.GetEnumerator().Cached(GetType().Name);
             }
 
-            Stats.Called(msg, status);
+            Stats.Called(GetType().Name, nameof(GetEnumerator), status);
 
             return _enumerator;
         }

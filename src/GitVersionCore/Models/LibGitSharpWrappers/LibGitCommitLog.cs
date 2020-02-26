@@ -26,18 +26,18 @@ namespace GitVersion.Models.LibGitSharpWrappers
         }
 
 
-        public IEnumerator<IGitCommit> GetEnumerator() => new LibGitCommitEnumerator(_wrapped.GetEnumerator());
+        public IEnumerator<IGitCommit> GetEnumerator() => Log(nameof(GetEnumerator), new LibGitCommitEnumerator(_wrapped.GetEnumerator()));
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public GitCommitSortStrategies SortedBy => (GitCommitSortStrategies) _wrapped.SortedBy;
+        public GitCommitSortStrategies SortedBy => Log(nameof(SortedBy), (GitCommitSortStrategies) _wrapped.SortedBy);
 
         public IGitCommitLog QueryBy(GitCommitFilter filter)
-            => new LibGitCommitLog(_wrapped.QueryBy(GetCommitFilter(filter)));
+            => Log(nameof(QueryBy) + "(filter)", new LibGitCommitLog(_wrapped.QueryBy(GetCommitFilter(filter))));
 
-        public IEnumerable<IGitLogEntry> QueryBy(string path) => _wrapped.QueryBy(path).Select(c => new LibGitLogEntry(c));
+        public IEnumerable<IGitLogEntry> QueryBy(string path) => Log(nameof(QueryBy) + "(path)", _wrapped.QueryBy(path).Select(c => new LibGitLogEntry(c)));
 
         public IEnumerable<IGitLogEntry> QueryBy(string path, GitCommitFilter filter)
-            => _wrapped.QueryBy(path, GetCommitFilter(filter)).Select(l => new LibGitLogEntry(l));
+            => Log(nameof(QueryBy) + "(path, filter)", _wrapped.QueryBy(path, GetCommitFilter(filter)).Select(l => new LibGitLogEntry(l)));
 
 
         private static CommitFilter GetCommitFilter(GitCommitFilter filter)
@@ -65,6 +65,14 @@ namespace GitVersion.Models.LibGitSharpWrappers
             }
 
             return commitFilter;
+        }
+
+        private T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
         }
     }
 }

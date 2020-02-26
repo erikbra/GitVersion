@@ -20,14 +20,22 @@ namespace GitVersion.Models.LibGitSharpWrappers
             Wrapped = repo;
         }
 
-        public IEnumerable<IGitTag> Tags => Wrapped.Tags.Select(t => new LibGitTag(t));
-        public IQueryableGitCommitLog Commits => new LibGitCommitLog(Wrapped.Commits);
-        public IGitBranch Head => new LibGitBranch(Wrapped.Head);
-        public IGitBranchCollection Branches => new LibGitBranchCollection(Wrapped.Branches);
-        public IGitRepositoryInformation Info => new LibGitRepositoryInformation(Wrapped.Info);
-        public IGitNetwork Network => new LibGitNetwork(Wrapped.Network);
-        public IGitObjectDatabase ObjectDatabase => new LibGitObjectDatabase(Wrapped.ObjectDatabase);
-        public IGitReferenceCollection Refs => new LibGitReferenceCollection(Wrapped.Refs);
+        public IEnumerable<IGitTag> Tags => Log(nameof(Tags), Wrapped.Tags.Select(t => new LibGitTag(t)));
+        public IQueryableGitCommitLog Commits => Log(nameof(Commits), new LibGitCommitLog(Wrapped.Commits));
+        public IGitBranch Head => Log(nameof(Head), new LibGitBranch(Wrapped.Head));
+        public IGitBranchCollection Branches => Log(nameof(Branches), new LibGitBranchCollection(Wrapped.Branches));
+        public IGitRepositoryInformation Info => Log(nameof(Info), new LibGitRepositoryInformation(Wrapped.Info));
+        public IGitNetwork Network => Log(nameof(Network), new LibGitNetwork(Wrapped.Network));
+        public IGitObjectDatabase ObjectDatabase => Log(nameof(ObjectDatabase), new LibGitObjectDatabase(Wrapped.ObjectDatabase));
+        public IGitReferenceCollection Refs => Log(nameof(Refs), new LibGitReferenceCollection(Wrapped.Refs));
         public void Dispose() => Wrapped.Dispose();
+
+        private T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
+        }
     }
 }

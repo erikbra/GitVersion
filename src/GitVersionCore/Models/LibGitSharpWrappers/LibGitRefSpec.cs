@@ -11,7 +11,15 @@ namespace GitVersion.Models.LibGitSharpWrappers
             Wrapped = wrapped;
         }
 
-        public string Specification => Wrapped.Specification;
-        public string Source => Wrapped.Source;
+        public string Specification => Log(nameof(Specification), Wrapped.Specification);
+        public string Source => Log(nameof(Source), Wrapped.Source);
+
+        private T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace GitVersion.Models
         {
             lock (lockObject)
             {
-                return Utils.GetCachedOrUnderlying(GetType().Name + "." + methodName, cached, underlying);
+                return Utils.GetCachedOrUnderlying(GetType().Name, methodName, cached, underlying);
             }
         }
     }

@@ -12,14 +12,22 @@ namespace GitVersion.Models.LibGitSharpWrappers
             Wrapped = wrapped;
         }
 
-        public string CanonicalName => Wrapped.CanonicalName;
-        public string TargetIdentifier => Wrapped.TargetIdentifier;
-        public string Id => Target.Id;
-        public string Sha => Target.Sha;
+        public string CanonicalName => Log(nameof(CanonicalName), Wrapped.CanonicalName);
+        public string TargetIdentifier => Log(nameof(TargetIdentifier), Wrapped.TargetIdentifier));
+        public string Id => Log(nameof(Id), Target.Id);
+        public string Sha => Log(nameof(Sha), Target.Sha);
 
-        public IGitDirectReference ResolveToDirectReference() => new LibGitDirectReference(Wrapped.ResolveToDirectReference());
+        public IGitDirectReference ResolveToDirectReference() => Log(nameof(ResolveToDirectReference), new LibGitDirectReference(Wrapped.ResolveToDirectReference()));
 
         public IGitReference Target { get; }
+
+        private T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
+        }
 
     }
 }

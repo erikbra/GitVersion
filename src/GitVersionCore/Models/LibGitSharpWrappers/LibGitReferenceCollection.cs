@@ -16,7 +16,7 @@ namespace GitVersion.Models.LibGitSharpWrappers
             Wrapped = wrapped;
         }
 
-        public IEnumerator<IGitReference> GetEnumerator() => new LibGitReferenceEnumerator(Wrapped.GetEnumerator());
+        public IEnumerator<IGitReference> GetEnumerator() => Log(nameof(GetEnumerator), new LibGitReferenceEnumerator(Wrapped.GetEnumerator()));
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public IGitReference Add(string localCanonicalName, IGitObjectId objectId, bool allowOverwrite)
@@ -77,6 +77,14 @@ namespace GitVersion.Models.LibGitSharpWrappers
                 Reference r => new LibGitReference(r),
                 null => null
             };
+
+        private T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
+        }
 
     }
 }

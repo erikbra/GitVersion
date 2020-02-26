@@ -65,7 +65,7 @@ namespace GitVersion.Models
 
         private T GetCachedOrUnderlying<T>(string methodName, T cached, Func<T> underlying)
         {
-            return Utils.GetCachedOrUnderlying(GetType().Name + "." + methodName, cached, underlying);
+            return Utils.GetCachedOrUnderlying(GetType().Name, methodName, cached, underlying);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace GitVersion.Models.LibGitSharpWrappers
                 throw new ArgumentException(nameof(commitToFindCommonBase));
             }
 
-            return new LibGitCommit(Wrapped.FindMergeBase(firstCommit.Wrapped, secondCommit.Wrapped));
+            return Log(nameof(FindMergeBase), new LibGitCommit(Wrapped.FindMergeBase(firstCommit.Wrapped, secondCommit.Wrapped)));
         }
 
         public string ShortenObjectId(IGitCommit commit)
@@ -34,7 +34,15 @@ namespace GitVersion.Models.LibGitSharpWrappers
                 throw new ArgumentException(nameof(commit));
             }
 
-            return Wrapped.ShortenObjectId(lgc.Wrapped);
+            return Log(nameof(ShortenObjectId), Wrapped.ShortenObjectId(lgc.Wrapped));
+        }
+
+        private T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
         }
     }
 }

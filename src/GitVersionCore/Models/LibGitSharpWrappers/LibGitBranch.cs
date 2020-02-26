@@ -12,24 +12,26 @@ namespace GitVersion.Models.LibGitSharpWrappers
 
         public LibGitBranch(Branch branch)
         {
+            Stats.Called(GetType().Name, "<ctor>", branch.CanonicalName);
             Wrapped = branch;
         }
 
-        public string Sha => Tip?.Sha;
-        public string CanonicalName => Wrapped.CanonicalName;
-        public string FriendlyName => Wrapped.FriendlyName;
-        public IGitCommit Tip => new LibGitCommit(Wrapped.Tip);
-        public bool IsTracking => Wrapped.IsTracking;
-        public bool IsRemote => Wrapped.IsRemote;
-        public IGitCommitLog Commits => new LibGitCommitLog(Wrapped.Commits);
-        public string NameWithoutRemote() => Wrapped.NameWithoutRemote();
-        public bool IsDetachedHead() => Wrapped.IsDetachedHead();
+        public string Sha => Log(nameof(Sha), Tip?.Sha);
+        public string CanonicalName => Log(nameof(CanonicalName), Wrapped.CanonicalName);
+        public string FriendlyName => Log(nameof(FriendlyName),  Wrapped.FriendlyName);
+        public IGitCommit Tip => Log(nameof(Tip), new LibGitCommit(Wrapped.Tip));
+        public bool IsTracking => Log(nameof(IsTracking), Wrapped.IsTracking);
+        public bool IsRemote => Log(nameof(IsRemote), Wrapped.IsRemote);
+        public IGitCommitLog Commits => Log(nameof(Commits), new LibGitCommitLog(Wrapped.Commits));
+        public string NameWithoutRemote() => Log(nameof(NameWithoutRemote), Wrapped.NameWithoutRemote());
+        public bool IsDetachedHead() => Log(nameof(IsDetachedHead), Wrapped.IsDetachedHead());
 
-        private T Log<T>(string name, Func<T> func)
+        private T Log<T>(string name, T value)
         {
-            Stats.Called(GetType().Name + "." + name);
-            return func();
-        }
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
 
+            return value;
+        }
     }
 }

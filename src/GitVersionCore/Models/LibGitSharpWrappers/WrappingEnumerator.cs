@@ -12,20 +12,45 @@ namespace GitVersion.Models.LibGitSharpWrappers
         protected WrappingEnumerator(IEnumerator<TTOWrap> toWrap)
         {
             Wrapped = toWrap;
+            Stats.Called(GetType().Name, "<ctor>");
         }
 
-        public bool MoveNext() => Wrapped.MoveNext();
+        public bool MoveNext() => Log(nameof(MoveNext), Wrapped.MoveNext());
 
-        public void Reset() => Wrapped.Reset();
+        public void Reset()
+        {
+            Log(nameof(Reset));
+            Wrapped.Reset();
+        }
 
-        public TWrapper Current => Wrap(Wrapped.Current);
+        public TWrapper Current => Log(nameof(Current), Wrap(Wrapped.Current));
+
+        object IEnumerator.Current => Current;
+
+        public void Dispose()
+        {
+            Log(nameof(Dispose));
+            Wrapped.Dispose();
+        }
 
         private static TWrapper Wrap(TTOWrap item)
         {
             return (TWrapper) Activator.CreateInstance(typeof(TWrapper), item);
         }
 
-        object IEnumerator.Current => Current;
-        public void Dispose() => Wrapped.Dispose();
+
+        protected T Log<T>(string name, T value)
+        {
+            Stats.Called(GetType().Name, name);
+            Stats.Called(GetType().Name, name, value);
+
+            return value;
+        }
+
+        protected void Log(string name)
+        {
+            Stats.Called(GetType().Name, name);
+        }
+
     }
 }

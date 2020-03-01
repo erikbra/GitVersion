@@ -18,6 +18,8 @@ namespace GitVersion.Models.LibGitSharpWrappers
             Wrapped = id;
         }
 
+        public override string ToString() => ToString(7);
+
         public string ToString(int prefixLength) => Wrapped.ToString(prefixLength);
         public string Sha => Wrapped.Sha;
     }

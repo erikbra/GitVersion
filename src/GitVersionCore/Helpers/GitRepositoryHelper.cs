@@ -19,7 +19,7 @@ namespace GitVersion.Helpers
             bool noFetch, string currentBranch, bool isDynamicRepository)
         {
             using var libGitRepo = new LibGitRepository(gitDirectory);
-            var repo = libGitRepo.Cached();
+            var repo = libGitRepo; //.Cached();
             // Need to ensure the HEAD does not move, this is essentially a BugCheck
             var expectedSha = repo.Head.Tip.Sha;
             var expectedBranchName = repo.Head.CanonicalName;

@@ -15,7 +15,7 @@ namespace GitVersion.Extensions
     {
         public static TResult WithRepository<TResult>(this string dotGitDirectory, Func<IGitRepository, TResult> action)
         {
-            var repo = new LibGitRepository(dotGitDirectory).Cached();
+            var repo = new LibGitRepository(dotGitDirectory);//.Cached();
             return action(repo);
         }
 

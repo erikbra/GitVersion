@@ -34,7 +34,7 @@ namespace GitVersion.Models.LibGitSharpWrappers
             };
         }
 
-        public override string ToString() => GetType().Name + " :: " + Id.ToString(7);
+        public override string ToString() => Id.ToString(7);
 
         public bool Equals(LibGitCommit other)
         {

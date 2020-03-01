@@ -23,46 +23,99 @@ namespace GitVersion.VersionCalculation
             this.log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
+        private class MergeCommit
+        {
+            public IGitCommit Commit { get; set; }
+            public MergeMessage MergeMessage { get; set; }
+            public bool HasVersion => HasVersion(MergeMessage);
+        }
+
+        private class DistinctBaseVersionComparer : IEqualityComparer<BaseVersion> {
+
+            public bool Equals(BaseVersion x, BaseVersion y)
+            {
+                return x.BaseVersionSource == y.BaseVersionSource;
+            }
+
+            public int GetHashCode(BaseVersion obj)
+            {
+                return obj.BaseVersionSource.GetHashCode();
+            }
+        }
+
         public virtual IEnumerable<BaseVersion> GetVersions(GitVersionContext context)
         {
+            log.Info($"Finding commits prior to {context.CurrentCommit} ({context.CurrentCommit.When()}" );
+
             var commitsPriorToThan = context.CurrentBranch
                 .CommitsPriorToThan(context.CurrentCommit.When());
-            var baseVersions = commitsPriorToThan
-                .SelectMany(c =>
+
+            log.Info($"Found {commitsPriorToThan.Count()} commits." );
+
+            log.Info($"Finding merge commits" );
+
+            var mergeCommits = commitsPriorToThan.Where(IsMergeCommit)
+                .Select(c =>  new MergeCommit()
                 {
-                    if (TryParse(c, context, out var mergeMessage) &&
-                        mergeMessage.Version != null &&
-                        context.FullConfiguration.IsReleaseBranch(TrimRemote(mergeMessage.MergedBranch)))
+                    Commit = c,
+                    MergeMessage = GetMergeMessage(c, context)
+                }).Where(m => HasVersion(m.MergeMessage));
+
+            log.Info($"Found {mergeCommits.Count()} commits." );
+
+
+            log.Info($"Finding base versions" );
+
+            var baseVersions = mergeCommits //commitsPriorToThan
+                .SelectMany(c =>
+                //.Select(c =>
+                {
+                    var mergeMessage = c.MergeMessage;
+                    if (IsMergeToReleaseBranch(context, mergeMessage))
                     {
                         log.Info($"Found Commit [{context.CurrentCommit.Sha}] matching merge message format: {mergeMessage.FormatName}");
+                        log.Info($"Found Commit [{c.Commit.Sha}] matching merge message format: {mergeMessage.FormatName}");
                         var shouldIncrement = !context.Configuration.PreventIncrementForMergedBranchVersion;
                         return new[]
                         {
-                            new BaseVersion(context, $"{MergeMessageStrategyPrefix} '{c.Message.Trim()}'", shouldIncrement, mergeMessage.Version, c, null)
+                            //new BaseVersion(context, $"{MergeMessageStrategyPrefix} '{c.MergeMessage.Trim()}'", shouldIncrement, mergeMessage.Version, c, null)
+                            new BaseVersion(context, $"{MergeMessageStrategyPrefix} '{c.Commit.Message.Trim()}'", shouldIncrement, mergeMessage.Version, c.Commit, null)
                         };
                     }
-                    return Enumerable.Empty<BaseVersion>();
-                }).ToList();
+                    else
+                    {
+                        return Enumerable.Empty<BaseVersion>();
+                        //return null;
+                    }
+                }).ToList()
+            .Take(5);
+
+            log.Info($"Found {baseVersions.Count()} baseVersions." );
+
             return baseVersions;
+        }
+
+        private static bool IsMergeToReleaseBranch(GitVersionContext context, MergeMessage mergeMessage)
+        {
+            return //HasVersion(mergeMessage) &&
+                   context.FullConfiguration.IsReleaseBranch(TrimRemote(mergeMessage.MergedBranch));
+        }
+
+        private static bool HasVersion(MergeMessage mergeMessage)
+        {
+            return mergeMessage?.Version != null;
         }
 
         public static readonly string MergeMessageStrategyPrefix = "Merge message";
 
-        private static bool TryParse(IGitCommit mergeCommit, GitVersionContext context, out MergeMessage mergeMessage)
+        private static MergeMessage GetMergeMessage(IGitCommit mergeCommit, GitVersionContext context)
         {
-            mergeMessage = Inner(mergeCommit, context);
-            return mergeMessage != null;
+             return new MergeMessage(mergeCommit.Message, context.FullConfiguration);
         }
 
-        private static MergeMessage Inner(IGitCommit mergeCommit, GitVersionContext context)
+        private static bool IsMergeCommit(IGitCommit mergeCommit)
         {
-            if (mergeCommit.Parents.Count() < 2)
-            {
-                return null;
-            }
-
-            var mergeMessage = new MergeMessage(mergeCommit.Message, context.FullConfiguration);
-            return mergeMessage;
+            return mergeCommit.Parents.Count() >= 2;
         }
 
         private static string TrimRemote(string branchName) => branchName

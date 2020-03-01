@@ -13,7 +13,7 @@ namespace GitVersion.Models.LibGitSharpWrappers
         }
 
         public string CanonicalName => Log(nameof(CanonicalName), Wrapped.CanonicalName);
-        public string TargetIdentifier => Log(nameof(TargetIdentifier), Wrapped.TargetIdentifier));
+        public string TargetIdentifier => Log(nameof(TargetIdentifier), Wrapped.TargetIdentifier);
         public string Id => Log(nameof(Id), Target.Id);
         public string Sha => Log(nameof(Sha), Target.Sha);
 

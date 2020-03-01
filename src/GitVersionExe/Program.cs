@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using GitVersion.Extensions;
 using GitVersion.Models;
@@ -14,8 +16,12 @@ namespace GitVersion
         private static async Task Main(string[] args)
         {
             await CreateHostBuilder(args).Build().RunAsync();
-            Stats.Dump(Console.Out);
-            Console.Out.Flush();
+            var outFile = Path.Combine(Directory.GetCurrentDirectory(), "gitversion-diag.txt");
+            var s = new FileStream(outFile, FileMode.Create);
+            var writer = new StreamWriter(s, Encoding.UTF8);
+            Stats.Dump(writer);
+            //Stats.Dump(Console.Out);
+            //Console.Out.Flush();
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>

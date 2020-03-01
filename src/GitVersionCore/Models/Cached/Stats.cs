@@ -24,6 +24,18 @@ namespace GitVersion.Models
 
         public static void Dump(TextWriter writer)
         {
+            var dump = GetDumpData();
+            writer.Write(dump);
+        }
+
+        public static void Dump(StreamWriter writer)
+        {
+            var dump = GetDumpData();
+            writer.Write(dump);
+        }
+
+        private static string GetDumpData()
+        {
             int buffer = 10;
             var maxLen = _stats.Keys.Max(k => k.Length);
 
@@ -49,7 +61,8 @@ namespace GitVersion.Models
             builder.Append("\n");
             builder.Append("\n");
 
-            writer.Write(builder.ToString());
+            var dump = builder.ToString();
+            return dump;
         }
 
         // private static (IDictionary<string,IList<string>>, IDictionary<string, IList<string>>) GroupStats()
@@ -72,13 +85,16 @@ namespace GitVersion.Models
 
         private static void Increment(string msg)
         {
-            if (_stats.ContainsKey(msg))
+            lock (_stats)
             {
-                _stats[msg] += 1;
-            }
-            else
-            {
-                _stats[msg] = 1;
+                if (_stats.ContainsKey(msg))
+                {
+                    _stats[msg] += 1;
+                }
+                else
+                {
+                    _stats[msg] = 1;
+                }
             }
         }
     }

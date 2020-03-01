@@ -21,8 +21,11 @@ namespace GitVersion.VersionCalculation
         {
             using (log.IndentLog("Calculating base versions"))
             {
-                var baseVersions = strategies
-                    .SelectMany(s => s.GetVersions(context))
+                log.Info("Finding all versions");
+                var versions = strategies.SelectMany(s => s.GetVersions(context));
+
+                log.Info("Finding filtered versions");
+                var filteredVersions = versions
                     .Where(v =>
                     {
                         if (v == null) return false;
@@ -39,13 +42,39 @@ namespace GitVersion.VersionCalculation
                         }
 
                         return true;
-                    })
-                    .Select(v => new Versions
+                    }).ToList();
+
+                log.Info($"Finding maybeincrement versions (trying {filteredVersions.Count} in total)");
+
+                log.Info($"First version is: {filteredVersions.First().Source}");
+                log.Info($"Last version is: {filteredVersions.Last().Source}");
+
+                var baseVersions = new List<Versions>();
+
+                for (var i = 0; i < filteredVersions.Count; i++)
+                {
+                    var v = filteredVersions[i];
+
+                    log.Info($"{i}: Processing version {v.Source} ");
+
+                    var vs = new Versions
                     {
                         IncrementedVersion = MaybeIncrement(context, v),
                         Version = v
-                    })
-                    .ToList();
+                    };
+
+                    baseVersions.Add(vs);
+                }
+
+                // This is really slow for some large repos - only processing 1-2 per second.
+
+                // var baseVersions = filteredVersions
+                //     .Select(v => new Versions
+                //     {
+                //         IncrementedVersion = MaybeIncrement(context, v),
+                //         Version = v
+                //     })
+                //     .ToList();
 
                 FixTheBaseVersionSourceOfMergeMessageStrategyIfReleaseBranchWasMergedAndDeleted
                     (context, baseVersions);

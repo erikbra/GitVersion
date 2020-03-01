@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GitVersion.Helpers;
-using GitVersion.Models;
 using GitVersion.Models.Abstractions;
 using GitVersion.Models.LibGitSharpWrappers;
 using LibGit2Sharp;

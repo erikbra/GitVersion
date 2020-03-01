@@ -7,6 +7,7 @@ using Shouldly;
 using GitVersion.Logging;
 using Microsoft.Extensions.Options;
 using GitVersion.Extensions;
+using GitVersion.Models.Abstractions;
 using GitVersion.Models.LibGitSharpWrappers;
 using GitVersion.VersionCalculation;
 using GitVersionCore.Tests.Helpers;

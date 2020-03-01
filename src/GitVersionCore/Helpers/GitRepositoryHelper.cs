@@ -3,7 +3,6 @@ using System.Linq;
 using GitVersion.Exceptions;
 using GitVersion.Logging;
 using GitVersion.Extensions;
-using GitVersion.Models;
 using GitVersion.Models.Abstractions;
 using GitVersion.Models.LibGitSharpWrappers;
 

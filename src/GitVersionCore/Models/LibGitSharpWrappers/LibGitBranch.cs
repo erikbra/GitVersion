@@ -1,4 +1,3 @@
-using System;
 using GitVersion.Extensions;
 using GitVersion.Models.Abstractions;
 using LibGit2Sharp;

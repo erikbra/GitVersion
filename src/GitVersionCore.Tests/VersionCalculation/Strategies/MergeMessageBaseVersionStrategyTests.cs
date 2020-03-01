@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitVersion.Configuration;
 using GitVersion.Logging;
+using GitVersion.Models.Abstractions;
 using GitVersion.VersionCalculation;
 using GitVersionCore.Tests.Helpers;
 using GitVersionCore.Tests.Mocks;
